@@ -1,0 +1,198 @@
+---
+-- Fonction Teleporter
+---
+local flib = {}
+
+----------------------------------------------------------------------------------
+
+-- getIdValue
+local function getIdValue(LuaSurface)
+  return global.teleport.surfaces[LuaSurface.name].value.id_teleporter
+end
+
+-- setIdValue
+local function setIdValue(LuaSurface, value)
+  global.teleport.surfaces[LuaSurface.name].value.id_teleporter = value
+end
+
+----------------------------------------------------------------------------------
+
+-- getTeleporterValue
+local function getValue(LuaSurface)
+  return global.teleport.surfaces[LuaSurface.name].value.teleporter
+end
+
+-- setTeleporterValue
+local function setValue(LuaSurface, value)
+  global.teleport.surfaces[LuaSurface.name].value.teleporter = value
+end
+
+----------------------------------------------------------------------------------
+
+-- getId
+local function getId(LuaSurface, position)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.position.x == position.x and teleporter.position.y == position.y then
+          return teleporter.id
+        end
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------------------------
+
+-- getName
+local function getNamePosition(LuaSurface, position)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.position.x == position.x and teleporter.position.y == position.y then
+          return teleporter.name
+        end
+      end
+    end
+  end
+end
+
+local function getNameId(LuaSurface, id)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.id == id then
+          return teleporter.name
+        end
+      end
+    end
+  end
+end
+
+-- setName
+local function setNameId(LuaSurface, id, name)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.id == id then
+          teleporter.name = name
+        end
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------------------------
+
+-- getRenderId
+local function getRenderId(LuaSurface, position)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.position.x == position.x and teleporter.position.y == position.y then
+          if teleporter.render_id then
+            return teleporter.render_id
+          else
+            return -1
+          end
+        end
+      end
+    end
+  else return -1
+  end
+end
+
+-- setRenderId
+local function setRenderId(LuaSurface, position, renderId)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.position.x == position.x and teleporter.position.y == position.y then
+          teleporter.render_id = renderId
+        end
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------------------------
+
+-- getPosition
+local function getPosition(LuaSurface, name)
+  if global.teleport.surfaces[LuaSurface.name].teleporters then
+    for i, teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+      if teleporter.teleport == 1 then
+        if teleporter.name == name then
+          return teleporter.position
+        end
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------------------------
+
+-- New
+local function new(id, position, renderId, type)    
+  local name_teleporter = "teleporter" .. id
+ 
+  local teleporter = 
+    {
+      id = id,
+      position = position,
+      name = name_teleporter,
+      render_id = renderId,
+      teleport = type,
+    }
+  return teleporter
+end
+
+
+
+-- Suppression de la structure "portal" dans global.teleport.surfaces[surface.name].portals
+local function delete(LuaSurface, TabPosition)
+    local id = getId(LuaSurface, TabPosition)
+          
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+        if portal.id == id then
+          global.teleport.surfaces[LuaSurface.name].teleporters[i] = nil
+        end
+    end      
+    setValue(LuaSurface, getValue(LuaSurface) - 1)
+end
+  
+----------------------------------------------------------------------------------
+  
+-- Teleporte le Joueur
+local function teleport(LuaPlayer, LuaSurface, name)
+    if LuaPlayer ~= nil and LuaPlayer.character ~= nil then
+        if LuaSurface ~= nil then
+          if name ~= nil then
+            local position = getPosition(LuaSurface, name)
+            LuaPlayer.teleport({position.x + 1.1,position.y + 1.1}, LuaSurface)
+          end
+        end
+    end 
+end
+
+----------------------------------------------------------------------------------
+
+----------------------------
+-- Chargement des fonctions
+flib.new = new
+flib.delete = delete
+flib.teleport = teleport
+flib.getIdValue = getIdValue
+flib.setIdValue = setIdValue
+flib.getValue = getValue
+flib.setValue = setValue
+flib.getId = getId
+flib.getNamePosition = getNamePosition
+flib.getNameId = getNameId
+flib.setNameId = setNameId
+flib.getRenderId = getRenderId
+flib.setRenderId = setRenderId
+flib.getPosition =getPosition
+
+-- Retourne la liste des fonctions
+return flib

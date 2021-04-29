@@ -1,0 +1,478 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.6.0
+Date: 11.04.2021
+  Fixes:
+    - Bugfix sur le bouton restart. (désynchronisation)
+    - Bugfix sur la fonction teleport (portal) : ajout de parametres "instantTP".
+  Notes:
+    - Version stable 1.5
+    - Prochaine mise à jour : 2.0
+---------------------------------------------------------------------------------------------------
+Version: 1.5.7
+Date: 31.03.2021
+  Changes:
+    - Changement sur le module "player" : mise à 0 du facteur d'evolution par le temps.
+---------------------------------------------------------------------------------------------------
+Version: 1.5.6
+Date: 31.03.2021
+  Changes:
+    - Changement mineur.
+  Fixes:
+    - Correction sur le cessé de feu des équipe ennemies. Ne s'activé pas lors d'une déconnexion serveur.
+---------------------------------------------------------------------------------------------------
+Version: 1.5.5
+Date: 29.03.2021
+  Fixes:
+    - fix mineur sur le bouton restart. Utilisation de la fonction clean.
+  Changes:
+    - Mise à jour de la gestion du restart.
+    - Nettoyage des commentaires dans les fonctions "surface".
+---------------------------------------------------------------------------------------------------
+Version: 1.5.4
+Date: 28.03.2021
+  Fixes:
+    - fix mineur sur le bouton restart. Utilisation de la fonction clean.
+  Changes:
+    - Changement mineur.
+    - Activation de 'ai_controllable' pour les equipes ennemies.
+---------------------------------------------------------------------------------------------------
+Version: 1.5.3
+Date: 09.03.2021
+  Fixes:
+    - bug fix : button restart crash server.
+---------------------------------------------------------------------------------------------------
+Version: 1.5.2
+Date: 08.03.2021
+  Fixes:
+    - bug fix : enable_main_button settings.
+---------------------------------------------------------------------------------------------------
+Version: 1.5.1
+Date: 07.03.2021
+  Adds:
+    - Ajout d'un message lors d'une liaison ou déliaison.
+    - Ajout d'une commande listant les surfaces lié à nous : /link
+---------------------------------------------------------------------------------------------------
+Version: 1.5.0
+Date: 07.03.2021
+  Changes:
+    - Changement mineur dans le module "portal".
+    - Limitation du nombre de joueur max à 30 sur le serveur.
+    - Changement sur la fonction "UpdateCeaseFire" dans les fonctions : "surface".
+    - l'update du cessé le feu se fait sur changement d'état de "map_used".
+  Adds :
+    - Gestion des équipes ennemies / par map, avec évolution indépendante.
+    - Ajout du module "enemy" qui gère cette nouveauté.
+    - Ajout d'une fonction "utils" : tableBusy(t)
+    - Ajout de la fonction : "portal_died" dans le module : "portal".
+    - Ajout d'option de mod "Activation des équipes ennemis".
+    - Si l'option est désactivé, aucun ennemi est généré.
+    - Si dans le "map_gen_settings" l'option ennemi est décoché on n'active pas les equipes ennemis.
+  Notes:
+    - la v1.4 du mod est stable.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.64
+Date: 02.03.2021
+  Changes:
+    - Changement mineur dans : core/migration.
+  Fixes:
+    - fix : "on_player_left_game" lors du chargement d'une save en local. (migration)
+---------------------------------------------------------------------------------------------------
+Version: 1.4.63
+Date: 01.03.2021
+  Changes:
+    - La mise à jour de la tempo se fait maintenant sur le déplacement du joueur et non sur les tick de jeu.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.62
+Date: 28.02.2021
+  Fixes:
+    - Fix de : teleport (fonction : portal)
+---------------------------------------------------------------------------------------------------
+Version: 1.4.61
+Date: 28.02.2021
+  Fixes:
+    - Fix de : on_tick_player_tp
+---------------------------------------------------------------------------------------------------
+Version: 1.4.60
+Date: 28.02.2021
+  Adds:
+    - Timer sur téléportation de 3sec pour pas se téléporter trop vite d'une map à l'autre.
+  Fixes:
+    - Fix de l'offlinePeace en ajoutant l'event : on_player_left_game (module : player)
+  Notes:
+    - Dernière release du mod en 1.4 sauf sur un bug/plantage trouvé.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.52
+Date: 28.02.2021
+  Changes:
+    - Réorganisation des fichiers "locale".
+  Adds:
+    - Ajout d'un message quand une recherche est terminée et que vous n'êtes pas chez vous.
+    - Option de mod pour désactiver les messages de recherche terminée.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.51
+Date: 28.02.2021
+  Fixes:
+    - Bug fix sur la fonction "load_all_inventory" de inventory.lua
+---------------------------------------------------------------------------------------------------
+Version: 1.4.50
+Date: 28.02.2021
+  Changes:
+    - Changement mineur sur la structure "global".
+    - Code pour prendre en compte les incompatibilités avec les autres mods de téléportation.
+    - Standardisation des fonctions "inventory".
+  Adds:
+    - Ajout de fonctions "surface" pour la prise en compte des modifications apportés avec le fix de "OfflinePeace".
+    - Compatibilité avec le mod : Factorissimo2.
+    - Compatibilité avec le mod : SeaBlock
+  Fixes:
+    - Fix sur le module "OfflinePeace", la fonction est déplacé dans les fonctions "surface".
+---------------------------------------------------------------------------------------------------
+Version: 1.4.43
+Date: 21.02.2021
+  Adds:
+    - Ajout de touche de raccourcis pour ouvrir/fermer le menu.
+    - Ajout de paramètre de mods par joueur pour activer/désactiver le bouton du menu.
+    - Ajout de l'event : on_runtime_mod_setting_changed dans le module "player".
+---------------------------------------------------------------------------------------------------
+Version: 1.4.42
+Date: 21.02.2021
+  Adds:
+    - Compatibilité avec CommuGuideMod.
+  Changes:
+    - Modification sur le module "player" : on_player_changed_surface
+    - Modification sur le module "OfflinePeace" : ajout de la vérification : global.teleport.surfaces[force.name]
+---------------------------------------------------------------------------------------------------
+Version: 1.4.41
+Date: 20.02.2021
+  Fixes:
+    - Bug fix : events - "on_tick_local" : ligne 39 index = nil (player.name)
+---------------------------------------------------------------------------------------------------
+Version: 1.4.40
+Date: 18.02.2021
+  Changes:
+    - Migration du code gui en "fonction local" : portal, teleporter, remote et menu.
+    - Passage en fonction "utils" : clean
+    - Le bouton principale du menu est un sprite button 40x40 (standard).
+    - Mise à jour des styles du mods avec l'ajout du sprite portal.
+    - Changement de la chaine de caractères des portails non liés.
+  Adds:
+    - Fonctions "gui".
+    - Fonctions "styles".
+    - Nouveau paramètre de mods pour un clean automatique sur inactivité (0~1500h).
+    - Création d'un clean automatique sur inactivité dans "events" : on_tick.
+    - Mise en place d'une commande /exception pour ajouter une exception sur le clean de map automatique.
+    - Les joueurs listés en exception ne sont pas affectés par le clean automatique des maps.
+  Fixes:
+    - Bug fix mineur sur le clean de map.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.36
+Date: 14.02.2021
+  Changes:
+    - Modification de la structure de données "global" pour les portails et téléporteurs.
+  Adds:
+    - Librairie de fonctions "surface".
+---------------------------------------------------------------------------------------------------
+Version: 1.4.35
+Date: 14.02.2021
+  Changes:
+    - Modification du Open Gui portal avec l'actualisation du lien et du rendering.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.34
+Date: 14.02.2021
+  Changes:
+    - Modification du clean map.
+    - Modification du restart map.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.33
+Date: 14.02.2021
+  Changes:
+    - Changement pour la prise en compte de la version en cours pour la migration.
+    - Modification du restart map.
+    - Actualise le portail s'il a perdu le lien suite à un clean de map au moment du teleport.
+    - Actualise le portail s'il a perdu le lien suite à un clean de map au moment de l'ouverture du gui.
+  Adds:
+    - Ajout des rendering pour les portail à certain endroit manquant.
+  Fixes:
+    - Fix : "ritmods.lib" restant sur le teleport du portail.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.32
+Date: 12.02.2021
+  Adds:
+    - Migration pour le nouveau paramètre de mod.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.31
+Date: 11.02.2021
+  Changes:
+    - Texte de l'expulsion corrigé.
+  Adds:
+    - Ajout d'une option de mod pour avoir le bouton restart en permanence. (par défaut à false)
+    - Localisation des textes lors du restart de map.
+    - Localisation pour un nouveau message si on essaye d'utiliser un portail/teleporter autre part que sur notre propre surface.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.30
+Date: 08.02.2021
+  Changes:
+    - control.lua synthetisé.
+    - structure "global" du mod pour mettre en place les migration de mod.
+  Adds:
+    - Dossier "core", regroupant les fichiers necessaires au control.lua
+      Notament : modules, global et migration
+  Fixes:
+    - Correctif sur les fonction "player", ajout de la bibliothèque de fonctions "inventory" pour fonctionner.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.27
+Date: 07.02.2021
+  Fixes:
+    - Correctif sur les fonctions "inventory".
+---------------------------------------------------------------------------------------------------
+Version: 1.4.26
+Date: 07.02.2021
+  Fixes:
+    - Correctif pour corriger le changement de structure de données sur une ancienne sauvegarde.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.25
+Date: 06.02.2021
+  Fixes:
+    - Remise en place de la compatibilité avec le mod : SpaceBlock
+---------------------------------------------------------------------------------------------------
+Version: 1.4.24
+Date: 04.02.2021
+  Changes:
+    - Optimisation + amélioration du code. (Part1)
+    - Passage des function en local.
+    - Passage du code "inventory.lua" en fonction local.
+    - Fonctions rangés dans un dossier par type de fonctions.
+    - Réécriture du defines pour passer passage en 'local return'.
+  Fixes:
+    - Fix du listing des surfaces pour /tp et /clean.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.23
+Date: 02.02.2021
+  Fixes:
+    - Bug fix : Module : "teleporter", event : on_build_entity
+      Problème sur la creation de portail ou de téléporteur sur une autres surfaces que celle du propiétaire est corrigé.
+    - Bug fix : Module : "OfflinePeace" - Desynchronisation quand le mod "gvv" est actif corrigé.
+  Changes:
+    - Les portails et téléporteurs ne peuvent plus être mis dans votre main si vous n'êtes sur votre map.
+      Faire Shift+Click vers dans un coffre pour vous en débarasser.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.22
+Date: 01.02.2021
+  Fixes:
+    - Bug fix : Module : "player", event : on_pre_player_died
+      Mise à jour des fermetures des GUI.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.21
+Date: 01.02.2021
+  Fixes:
+    - Bug Gentil1 fix : LuaPlayer.character.request_slot_count Lecture seulement...
+      Suppression de la ligne 107 du module "inventory", il y avait une écriture de la variable cité ci-dessus.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.20
+Date: 29.01.2021
+  Adds:
+    - Crash site / surface.
+  Changes:
+    - Items de départ comme en vanilla (sans le pistolet et les munitions).
+---------------------------------------------------------------------------------------------------
+Version: 1.4.11
+Date: 23.01.2021
+  Notes:
+    - 1.4.11 = 1.4.0 (version 1.1)
+  Adds:
+    - Ajout d'un bouton pour relancer sur une nouvelle map.
+      Ce bouton s'affichera après avoir lancé la première fusée.
+    - Ajout d'un menu admin (GUI) pour les commandes /tp et /clean.
+  Changes:
+    - Arrangement et standardisation du code pour la partie GUI.
+    - Le GUI des téléporteurs ne s'ouvre plus lors de la pose.
+    - Révision du GUI poortal.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.10
+Date: 23.01.2021
+  Notes:
+    - 1.4.10 = 1.4.0 (version 1.0)
+  Adds:
+    - Ajout d'un bouton pour relancer sur une nouvelle map.
+      Ce bouton s'affichera après avoir lancé la première fusée.
+    - Ajout d'un menu admin (GUI) pour les commandes /tp et /clean.
+  Changes:
+    - Arrangement et standardisation du code pour la partie GUI.
+    - Le GUI des téléporteurs ne s'ouvre plus lors de la pose.
+    - Révision du GUI poortal.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.3
+Date: 14.11.2020
+  Fixes:
+    - Bug bev fix : create Force already exists "enemy-...".
+      Mise en commentaire des lignes qui son censé être prévu pour une futur feature (player.lua). 
+---------------------------------------------------------------------------------------------------
+Version: 1.3.2
+Date: 11.11.2020
+  Notes:
+    - Compatible avec la version 0.3.7 de Spaceblock uniquement (pour le moment).
+---------------------------------------------------------------------------------------------------
+Version: 1.3.1
+Date: 01.11.2020
+  Fixes:
+    - Bug fix dans "on_gui_confirmed" de "gui_teleporter.lua" passage de la variable local position après
+      vérification que la variable LuaGui ne soit pas égale à nil.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 01.11.2020
+  Adds:
+    - Ajout de tout le système des téléporteurs.
+  Changes:
+    - Arrangement de certaine partie de code.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.8
+Date: 23.10.2020
+  Adds:
+    - Ajout de la télécommande à téléporteur.
+    - Préparation du code pour les téléporteurs.
+  Changes:
+    - Arrangement de certaine partie de code.
+  Fixes:
+    - Bug fix au lancement en mode bac à sable. Tout le système de portail est désactivé dans ce mode là.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.7
+Date: 11.10.2020
+  Fixes:
+    - Vous n'êtes plus téléporté quand vous êtes à bord d'un vehicule.
+    - Fix du bug à l'ouverture du GUI portal.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.6
+Date: 06.10.2020
+  Adds:
+    - Commande /tp pour retour au spawn de sa propre map, avec l'option de mod.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.5
+Date: 06.10.2020
+  Adds:
+    - Le nom de la liaison au dessus du portail est maintenant affichée.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.4
+Date: 15.09.2020
+  Adds:
+    - Lien avec le mod "gvv".
+    - Ajout de nouveau portail, pas encore débloquable en jeu pour le moment. (caché)
+---------------------------------------------------------------------------------------------------
+Version: 1.2.3
+Date: 06.09.2020
+  Changes:
+    - Intégration du mod "event-listener" dans RitnTeleportation.
+  Adds:
+    - Annulation des crafts sur le passage d'un portail, les objet retourne dans l'inventaire.
+    - Les éléments en main sont sauvegarder et restituer dans le meme principe que les inventaires.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.2
+Date: 27.08.2020
+  Fixes:
+    - Bug fix : commande "tp" fix.
+    - Bug fix : migration du code "inventaire".
+---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 26.08.2020
+  Fixes:
+    - Bug fix : pcall sur la remote fonction "set_disable_crashsite" en cas de map généré avant la 1.0.
+    - Ajout d'une migration de code "inventaire" pour eviter le plantage lors d'une téléportation.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 25.08.2020
+  Fixes:
+    - Sauvegarde et restitution de l'inventaire à 100%. (équipement et blueprint inclus)
+    - Sauvegarde et restitution de la gestion des demandes logistique personnelle à 100%.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+Date: 24.08.2020
+  Fixes:
+    - Bug fix : Mise à TRUE de la remote fonction "set_skip_intro" et "set_disable_crashsite" dans l'event "on_load" et "on_init".
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 15.08.2020
+  Notes:
+    - Passage en 1.0.
+    - Version du mod stable.
+    - Des améliorations sont à venir : https://mods.factorio.com/mod/RitnTeleportation/discussion/5f22f1442f34acc86509e433
+---------------------------------------------------------------------------------------------------
+Version: 1.0.11
+Date: 03.08.2020
+  Fixes:
+    - Bug fix : Le cessez le feu ne s'active pas quand on se reconnecte.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.10
+Date: 01.08.2020
+  Fixes:
+    - Bug fix : Changement d'équipe quand le portail est retiré à votre reconnexion, lorsque vous vous êtes déconnecté ailleurs que chez vous.
+  Changes:
+    - La sauvegarde de votre inventaire ne se fait plus à la déconnexion mais à la reconnexion si necessaire.
+    - La restitution d'inventaire et changement d'équipe se fait sur l'event : on_player_changed_surface.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+Date: 01.08.2020
+  Fixes:
+    - Bug fix : LuaItemStack = nil dans la fonction get (inventory)
+---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+Date: 31.07.2020
+  Fixes:
+    - Mémorise l'équipement de l'armure porté par le joueur.
+    - Mémorise quelques informations supplémentaire dans la partie Logistique de demande et corbeille.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+Date: 28.07.2020
+  Fixes:
+    - Bug sur le GUI déjà ouvert alors qu'on clique sur le portail.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.6
+Date: 26.07.2020
+  Fixes:
+    - Bug Overcl0ck : fix du bug (suite...)
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+Date: 25.07.2020
+  Adds:
+    - Ajout de la commande "/clean <player>" pour les admins.
+  Fixes:
+    - Bug Overcl0ck : fix du bug lors de la déconstruction/construction par robot.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 20.07.2020
+  Fixes:
+    - Bug Ziboux : fix du bug lors d'une construction par robot.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 19.07.2020
+  Changes:
+    - Suppression du message de cessez le feu.
+  Adds:
+    - Ajout de la commande "/tp <player>" pour les admins.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 13.07.2020
+  Adds:
+    - Ajout de la gestion des events via le mod "Event-listener" pour une gestion par module.
+    - Ajout d'un sytème de cessé le feu contre l'ennemie si une map se retrouve sans joueur connecté.
+  Changes:
+    - Design du portal GUI.
+  Fixes:
+    - Bug fix : lors d'une reconnexion d'un joueur, plantage du serveur.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 10.07.2020
+  Fixes:
+    - Bug fix + optimisation + amélioration du code.
+    - Bug fix, si un joueur meurt le portail ne peut pas etre detruit tant que le joueur n'a pa réapparut.
+  Changes:
+    - Design du portail.
+    - Amélioration du GUI.
+  Adds:
+    - Ajout de sons quand on pose ou enlève un portail.
+    - Ajout de la compatibilité avec le mod "SpaceBlock".
+    - Ajout d'un paramètre de mod (section : Démarrage) pour définir si la map généré est identique pour tous ou non.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 27.04.2020
+  Changes:
+    - Compatible vanilla et ouvert à tous les mods ne créant pas de surface.
+    - Prend en compte toutes les paramètres de map à sa création.
