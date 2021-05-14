@@ -155,6 +155,7 @@ local function new(id, position, dest, render_id, teleport)
     render_id = render_id,
     teleport = teleport,
   }
+  ritnlib.utils.ritnLog(">> (debug) - function portal : new -> ok")
   return portal
 end
 
@@ -179,24 +180,24 @@ local function delete(LuaSurface_origine, TabPosition_origine, LuaSurface_destin
 end
 
 
---local function verifLink(LuaSurface, id, LuaPlayer)
+
 
 
 ----------------------------------------------------------------------------------
 
 -- Téléportation entre portail
 local function teleport(LuaSurface, id, LuaPlayer, instantTP)
-  ritnlib.utils.ritnLog(">> (debug) - portal teleport - function ok")
+  
   if not id then return end
   if LuaPlayer.driving then return end
   -- No characters
   if LuaPlayer.character == nil then return end
   
-  -- fix 1.5.8
+  -- Via commande ADMIN (pas d'attente)
   local instant = false
   if instantTP ~= nil then instant = instantTP end
 
-  -- fix 1.4.62
+  -- temporisation après un TP
   if global.teleport.surfaces[LuaSurface.name] then 
     if global.teleport.surfaces[LuaSurface.name].players then 
       if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name] then 
@@ -206,6 +207,7 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       end
     end
   end
+  ritnlib.utils.ritnLog(">> (debug) - portal teleport - function ok")
   
   -- Récupère la surface de destination
   local LuaSurface_dest = game.surfaces[getDestinationId(LuaSurface, id)]
@@ -245,18 +247,35 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                 -- fermeture de la fenetre des teleporteurs
                 ritnGui.remote.close(LuaPlayer)
                   print(">> " .. LuaPlayer.name .." -> " .. LuaSurface_dest.name)
+
+                  -- 1.6.1 ----
+                  local statut, errorMsg = pcall(function() 
+                    if not global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] then
+                      global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+                    end
+                  end)
+                  if statut then 
+                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
+                  else
+                    ritnlib.utils.ritnLog(">> (debug) - ERROR = " .. errorMsg)
+                  end
+                  -------------
                   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
                   if LuaPlayer.name == LuaSurface_dest.name then
                     LuaPlayer.teleport({pos2.x+1.1,pos2.y+1.1},LuaSurface_dest)
+                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   else
                     LuaPlayer.teleport({pos2.x-1.1,pos2.y+1.1},LuaSurface_dest)
+                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   end
               else
                 LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.no_access)
+                ritnlib.utils.ritnLog(">> (debug) - portal teleport - no tp : no access")
               end
           end
         else
           LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.dest_not_find)
+          ritnlib.utils.ritnLog(">> (debug) - portal teleport - no tp : no destination")
           return
         end
       end
@@ -269,6 +288,7 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       local renderId = getRenderId(LuaSurface, getPositionId(LuaSurface, id))
       if renderId ~= -1 then 
         rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
+        ritnlib.utils.ritnLog(">> (debug) - portal teleport - rendering : portal not link")
       end
       
     end
@@ -289,6 +309,7 @@ local function listLink(surface_name)
       end
     end   
   end
+  ritnlib.utils.ritnLog(">> (debug) - listing link")
   return list
 end
 

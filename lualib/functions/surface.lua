@@ -9,7 +9,7 @@ local prefix_enemy = ritnmods.teleport.defines.prefix.enemy
 
 -- Système de cessé le feu avec les ennemies lors d'un changement d'état d'un joueur.
 local function UpdateCeaseFires(LuaSurface)
-	--if #game.connected_players <= 0 then return end
+
   if global.teleport.surfaces[LuaSurface.name] then 
 
     local forces = {}

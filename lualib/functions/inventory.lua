@@ -2,6 +2,10 @@
 -- Fonction "player"
 ---
 local flib = {}
+---------------------------------------------------------------------------------------------
+local ritnlib = {}
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
+---------------------------------------------------------------------------------------------
 
 -- Init structure
 local function initInventory()
@@ -18,6 +22,7 @@ local function initInventory()
     {name="character_personal_logistic_requests_enabled", value = false}
   }
 
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : init -> ok")
   return invGlobal
 end
 
@@ -34,6 +39,7 @@ local function saveInventory(invGlobal, LuaPlayer, defines)
         end
       end
     end
+    ritnlib.utils.ritnLog(">> (debug) - function inventory : saveInventory -> ok")
 end
 
 --LoadInventory
@@ -48,6 +54,7 @@ local function loadInventory(invGlobal, LuaPlayer, defines)
       end
     end
   end
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadInventory -> ok")
 end
 
 
@@ -59,6 +66,7 @@ local function save_all_inventory(LuaPlayer, invGlobal)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_ammo)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_armor)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_trash)
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : saveAllInventory -> ok")
 end
 
 --New Get
@@ -68,6 +76,7 @@ local function load_all_inventory(LuaPlayer, invGlobal)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_guns)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_ammo)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_trash)
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadAllInventory -> ok")
 end
 
 
@@ -92,6 +101,7 @@ local function saveLogistic(LuaPlayer, invGlobal)
   else 
     invGlobal["logistic_inv"] = nil
   end
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : savelogistic -> ok")
 end
 
 -- Load Logistic
@@ -112,6 +122,7 @@ local function loadLogistic(LuaPlayer, invGlobal)
       end
     end
   end
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadLogistic -> ok")
 end
 
 ------------------------------------------------------------------------------------------
@@ -123,6 +134,7 @@ local function saveCursor(LuaPlayer, invGlobal)
   if stack.valid then
     invGlobal["cursor"][1].swap_stack(stack)
   end
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : saveCursor -> ok")
 end
 
 -- Load Cursor
@@ -131,6 +143,7 @@ local function loadCursor(LuaPlayer, invGlobal)
   if stack.valid then
     LuaPlayer.cursor_stack.swap_stack(stack)
   end
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadCursor -> ok")
 end
 
 ------------------------------------------------------------------------------------------
@@ -143,8 +156,10 @@ local function cancel_all_crafting(LuaPlayer)
         local options = {index=craft.index, count=craft.count}
         LuaPlayer.cancel_crafting(options)
       end
+      ritnlib.utils.ritnLog(">> (debug) - function inventory : cancel_all_crafting -> ok")
     end)
   end
+  
 end
 
 ------------------------------------------------------------------------------------------
@@ -163,6 +178,7 @@ local function save(LuaPlayer, invGlobal)
   save_all_inventory(LuaPlayer, invGlobal)
   saveCursor(LuaPlayer, invGlobal)
   saveLogistic(LuaPlayer, invGlobal)
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : SAVE -> ok")
 end
 
 --- LOAD
@@ -178,6 +194,7 @@ local function load(LuaPlayer, invGlobal)
   load_all_inventory(LuaPlayer, invGlobal)
   loadCursor(LuaPlayer, invGlobal)
   loadLogistic(LuaPlayer, invGlobal)
+  ritnlib.utils.ritnLog(">> (debug) - function inventory : LOAD -> ok")
 end
 
 
@@ -193,6 +210,7 @@ local function clearCursor(LuaPlayer, itemName)
   else 
     LuaPlayer.clear_cursor()
     LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.cursor)
+    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> ok")
   end
 end
 

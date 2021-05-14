@@ -22,12 +22,11 @@ local function ritnPrint(txt)
 end
 
 local function ritnLog(txt) 
-
     local statut, errorMsg = pcall(function() 
         print(txt)
     end)
     if statut == (false or nil) then 
-        print("error ritnlog : " .. errorMsg)
+        print(">> error ritnlog : " .. errorMsg)
     end
 end
 
