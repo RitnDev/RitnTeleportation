@@ -48,14 +48,59 @@ local function on_player_changed_surface(e)
 end
 
 
+local function on_pre_player_left_game(e)
+  local LuaPlayer = game.players[e.player_index]
+  local LuaSurface = LuaPlayer.surface
+  local reason = e.reason -- defines.disconnect_reason
+  
+  ritnlib.utils.ritnLog(">> PRE left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
+  
+  -- 1.6.2 ---------
+  local statut, errorMsg = pcall(function() 
+    if not global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] then
+      global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+    end
+  end)
+  if statut then 
+    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
+  else
+    ritnlib.utils.ritnLog(">> (debug) - ERROR = " .. errorMsg)
+  end
+  ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
+
+
+  if reason == defines.disconnect_reason.quit then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "quit")
+  elseif reason == defines.disconnect_reason.dropped then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "dropped")
+  elseif reason == defines.disconnect_reason.reconnect then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "reconnect")
+  elseif reason == defines.disconnect_reason.wrong_input then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "wrong_input")
+  elseif reason == defines.disconnect_reason.desync_limit_reached	then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "desync_limit_reached")
+  elseif reason == defines.disconnect_reason.cannot_keep_up	then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "cannot_keep_up")
+  elseif reason == defines.disconnect_reason.afk then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "afk")
+  elseif reason == defines.disconnect_reason.kicked	then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "kicked")
+  elseif reason == defines.disconnect_reason.kicked_and_deleted then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "kicked_and_deleted")
+  elseif reason == defines.disconnect_reason.banned	then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "banned")
+  elseif reason == defines.disconnect_reason.switching_servers then
+    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "switching_servers")
+  end
+  ------------------
+end
+
+
 local function on_player_left_game(e)
   local LuaPlayer = game.players[e.player_index]
   local LuaSurface = LuaPlayer.surface
-  pcall(function() print(">> left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name) end)
+  ritnlib.utils.ritnLog(">> left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
   ritnlib.surface.removePlayer(LuaPlayer, LuaSurface)
-
-  -- restart ....
-        
 end
 
 
@@ -219,7 +264,7 @@ local function on_player_joined_game(e)
       end
    
       -- player is no home
-      ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
+      --ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
       LuaPlayer.teleport({0,0}, LuaPlayer.name)
   
       if not global.teleport.surfaces[LuaPlayer.name].inventories[LuaPlayer.name] then
@@ -332,6 +377,7 @@ end
 -- Events Player
 module.events[defines.events.on_player_changed_surface] = on_player_changed_surface
 module.events[defines.events.on_player_joined_game] = on_player_joined_game
+module.events[defines.events.on_pre_player_left_game] = on_pre_player_left_game
 module.events[defines.events.on_player_left_game] = on_player_left_game
 module.events[defines.events.on_player_changed_position] = on_player_changed_position
 module.events[defines.events.on_pre_player_died] = on_pre_player_died
