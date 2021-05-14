@@ -59,11 +59,10 @@ local function on_pre_player_left_game(e)
   local statut, errorMsg = pcall(function() 
     if not global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] then
       global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+      ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
     end
   end)
-  if statut then 
-    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
-  else
+  if statut  == (false or nil) then 
     ritnlib.utils.ritnLog(">> (debug) - ERROR = " .. errorMsg)
   end
   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
@@ -236,7 +235,7 @@ local function on_player_joined_game(e)
         game.remove_offline_players(LuaPlayer)
       end
       ritnlib.surface.addPlayer(LuaPlayer)
-
+      ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
     else
 
       -- No characters
@@ -264,7 +263,6 @@ local function on_player_joined_game(e)
       end
    
       -- player is no home
-      --ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
       LuaPlayer.teleport({0,0}, LuaPlayer.name)
   
       if not global.teleport.surfaces[LuaPlayer.name].inventories[LuaPlayer.name] then
