@@ -91,8 +91,10 @@ local function clean(player_name, LuaPlayer)
         local tab_p = {}
         table.insert(tab_p, players_name)
         game.remove_offline_players(tab_p)
-        if LuaPlayer then LuaPlayer.print("Clean OK for : " .. player_name) end
-        print(">> CLEAN OK for : " .. LuaPlayer.name)
+        if LuaPlayer then 
+            LuaPlayer.print("Clean OK for : " .. player_name) 
+            print(">> CLEAN OK for : " .. LuaPlayer.name)
+        end
     end
 end
 
