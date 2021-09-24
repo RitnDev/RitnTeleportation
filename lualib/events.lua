@@ -51,6 +51,7 @@ local function on_tick_local(e)
                 local surface = player.name
                 if global.teleport.surfaces[surface].exception == true then return end
                 events.utils.clean(surface)
+                return
             end
 
           end
@@ -85,39 +86,6 @@ end)
 ------------------------------------------------------------------------------------------------------------------------
 -- Add commands
 ------------------------------------------------------------------------------------------------------------------------
-
-commands.add_command("tp", "", 
-  function (e)
-    local LuaPlayer = game.players[e.player_index]
-      if LuaPlayer.admin or LuaPlayer.name == "Ritn" then
-        if e.parameter ~= nil then 
-          if game.players[e.parameter] then
-            local surface = game.players[e.parameter].name
-            if game.surfaces[e.parameter] then
-              events.lib.save(LuaPlayer.surface, LuaPlayer)
-              LuaPlayer.teleport({0,0}, surface)
-              LuaPlayer.force = surface
-            end
-          else
-            if e.parameter == "nauvis" then
-              local surface = game.surfaces[e.parameter].name
-              if game.surfaces[e.parameter] then
-                events.lib.save(LuaPlayer.surface, LuaPlayer)
-                LuaPlayer.teleport({0,0}, surface)
-                LuaPlayer.force = "player"
-              end
-            end
-          end 
-        else 
-          if settings.startup[ritnmods.teleport.defines.name.settings.generate_seed].value == true then
-            if LuaPlayer.name == LuaPlayer.surface.name then
-              LuaPlayer.teleport({0,0}, LuaPlayer.surface.name)
-            end
-          end
-        end
-      end 
-  end
-)
 
 commands.add_command("exception", "<add/remove/view> <player>", 
   function (e)

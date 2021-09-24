@@ -39,8 +39,4 @@ end
 if not global.settings then global.settings = {} end
 if not global.migration then global.migration = false end
 
-
-
 global.generate_seed = settings.startup[ritnmods.teleport.defines.name.settings.generate_seed].value
-
-

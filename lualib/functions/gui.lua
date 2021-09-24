@@ -146,6 +146,8 @@ local function createEmptyWidget(source)
     return source.add(empty)
 end
 
+
+
 ----------------------------
 -- Chargement des fonctions
 flib.createFrame = createFrame

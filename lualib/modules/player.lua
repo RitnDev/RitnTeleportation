@@ -9,7 +9,7 @@ ritnlib.portal =      require(ritnmods.teleport.defines.functions.portal)
 ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
 ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
 ritnlib.surface =     require(ritnmods.teleport.defines.functions.surface)
-ritnlib.seablock =    require(ritnmods.teleport.defines.mods.seablock.lib.control)
+ritnlib.seablock =    require(ritnmods.teleport.defines.mods.seablock)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.menu =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
@@ -301,7 +301,7 @@ local function on_player_changed_position(e)
         
         if nb_portal > 0 then
   
-          for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+          for _,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
             if portal.teleport ~= 0 then
   
                 local p_pos = LuaPlayer.position

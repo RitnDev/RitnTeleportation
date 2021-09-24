@@ -93,8 +93,8 @@ local function clean(player_name, LuaPlayer)
         game.remove_offline_players(tab_p)
         if LuaPlayer then 
             LuaPlayer.print("Clean OK for : " .. player_name) 
-            print(">> CLEAN OK for : " .. LuaPlayer.name)
         end
+        print(">> CLEAN OK for : " .. player_name)
     end
 end
 

@@ -3,7 +3,6 @@
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
 ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
-ritnlib.styles =    require(ritnmods.teleport.defines.functions.styles)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.remote =        require(ritnmods.teleport.defines.gui.remote.GuiElements)

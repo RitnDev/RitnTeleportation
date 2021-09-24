@@ -31,6 +31,7 @@ data:extend {
 		default_value = ritnmods.teleport.defines.value.settings.generate_seed,
 		order = ritnmods.teleport.defines.name_prefix .. "tp-01"
 	},
+	--[[
 	{
 		-- Autorisation de la commande tp
 		type = "bool-setting",
@@ -38,7 +39,7 @@ data:extend {
 		setting_type = "startup",
 		default_value = ritnmods.teleport.defines.value.settings.command_tp,
 		order = ritnmods.teleport.defines.name_prefix .. "tp-02"
-	},
+	},]]
 	{
 		-- Activation des téléporteurs
 		type = "bool-setting",

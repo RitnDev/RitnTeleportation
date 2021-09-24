@@ -1,5 +1,4 @@
 
-
 --Entity
 require("prototypes.entity.ritn-portal")
 require("prototypes.entity.ritn-teleporter")

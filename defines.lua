@@ -71,27 +71,13 @@ defines.mods = {
         name = defines.lib.mods .. "vanilla/",
         lib = {},
     },
-    spaceblock = {
-        name = defines.lib.mods .."spaceblock/",
-        lib = {},
-    },
-    seablock = {
-        name = defines.lib.mods .."seablock/",
-        lib = {},
-    },
+    spaceblock = defines.lib.mods .."spaceblock",
+    seablock = defines.lib.mods .."seablock",
 }
 -- vanilla
 defines.mods.vanilla.lib = {
     CrashSite = defines.mods.vanilla.name .. "crash-site",
     util = defines.mods.vanilla.name .. "util",
-}
--- Spaceblock
-defines.mods.spaceblock.lib = {
-    control = defines.mods.spaceblock.name .. "control"
-}
--- Seablock
-defines.mods.seablock.lib = {
-    control = defines.mods.seablock.name .. "seablock"
 }
 
 

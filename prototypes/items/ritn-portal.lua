@@ -1,6 +1,5 @@
 data:extend({
 
-
     --Ritn Portal
     {
         --item
@@ -33,6 +32,5 @@ data:extend({
         result = ritnmods.teleport.defines.name.item.portal,
         result_count = 1
     }
-
 
 })
