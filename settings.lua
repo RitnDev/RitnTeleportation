@@ -31,15 +31,16 @@ data:extend {
 		default_value = ritnmods.teleport.defines.value.settings.generate_seed,
 		order = ritnmods.teleport.defines.name_prefix .. "tp-01"
 	},
-	--[[
 	{
-		-- Autorisation de la commande tp
-		type = "bool-setting",
-		name = ritnmods.teleport.defines.name.settings.command_tp,
-		setting_type = "startup",
-		default_value = ritnmods.teleport.defines.value.settings.command_tp,
+		-- Nombre de map max sur la partie.
+		type = "int-setting",
+		name = ritnmods.teleport.defines.name.settings.surfaceMax,
+		setting_type = "runtime-global",
+		default_value = ritnmods.teleport.defines.value.settings.surfaceMax.default_value,
+		minimum_value = ritnmods.teleport.defines.value.settings.surfaceMax.minimum_value,
+		maximum_value = ritnmods.teleport.defines.value.settings.surfaceMax.maximum_value,
 		order = ritnmods.teleport.defines.name_prefix .. "tp-02"
-	},]]
+	},
 	{
 		-- Activation des téléporteurs
 		type = "bool-setting",
@@ -57,7 +58,7 @@ data:extend {
 		order = ritnmods.teleport.defines.name_prefix .. "tp-04"
 	},
 	{
-		-- Void requester chest size.
+		-- Time-out avant suppression de la map (en heure).
 		type = "int-setting",
 		name = ritnmods.teleport.defines.name.settings.clean,
 		setting_type = "runtime-global",

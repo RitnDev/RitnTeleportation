@@ -14,6 +14,7 @@ modules.teleporter =            require(ritnmods.teleport.defines.lib.teleporter
 
 -- Inclus les interactions avec les joueurs
 modules.player =                require(ritnmods.teleport.defines.lib.player) 
+modules.lobby =                 require(ritnmods.teleport.defines.lib.lobby) 
 
 -- Inclus les interactions avec les enemies
 modules.enemy =                 require(ritnmods.teleport.defines.lib.enemy)

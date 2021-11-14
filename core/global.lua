@@ -38,6 +38,8 @@ if not global.enemy then global.enemy = {
 }
 end
 if not global.settings then global.settings = {} end
+global.settings.surfaceMax = settings.global[ritnmods.teleport.defines.name.settings.surfaceMax].value
+
 if not global.migration then global.migration = false end
 
 global.generate_seed = settings.startup[ritnmods.teleport.defines.name.settings.generate_seed].value

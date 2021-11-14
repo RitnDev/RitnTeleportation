@@ -157,31 +157,25 @@ end
 
 
 -- Creation du Lobby d'un joueur
-local function createLobby(e)
-
-  local surface=e.surface
-  local area=e.area
-  local tv={}
-  local t={}
-  local tx
-  local base_tile=1
-
-  for x = area.left_top.x, area.right_bottom.x do 
-      for y= area.left_top.y, area.right_bottom.y do
-          if((x>-4 and x<3) and (y>-4 and y<3))then
-              tx=tx or {} table.insert(tx,{name="refined-concrete",position={x,y}})
-          else
-              local tile="out-of-map"
-              table.insert(t, {name=tile,position={x,y}}) tv[x]=tv[x] or {} tv[x][y]=true
-          end
-      end
+local function createLobby(LuaPlayer)
+  local prefix_lobby = ritnmods.teleport.defines.prefix.lobby
+  local lobby_name = prefix_lobby .. LuaPlayer.name
+  local LuaSurface = game.surfaces[lobby_name]
+  local tiles = {}
+  
+  -- creation de la surface lobby si elle n'existe pas déjà
+  if not LuaSurface then LuaSurface = game.create_surface(lobby_name) end
+  -- préparation de la téléportation
+  for x=-1,1 do
+    for y=-1,1 do
+      table.insert(tiles, {name = "lab-white", position = {x, y}})
+    end
   end
 
-  surface.destroy_decoratives{area=area}
-  if(tx)then surface.set_tiles(tx) end
-  surface.set_tiles(t)
-  for k,v in pairs(surface.find_entities_filtered{type="character",invert=true,area=area})do v.destroy{raise_destroy=true} end
-
+  LuaSurface.set_tiles(tiles) 
+  LuaPlayer.clear_items_inside()
+  LuaPlayer.teleport({0,0}, lobby_name)
+  LuaPlayer.character.active = false
 end
 
 
@@ -252,6 +246,7 @@ local function createSurface(LuaPlayer)
         -- Teleportation sur la surface du personnage.
         ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
         LuaPlayer.teleport({0,0}, origine)
+        LuaPlayer.character.active = true
         
         
         -- Add Crash site :

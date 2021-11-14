@@ -35,6 +35,7 @@ defines.lib = {
 
     player = modules .. "player",
     enemy = modules .. "enemy",
+    lobby = modules .. "lobby",
 }
 
 -- graphics
@@ -111,6 +112,7 @@ defines.name_prefix = "ritnmods-"
 defines.prefix = {
     name = "ritnmods-",
     enemy = "enemy~",
+    lobby = "lobby~",
 }
 
 -- Name and value
@@ -134,6 +136,7 @@ defines.name.settings = {
     teleporter_enable = defines.name_prefix .. "tp-teleporter-enable",
     restart = defines.name_prefix .. "tp-restart",
     clean = defines.name_prefix .. "tp-clean",
+    surfaceMax = defines.name_prefix .. "tp-surface-max",
     enemy = defines.name_prefix .. "tp-enemy-enable",
     show_research = defines.name_prefix .. "tp-show-research",
 }
@@ -149,6 +152,11 @@ defines.value.settings = {
         default_value = 0,
         minimum_value = 0,
         maximum_value = 1500,
+    },
+    surfaceMax = {
+        default_value = 10,
+        minimum_value = 1,
+        maximum_value = 30,
     },
     enemy = true,
 }

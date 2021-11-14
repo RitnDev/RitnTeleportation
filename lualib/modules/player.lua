@@ -129,8 +129,14 @@ end
 -- Nouveau joueur arrivant
 -- Créer une surface avec les paramètres enregistrés en map gen settings
 local function NewPlayerSurface(LuaPlayer)
-      -- Si le nb_forces atteint +61 les joueurs sont kick
-      if #game.forces < 63 then 
+
+      ritnlib.surface.createLobby(LuaPlayer)
+
+      -- activer le gui lobby ici
+
+
+      -- Si le nombre de surface est uniquement inférieur au max paramétrés.
+      if #global.teleport.surfaces < global.settings.surfaceMax then 
         -- Creation de la surface joueur
         ritnlib.surface.createSurface(LuaPlayer)
       else
@@ -255,6 +261,13 @@ local function on_runtime_mod_setting_changed(e)
   if setting_type == "runtime-per-user" then 
     if setting_name == ritnmods.teleport.defines.name.settings.enable_main_button then 
       ritnGui.menu.button_main_open(LuaPlayer)
+    end
+  end
+
+  if setting_type == "runtime-global" then 
+    if setting_name == ritnmods.teleport.defines.name.settings.surfaceMax then
+      local setting_value = settings.global[setting_name].value
+      global.settings.surfaceMax = setting_value
     end
   end
 

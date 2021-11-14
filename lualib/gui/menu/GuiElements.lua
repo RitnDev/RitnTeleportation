@@ -134,6 +134,7 @@ local function create_gui_menu(LuaPlayer)
   local left = modGui.get_frame_flow(LuaPlayer)
   local content = {}
   local LuaSurface = LuaPlayer.surface
+  if global.teleport.surfaces[LuaSurface.name] == nil then return end -- correctif 1.8.1
   if global.teleport.surfaces[LuaSurface.name].name == nil then return end
   local finish = global.teleport.surfaces[LuaSurface.name].finish
   local admin = LuaPlayer.admin
