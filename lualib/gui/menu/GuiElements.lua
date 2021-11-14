@@ -303,7 +303,7 @@ local function create_gui_menu(LuaPlayer)
       GuiElement.Pane
     )
     ritnlib.styles.ritn_scroll_pane(content.Pane.style)
-    -- list_tp
+    -- list_clean
     content.list = ritnlib.gui.createList(
       content.Pane,
       GuiElement.list

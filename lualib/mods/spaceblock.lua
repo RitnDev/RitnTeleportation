@@ -6,16 +6,16 @@ module.events = {}
 -- Fonction utilisé dans le mod spaceblock pour générer la surface en landfill
 local function spaceblock(ev)
 
-  local s=ev.surface
-  local a=ev.area
+  local surface=ev.surface
+  local area=ev.area
   local tv={}
   local t={}
   local tx
   local base_tile=1
 
-  for x=a.left_top.x,a.right_bottom.x do
+  for x = area.left_top.x, area.right_bottom.x do
       
-      for y=a.left_top.y,a.right_bottom.y do
+      for y= a.left_top.y, area.right_bottom.y do
 
           if((x>-9 and x<8) and (y>-9 and y<8))then
               tx=tx or {} table.insert(tx,{name="landfill",position={x,y}})
@@ -51,12 +51,13 @@ local function spaceblock(ev)
 
   end
 
-  s.destroy_decoratives{area=a}
-  if(tx)then s.set_tiles(tx) end
-  s.set_tiles(t)
-  for k,v in pairs(s.find_entities_filtered{type="character",invert=true,area=a})do v.destroy{raise_destroy=true} end
+  surface.destroy_decoratives{area=area}
+  if(tx)then surface.set_tiles(tx) end
+  surface.set_tiles(t)
+  for k,v in pairs(surface.find_entities_filtered{type="character",invert=true,area=area})do v.destroy{raise_destroy=true} end
 
 end
+
 
 
 -- Génère une surface type "Spaceblock" si le mod est actif

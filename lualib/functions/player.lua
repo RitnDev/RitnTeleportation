@@ -42,6 +42,7 @@ local function is_died(LuaPlayer)
   return false
 end
 
+
 ----------------------------
 -- Chargement des fonctions
 local flib = {}

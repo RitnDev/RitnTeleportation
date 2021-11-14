@@ -198,7 +198,7 @@ local function load(LuaPlayer, invGlobal)
 end
 
 
--- fonction non local, renvoie le curseur dans l'invenataire principale
+-- fonction non local, renvoie le curseur dans l'inventaire principale
 -- selon un nom de l'item et la surface où le joueur se trouve.
 local function clearCursor(LuaPlayer, itemName)
   if LuaPlayer.surface.name == LuaPlayer.name then return end

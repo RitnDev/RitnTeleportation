@@ -82,15 +82,32 @@ local function clean(player_name, LuaPlayer)
             end
             game.delete_surface(player_name) 
         end
+
+        --Supression des forces (+ force "enemy" correspondant)
         if game.forces[player_name] then game.merge_forces(game.forces[player_name], "player") end
         if game.forces[prefix_enemy .. player_name] then game.merge_forces(game.forces[prefix_enemy .. player_name], "enemy") end
+
+        -- Add 1.8.0
+        if global.teleport.surfaces[player_name].origine then
+            for _,player in pairs(global.teleport.surfaces[player_name].origine) do 
+                global.teleport.players[player] = nil
+            end
+        end
+
+        -- Supression de la structure de données
         global.teleport.surfaces[player_name] = nil
         global.teleport.surface_value = global.teleport.surface_value - 1
-        local players_name = player_name
-        game.kick_player(players_name, "clean map")
-        local tab_p = {}
-        table.insert(tab_p, players_name)
-        game.remove_offline_players(tab_p)
+
+        -- verification que le joueur existe avant de le KICK !!!
+        if game.players[player_name] then
+            local players_name = player_name
+            game.kick_player(players_name, "clean map")
+        
+            local tab_p = {}
+            table.insert(tab_p, players_name)
+            game.remove_offline_players(tab_p)
+        end
+        
         if LuaPlayer then 
             LuaPlayer.print("Clean OK for : " .. player_name) 
         end
@@ -104,6 +121,9 @@ local function restart(LuaPlayer)
     local surface = LuaPlayer.surface.name
     if LuaPlayer.name ~= surface then return end
     if surface == nil then return end
+
+    -- modif 1.8.0
+    local tab_players = {}
 
     if global.teleport.surfaces[surface] then
         if game.surfaces[surface] then 
@@ -122,7 +142,16 @@ local function restart(LuaPlayer)
                 print(">> Restart impossible")
                 return 
             end
-            LuaPlayer.teleport({0,0},"nauvis")
+            
+            -- modif 1.8.0
+            for i,player in pairs(global.teleport.surfaces[surface].origine) do 
+                global.teleport.players[player] = nil
+
+                -- a modifié par lobby ici
+                game.players[player].teleport({i-1,i-1}, "nauvis")
+                table.insert(tab_players, player)
+            end
+            
             game.delete_surface(surface) 
         end
         if game.forces[surface] then game.merge_forces(game.forces[surface], "player") end
@@ -131,7 +160,13 @@ local function restart(LuaPlayer)
         print(">> RESTART OK for : " .. LuaPlayer.name)
     end
 
-    game.kick_player(LuaPlayer.name)
+    -- modif 1.8.0
+    if #tab_players >= 1 then
+        for i=1, #tab_players do 
+            game.kick_player(tab_players[i])
+        end
+    end
+    
     
 end
 
@@ -212,6 +247,33 @@ local function remove_settings_player(LuaPlayer, setting, value)
 end
 
 
+-- Recupération des settings de la map (nauvis)
+local function mapGeneratorNewSeed()
+
+    if not global.map_gen_settings.seed then 
+        game.map_settings.enemy_evolution.time_factor = 0   -- add 1.5.7
+        global.map_gen_settings = game.surfaces.nauvis.map_gen_settings
+        --add 1.5.0
+        if global.map_gen_settings["autoplace_controls"]["enemy-base"].size == 0 then 
+        global.enemy.value = false
+        else
+        global.enemy.value = true
+        end
+    end
+
+    local map_gen = global.map_gen_settings
+
+    if global.generate_seed == false then
+        -- Change la seed
+        map_gen.seed = math.random(1,4294967290)
+    end
+
+  return map_gen
+
+end
+
+
+
 ----------------------------
 -- Chargement des fonctions
 local flib = {}
@@ -222,6 +284,7 @@ flib.ritnPrint = ritnPrint
 flib.ritnLog = ritnLog
 flib.clean = clean
 flib.restart = restart
+flib.mapGeneratorNewSeed = mapGeneratorNewSeed
 flib.exception = {
     add = add_exception,
     remove = remove_exception,

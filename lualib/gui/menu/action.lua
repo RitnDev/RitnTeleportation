@@ -127,16 +127,19 @@ local function button_valid_tp(LuaPlayer)
         LuaPlayer.teleport({0,0}, surface)
         ritnGui.menu.frame_menu_close(LuaPlayer)   
     else
-        if surface == "nauvis" then 
+        --if surface == "nauvis" then 
             if not global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] then 
                 global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init() 
             end
             ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name])
             LuaPlayer.print("TP : " .. LuaPlayer.surface.name .. " -> " .. surface)
             print(">> ADMIN TP (" .. LuaPlayer.name .. ") : " .. LuaPlayer.surface.name .. " -> " .. surface)
+            -- add 1.8.0
+            global.teleport.players[LuaPlayer.name].origine = surface
+
             LuaPlayer.teleport({0,0}, surface)
             ritnGui.menu.frame_menu_close(LuaPlayer)
-        end
+        --end
     end
 end
 

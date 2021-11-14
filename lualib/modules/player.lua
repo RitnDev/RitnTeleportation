@@ -1,15 +1,11 @@
 -- INIT
-local util =          require(ritnmods.teleport.defines.mods.vanilla.lib.util)
-local crash_site =    require(ritnmods.teleport.defines.mods.vanilla.lib.CrashSite)
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
 ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
-ritnlib.player =      require(ritnmods.teleport.defines.functions.player)
 ritnlib.portal =      require(ritnmods.teleport.defines.functions.portal)
 ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
 ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
 ritnlib.surface =     require(ritnmods.teleport.defines.functions.surface)
-ritnlib.seablock =    require(ritnmods.teleport.defines.mods.seablock)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.menu =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
@@ -29,9 +25,10 @@ local function on_player_changed_surface(e)
   local oldSurface = game.surfaces[e.surface_index]
 
   if LuaPlayer.force.name ~= "guides" then
-    if game.players[surface] then
+    if game.forces[surface] then --modif 1.8.0 -> old : game.players[surface]
       LuaPlayer.force = surface 
     else
+      -- prendre en charge le lobby ici
       if surface == "nauvis" then 
         LuaPlayer.force = "player" 
       end
@@ -131,93 +128,15 @@ end
 ------------------------------------------------------------------------
 -- Nouveau joueur arrivant
 -- Créer une surface avec les paramètres enregistrés en map gen settings
-local function on_player_created(LuaPlayer)
-      
+local function NewPlayerSurface(LuaPlayer)
       -- Si le nb_forces atteint +61 les joueurs sont kick
       if #game.forces < 63 then 
-        
-        -- Recupération des settings de la map (nauvis)
-        if not global.map_gen_settings.seed then 
-          game.map_settings.enemy_evolution.time_factor = 0   -- add 1.5.7
-          global.map_gen_settings = game.surfaces.nauvis.map_gen_settings
-          --add 1.5.0
-          if global.map_gen_settings["autoplace_controls"]["enemy-base"].size == 0 then 
-            global.enemy.value = false
-          else
-            global.enemy.value = true
-          end
-        end
-  
-        local map_gen = global.map_gen_settings
-
-        if global.generate_seed == false then
-          -- Change la seed
-          map_gen.seed = math.random(1,4294967290)
-        end
-
-        local LuaSurface = game.create_surface(LuaPlayer.name, map_gen)  
-        local tiles = {}
-        
-        for x=-1,1 do
-          for y=-1,1 do
-            table.insert(tiles, {name = "lab-white", position = {x, y}})
-          end
-        end
-        
-        LuaSurface.set_tiles(tiles) 
-        local LuaForce = game.create_force(LuaPlayer.name)
-        LuaForce.reset()
-        LuaForce.research_queue_enabled = true
-        LuaForce.chart(LuaSurface, {{x = -100, y = -100}, {x = 100, y = 100}})
-        if game.active_mods["SeaBlock"] then  
-          ritnlib.seablock.startMap(LuaSurface)
-        end
-        
-        for k,v in pairs(game.forces) do
-          if v.name ~= "enemy" and v.name ~= "neutral" then
-            LuaForce.set_friend(v.name,true)
-            game.forces["player"].set_friend(LuaForce.name, true)
-          end
-        end
-  
-        for r_name,recipe in pairs(LuaPlayer.force.recipes) do
-          LuaForce.recipes[r_name].enabled = recipe.enabled
-        end
-
-        --Chargement des items
-        LuaPlayer.clear_items_inside()
-        local items_start_variantes = 1
-        -- Variantes avec SpaceBlock
-        if game.active_mods["spaceblock"] then
-          items_start_variantes = 2
-        end
-        if game.active_mods["SeaBlock"] then
-          items_start_variantes = 3
-        end
-        ritnlib.player.give_start_item(LuaPlayer, items_start_variantes)
-        
-        ritnlib.surface.generateSurface(game.surfaces.nauvis)
-        global.teleport.surfaces["nauvis"].exception = true
-        global.teleport.surfaces["nauvis"].map_used = true
-        ritnlib.surface.generateSurface(LuaSurface)
-        global.teleport.surfaces[LuaSurface.name].exception = LuaPlayer.admin
-        global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
-  
-        -- Teleportation sur la surface du personnage.
-        ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
-        LuaPlayer.teleport({0,0}, LuaSurface.name)
-        
-        -- Add Crash site :
-        if items_start_variantes <= 1 then   
-          crash_site.create_crash_site(LuaSurface, {-5,-6}, util.copy(global.crashed_ship_items), util.copy(global.crashed_debris_items))
-          util.remove_safe(LuaPlayer, global.crashed_ship_items)
-          util.remove_safe(LuaPlayer, global.crashed_debris_items)
-        end
-        
+        -- Creation de la surface joueur
+        ritnlib.surface.createSurface(LuaPlayer)
       else
         game.kick_player(LuaPlayer.name, ritnmods.teleport.defines.name.caption.msg.serveur_full)
       end
-  end
+end
 
 
   
@@ -227,6 +146,8 @@ local function on_player_created(LuaPlayer)
 local function on_player_joined_game(e)
     local LuaPlayer = game.players[e.player_index]
     local LuaSurface = LuaPlayer.surface
+
+
     -- player is home
     if LuaPlayer.name == LuaSurface.name then
   
@@ -241,25 +162,16 @@ local function on_player_joined_game(e)
       -- No characters
       if LuaPlayer.character == nil then return end
       
-      -- new player created
-      if not global.teleport.surfaces[LuaPlayer.name] then
+      -- new player created ou restart
+      if not global.teleport.surfaces[LuaPlayer.name] 
+       or global.teleport.surfaces[LuaPlayer.name].name == nil then
         print(">> debug : not surface : create")
         if LuaSurface.name == "nauvis" then
-          on_player_created(LuaPlayer)
+          NewPlayerSurface(LuaPlayer)
           return
         end
       else
         print(">> debug : surface exist : " .. LuaPlayer.name)
-      end
-      -- reactive player
-      if global.teleport.surfaces[LuaPlayer.name].name == nil then 
-        print(">> debug : valid false : create")
-        if LuaSurface.name == "nauvis" then
-          on_player_created(LuaPlayer)
-          return
-        end
-      else
-        print(">> debug : valid true : " .. LuaPlayer.name)
       end
    
       -- player is no home
@@ -303,13 +215,13 @@ local function on_player_changed_position(e)
   
           for _,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
             if portal.teleport ~= 0 then
-  
-                local p_pos = LuaPlayer.position
-                local et_pos = portal.position
                   
-                if (p_pos.x >= (et_pos.x - 1) and p_pos.x <= (et_pos.x + 1)) and (p_pos.y >= (et_pos.y - 1) and p_pos.y <= (et_pos.y + 1)) then
+                if (LuaPlayer.position.x >= (portal.position.x - 1) 
+                  and LuaPlayer.position.x <= (portal.position.x + 1)) 
+                  and (LuaPlayer.position.y >= (portal.position.y - 1) 
+                  and LuaPlayer.position.y <= (portal.position.y + 1)) then
                       
-                  local position = et_pos
+                  local position = portal.position
                   local id = ritnlib.portal.getId(LuaSurface, position)
                   local LuaGui = LuaPlayer.gui.screen[ritnmods.teleport.defines.name.gui.main_portal]
                       

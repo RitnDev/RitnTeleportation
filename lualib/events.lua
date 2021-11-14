@@ -87,6 +87,42 @@ end)
 -- Add commands
 ------------------------------------------------------------------------------------------------------------------------
 
+-- re-Add 1.8.0
+commands.add_command("clean", "<player>", 
+  function (e)
+
+    local autorize = false
+    local is_player = false
+
+    if e.player_index then 
+      local LuaPlayer = game.players[e.player_index]
+      if LuaPlayer.admin or LuaPlayer.name == "Ritn" then
+        autorize = true
+        is_player = true
+      end
+    else 
+      autorize = true
+    end
+    
+    if e.parameter ~= nil then
+      local parametre = e.parameter
+
+      if global.teleport.surfaces[parametre] then 
+        if autorize then 
+          if is_player then
+            -- by player : admin
+            events.utils.clean(parametre, game.players[e.player_index])
+          else 
+            -- by server
+            events.utils.clean(parametre)
+          end
+        end
+      end
+    end
+
+  end
+)
+
 commands.add_command("exception", "<add/remove/view> <player>", 
   function (e)
     local LuaPlayer = game.players[e.player_index]

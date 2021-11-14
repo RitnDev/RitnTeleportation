@@ -188,10 +188,10 @@ end
 -- Téléportation entre portail
 local function teleport(LuaSurface, id, LuaPlayer, instantTP)
   
-  if not id then return end
-  if LuaPlayer.driving then return end
+  if not id then ritnlib.utils.ritnLog(">> (debug) - portal teleport - not id") return end
+  if LuaPlayer.driving then ritnlib.utils.ritnLog(">> (debug) - portal teleport - driving") return end
   -- No characters
-  if LuaPlayer.character == nil then return end
+  if LuaPlayer.character == nil then ritnlib.utils.ritnLog(">> (debug) - portal teleport - no character")  return end
   
   -- Via commande ADMIN (pas d'attente)
   local instant = false
@@ -202,7 +202,10 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
     if global.teleport.surfaces[LuaSurface.name].players then 
       if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name] then 
         if instant == false then
-          if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name].tp == true then return end
+          if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name].tp == true then 
+            ritnlib.utils.ritnLog(">> (debug) - portal teleport - waiting tp ...") 
+            return 
+          end
         end
       end
     end
@@ -216,25 +219,32 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       if global.teleport.surfaces[LuaSurface_dest.name] then
         if getValue(LuaSurface_dest) ~= 0 then
           
-          local pos2 = nil
+          -- Recuperation du portail de destination (position et ID)
+          local portal_position = nil
 
+          -- recuperation de la position du portail destination
           for id, portal in pairs(global.teleport.surfaces[LuaSurface_dest.name].portals) do
               if portal.dest == LuaSurface.name then
-                  pos2 = portal.position
+                portal_position = portal.position
               end
           end
 
-          if pos2 == nil then
+          if portal_position == nil then
             LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.dest_not_find)
               return
           end
 
-          local id2 = getId(LuaSurface_dest, pos2)
+          -- Recuperation de l'ID du portail destination
+          local id_portal = getId(LuaSurface_dest, portal_position)
 
-          if id2 == nil then
+          if id_portal == nil then
             LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.dest_not_find)
           else
-              if LuaPlayer.name == LuaSurface.name or LuaPlayer.name == LuaSurface_dest.name then
+
+              local origine = global.teleport.players[LuaPlayer.name].origine
+
+              -- Verification que les personnes sont autorisés à passé le portail
+              if origine == LuaSurface.name or origine == LuaSurface_dest.name then
                 
                 -- fermeture de la page Namer Teleporter
                 local guiTeleport = LuaPlayer.gui.screen[ritnmods.teleport.defines.name.gui.NamerMain]
@@ -246,7 +256,7 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                 end
                 -- fermeture de la fenetre des teleporteurs
                 ritnGui.remote.close(LuaPlayer)
-                  print(">> " .. LuaPlayer.name .." -> " .. LuaSurface_dest.name)
+                  print(">> " .. origine .." -> " .. LuaSurface_dest.name)
 
                   -- 1.6.1 ----
                   local statut, errorMsg = pcall(function() 
@@ -262,10 +272,10 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                   -------------
                   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
                   if LuaPlayer.name == LuaSurface_dest.name then
-                    LuaPlayer.teleport({pos2.x+1.1,pos2.y+1.1},LuaSurface_dest)
+                    LuaPlayer.teleport({portal_position.x+1.1, portal_position.y+1.1},LuaSurface_dest)
                     ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   else
-                    LuaPlayer.teleport({pos2.x-1.1,pos2.y+1.1},LuaSurface_dest)
+                    LuaPlayer.teleport({portal_position.x-1.1, portal_position.y+1.1},LuaSurface_dest)
                     ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   end
               else
@@ -281,6 +291,7 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       end
       
   else
+    -- Aucune destination lié
     LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.not_link)
     if Luasurface_dest ~= ritnmods.teleport.defines.value.portal_not_link then 
       setDestinationId(LuaSurface, id, ritnmods.teleport.defines.value.portal_not_link)
