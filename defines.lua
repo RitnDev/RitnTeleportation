@@ -29,6 +29,7 @@ defines.lib = {
     gui_menu = modules .. "gui_menu",
     gui_teleporter = modules .. "gui_teleporter",
     gui_teleporter_remote = modules .. "gui_teleporter_remote",
+    gui_lobby = modules .. "gui_lobby",
 
     portal = modules .. "portal",
     teleporter = modules .. "teleporter",
@@ -103,6 +104,11 @@ defines.gui.menu = {
     action = defines.lib.gui .. "menu/action",
     GuiElements = defines.lib.gui .. "menu/GuiElements",
 }
+defines.gui.lobby = {
+    action = defines.lib.gui .. "lobby/action",
+    GuiElements = defines.lib.gui .. "lobby/GuiElements",
+}
+
 -- version of Event-Listener
 defines.event_listener = core .. "event-listener"
 
@@ -248,6 +254,7 @@ defines.name.gui = {
         main_menu = "main_menu-",
         surfaces_menu = "surfaces_menu-",
         restart = "restart-",
+        lobby = "lobby-"
     },
     
 }

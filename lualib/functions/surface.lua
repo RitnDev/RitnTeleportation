@@ -93,6 +93,10 @@ local function generateSurface(LuaSurface)
     if global.teleport.surfaces["nauvis"] then return end
   end
 
+  if not global.teleport.surfaces[LuaSurface.name] then
+    global.teleport.surface_value = global.teleport.surface_value + 1
+  end
+
   global.teleport.surfaces[LuaSurface.name] = {
     name = LuaSurface.name,
     exception = false,
@@ -111,10 +115,6 @@ local function generateSurface(LuaSurface)
     players = {},
     finish = settings.startup[ritnmods.teleport.defines.name.settings.restart].value,
   }
-
-  if not global.teleport.surfaces[LuaSurface.name] then
-    global.teleport.surface_value = global.teleport.surface_value + 1
-  end
 
   print(">> (debug) - function : generateSurface ok !")
 end
@@ -214,19 +214,6 @@ local function createSurface(LuaPlayer)
           LuaForce.recipes[r_name].enabled = recipe.enabled
         end
 
-        --Chargement des items
-        LuaPlayer.clear_items_inside()
-        local items_start_variantes = 1
-        -- Variantes avec SpaceBlock
-        if game.active_mods["spaceblock"] then
-          items_start_variantes = 2
-        end
-        if game.active_mods["SeaBlock"] then
-          items_start_variantes = 3
-        end
-        ritnlib.player.give_start_item(LuaPlayer, items_start_variantes)
-
-
         -- Creation de la structure de map dans les données
         generateSurface(game.surfaces.nauvis)
         global.teleport.surfaces["nauvis"].exception = true
@@ -247,6 +234,18 @@ local function createSurface(LuaPlayer)
         ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
         LuaPlayer.teleport({0,0}, origine)
         LuaPlayer.character.active = true
+
+        --Chargement des items
+        LuaPlayer.clear_items_inside()
+        local items_start_variantes = 1
+        -- Variantes avec SpaceBlock
+        if game.active_mods["spaceblock"] then
+          items_start_variantes = 2
+        end
+        if game.active_mods["SeaBlock"] then
+          items_start_variantes = 3
+        end
+        ritnlib.player.give_start_item(LuaPlayer, items_start_variantes)
         
         
         -- Add Crash site :

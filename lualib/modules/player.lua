@@ -12,6 +12,7 @@ ritnGui.menu =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
 ritnGui.remote =      require(ritnmods.teleport.defines.gui.remote.GuiElements)
 ritnGui.teleporter =  require(ritnmods.teleport.defines.gui.teleporter.GuiElements)
 ritnGui.portal =      require(ritnmods.teleport.defines.gui.portal.GuiElements)
+ritnGui.lobby =       require(ritnmods.teleport.defines.gui.lobby.GuiElements)
 ---------------------------------------------------------------------------------------------
 local module = {}
 module.events = {}
@@ -133,7 +134,7 @@ local function NewPlayerSurface(LuaPlayer)
       ritnlib.surface.createLobby(LuaPlayer)
 
       -- activer le gui lobby ici
-
+      --ritnGui.lobby.open(LuaPlayer)
 
       -- Si le nombre de surface est uniquement inférieur au max paramétrés.
       if #global.teleport.surfaces < global.settings.surfaceMax then 
@@ -153,41 +154,29 @@ local function on_player_joined_game(e)
     local LuaPlayer = game.players[e.player_index]
     local LuaSurface = LuaPlayer.surface
 
+    -- No characters
+    if LuaPlayer.character == nil then return end
+          
+    -- le joueur n'existe pas dans la structure
+    if not global.teleport.players[LuaPlayer.name] then 
+      print(">> debug : not surface : create")
+      NewPlayerSurface(LuaPlayer)
+      return
+    -- le joueur n'est plus lié à une map d'origine
+    elseif global.teleport.players[LuaPlayer.name].origine == "" then
+      print(">> debug : not surface : create")
+      NewPlayerSurface(LuaPlayer)
+      return
+    end
+
+    local surfaceOrigineName = global.teleport.players[LuaPlayer.name].origine
 
     -- player is home
-    if LuaPlayer.name == LuaSurface.name then
-  
-      if not global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] then
-        game.kick_player(LuaPlayer, "Fail to load datas, please retry !")
-        game.remove_offline_players(LuaPlayer)
-      end
+    if  surfaceOrigineName == LuaSurface.name then
       ritnlib.surface.addPlayer(LuaPlayer)
-      ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
-    else
-
-      -- No characters
-      if LuaPlayer.character == nil then return end
-      
-      -- new player created ou restart
-      if not global.teleport.surfaces[LuaPlayer.name] 
-       or global.teleport.surfaces[LuaPlayer.name].name == nil then
-        print(">> debug : not surface : create")
-        if LuaSurface.name == "nauvis" then
-          NewPlayerSurface(LuaPlayer)
-          return
-        end
-      else
-        print(">> debug : surface exist : " .. LuaPlayer.name)
-      end
-   
-      -- player is no home
-      LuaPlayer.teleport({0,0}, LuaPlayer.name)
-  
-      if not global.teleport.surfaces[LuaPlayer.name].inventories[LuaPlayer.name] then
-        game.kick_player(LuaPlayer, "Fail to load datas, please retry !")
-        game.remove_offline_players(LuaPlayer)
-      end
-  
+      ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[surfaceOrigineName].inventories[LuaPlayer.name])
+    else -- player is no home
+      LuaPlayer.teleport({0,0}, global.teleport.players[LuaPlayer.name].origine)
     end
 end
   

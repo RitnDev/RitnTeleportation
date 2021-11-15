@@ -199,7 +199,11 @@ local function create_gui(LuaSurface, LuaPlayer, LuaEntity)
 
 
     for k,surface in pairs(game.surfaces) do
-      if surface.name ~= "nauvis" and surface ~= LuaSurface.name and surface.name ~= LuaEntity.surface.name and ritnlib.portal.getValue(surface) >= 1 then
+      if surface.name ~= "nauvis" 
+        and surface ~= LuaSurface.name 
+        and surface.name ~= LuaEntity.surface.name 
+        and ritnlib.portal.getValue(surface) >= 1 then
+          
         local exist = false
         for x,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
             if surface.name == portal.dest then

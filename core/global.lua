@@ -27,7 +27,6 @@ if not global.teleport then global.teleport =
     surfaces = {},
     players = {},
     player_died = {},
-    restart_list = {},
     surface_value = 0,
   }
 end

@@ -30,7 +30,10 @@ local function give_start_item(LuaPlayer, vanilla)
   else
     LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
   end
-  LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
+
+  if game.is_multiplayer() then
+    LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
+  end
 
 end
 

@@ -152,11 +152,12 @@ local function restart(LuaPlayer)
                 table.insert(tab_players, player)
             end
             
-            game.delete_surface(surface) 
+            game.delete_surface(surface)
         end
         if game.forces[surface] then game.merge_forces(game.forces[surface], "player") end
         if game.forces[prefix_enemy .. surface] then game.merge_forces(game.forces[prefix_enemy .. surface], "enemy") end
-        global.teleport.surfaces[surface] = {}
+        global.teleport.surfaces[surface] = nil
+        global.teleport.surface_value = global.teleport.surface_value - 1
         print(">> RESTART OK for : " .. LuaPlayer.name)
     end
 

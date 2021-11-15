@@ -124,7 +124,9 @@ end
 
 -- getIdValue
 local function getIdValue(LuaSurface)
-  return global.teleport.surfaces[LuaSurface.name].value.id_portal
+  if global.teleport.surfaces[LuaSurface.name] then
+    return global.teleport.surfaces[LuaSurface.name].value.id_portal
+  else return -1 end -- maj 1.8.2
 end
 
 -- setIdValue
@@ -136,7 +138,9 @@ end
 
 -- getPortalValue
 local function getValue(LuaSurface)
-  return global.teleport.surfaces[LuaSurface.name].value.portal
+  if global.teleport.surfaces[LuaSurface.name] then
+    return global.teleport.surfaces[LuaSurface.name].value.portal
+  else return -1 end -- maj 1.8.2
 end
 
 -- setPortalValue

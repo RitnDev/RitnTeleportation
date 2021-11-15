@@ -6,7 +6,7 @@ ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
 
 -- Properties
 local visible = false
---local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
+local prefix_lobby = ritnmods.teleport.defines.name.gui.prefix.lobby
 --local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
 --local prefix_surfaces_menu = ritnmods.teleport.defines.name.gui.prefix.surfaces_menu
 --local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
@@ -25,30 +25,36 @@ local function create_gui_lobby(LuaPlayer)
   -- flow commun (Menu/Surfaces)
   content.main = ritnlib.gui.createFlowH(
     center,
-    GuiElement.flow_common
+    prefix_lobby .. ritnmods.teleport.defines.name.gui.MainFlow
   )
   
   -- frame Menu
-  content.frame_menu = ritnlib.gui.createFrame(
+  content.frame_lobby = ritnlib.gui.createFrame(
     content.main,
-    GuiElement.frame_menu.name,
-    GuiElement.frame_menu.caption
+    "ritn-frame-lobby",
+    ""
   )
-  ritnlib.styles.ritn_frame_style(content.frame_menu.style)
-
-  -- flow_restart
-  content.flow_restart = ritnlib.gui.createFlowV(
-    content.frame_menu,
-    GuiElement.flow_restart,
-    finish
-  )
+  ritnlib.styles.ritn_frame_style(content.frame_lobby.style)
   
-  -- button restart
-  content.button_restart = ritnlib.gui.createButton(
-    content.flow_restart,
-    GuiElement.button_restart.name,
-    GuiElement.button_restart.caption
+  -- button creation de map
+  content.button_create = ritnlib.gui.createButton(
+    content.frame_lobby,
+    prefix_lobby .. "button-create",
+    "Créer sa map"
   )
+  ritnlib.styles.ritn_normal_button(content.button_create.style)
+  content.button_create.style.minimal_height = 35
+
+  -- button rejoindre une map
+  content.button_join = ritnlib.gui.createButton(
+    content.frame_lobby,
+    prefix_lobby .. "button-join",
+    "Rejoindre une map"
+  )
+  ritnlib.styles.ritn_normal_button(content.button_join.style)
+  content.button_join.style.minimal_height = 35
+
+--[[
 
   -- flow_admin
   content.flow_admin = ritnlib.gui.createFlowV(
@@ -221,6 +227,8 @@ local function create_gui_lobby(LuaPlayer)
     )
     ritnlib.styles.ritn_small_button(content.button_valid.style)
 
+]]
+
 end
 
 
@@ -233,7 +241,7 @@ end
 -- close gui
 local function frame_lobby_close(LuaPlayer)
   local center = LuaPlayer.gui.center
-  --local frame_lobby = center[prefix_lobby .. ritnmods.teleport.defines.name.gui.lobby.flow_common]
+  local frame_lobby = center[prefix_lobby .. ritnmods.teleport.defines.name.gui.MainFlow]
 
   if frame_lobby then 
     frame_lobby.destroy()
@@ -249,7 +257,7 @@ end
 
 
 ------------------------------
-luaGui.open = frame_menu_open
-luaGui.close = frame_menu_close
+luaGui.open = frame_lobby_open
+luaGui.close = frame_lobby_close
 
 return luaGui

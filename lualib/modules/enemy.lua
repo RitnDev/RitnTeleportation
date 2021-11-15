@@ -16,7 +16,9 @@ local function on_chunk_generated(e)
     local area = e.area
     local position = e.position
     local LuaSurface = e.surface
+
     if LuaSurface.name == "nauvis" then return end
+    if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.2
     if global.enemy.setting == false then return end
     if global.enemy.value == false then return end
 
@@ -32,23 +34,22 @@ local function on_player_changed_surface(e)
     local LuaPlayer = game.players[e.player_index]
     local LuaSurface = LuaPlayer.surface
 
+    if LuaSurface.name == "nauvis" then return end
+    if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.2
     if global.enemy.setting == false then return end
     if global.enemy.value == false then return end
 
-    if LuaSurface.name ~= "nauvis" then
+    local force_name = prefix_enemy .. LuaSurface.name
 
-        local force_name = prefix_enemy .. LuaSurface.name
-
-        if not game.forces[force_name] then
-            local LuaForce = game.create_force(force_name)
-            LuaForce.reset()
-            LuaForce.reset_evolution()
-            LuaForce.ai_controllable = true
-            LuaForce.set_cease_fire("enemy", true)
-            game.forces["enemy"].set_cease_fire(LuaForce, true)
-        end
-
+    if not game.forces[force_name] then
+        local LuaForce = game.create_force(force_name)
+        LuaForce.reset()
+        LuaForce.reset_evolution()
+        LuaForce.ai_controllable = true
+        LuaForce.set_cease_fire("enemy", true)
+        game.forces["enemy"].set_cease_fire(LuaForce, true)
     end
+
 end
 
 
