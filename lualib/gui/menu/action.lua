@@ -16,6 +16,7 @@ local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
 local action = {
     [ritnmods.teleport.defines.name.gui.menu.button_main] = {},
     [ritnmods.teleport.defines.name.gui.menu.button_restart] = {},
+    [ritnmods.teleport.defines.name.gui.menu.button_exclusion] = {},
     [ritnmods.teleport.defines.name.gui.menu.button_tp] = {},
     [ritnmods.teleport.defines.name.gui.menu.button_clean] = {},
     [ritnmods.teleport.defines.name.gui.menu.button_close] = {},
@@ -81,6 +82,17 @@ local function button_restart(LuaPlayer)
     ritnGui.menu.frame_restart_show(LuaPlayer)
 end
 
+
+-- Action du bouton Exclure - add 1.8.3
+local function button_exclusion(LuaPlayer)
+    local LuaGui = returnElement(LuaPlayer, "menu")
+    local frame_restart = returnElement(LuaPlayer, "frame_restart")
+    if frame_restart then return end
+
+
+end
+
+
 -- Action du bouton /tp
 local function button_tp(LuaPlayer)
     local frame_surfaces = returnElement(LuaPlayer, "frame_surfaces")
@@ -117,7 +129,8 @@ local function button_valid_tp(LuaPlayer)
     if index == nil or index == 0 then return end
     local surface = returnElement(LuaPlayer, "list_tp").get_item(index)
     if surface == nil then return end 
-    if game.players[surface] then
+
+    if global.teleport.surfaces[surface] then
         if not global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] then 
             global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init() 
         end
@@ -126,20 +139,6 @@ local function button_valid_tp(LuaPlayer)
         print(">> ADMIN TP (" .. LuaPlayer.name .. ") : " .. LuaPlayer.surface.name .. " -> " .. surface)
         LuaPlayer.teleport({0,0}, surface)
         ritnGui.menu.frame_menu_close(LuaPlayer)   
-    else
-        --if surface == "nauvis" then 
-            if not global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] then 
-                global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init() 
-            end
-            ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name])
-            LuaPlayer.print("TP : " .. LuaPlayer.surface.name .. " -> " .. surface)
-            print(">> ADMIN TP (" .. LuaPlayer.name .. ") : " .. LuaPlayer.surface.name .. " -> " .. surface)
-            -- add 1.8.0
-            global.teleport.players[LuaPlayer.name].origine = surface
-
-            LuaPlayer.teleport({0,0}, surface)
-            ritnGui.menu.frame_menu_close(LuaPlayer)
-        --end
     end
 end
 
@@ -158,10 +157,10 @@ end
 local function button_valid_restart(LuaPlayer)
     ritnGui.menu.frame_restart_close(LuaPlayer)
 
-    if not game.is_multiplayer() then 
-        LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.local_party)
-        return 
-    end
+    --if not game.is_multiplayer() then 
+        --LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.local_party)
+        --return 
+    --end
     ritnlib.utils.restart(LuaPlayer)
 end
 
@@ -222,6 +221,7 @@ end
 -- Tableau de fonction : permet d'appeler la fonction correspondant au bouton
 action[ritnmods.teleport.defines.name.gui.menu.button_main] = button_main
 action[ritnmods.teleport.defines.name.gui.menu.button_restart] = button_restart
+action[ritnmods.teleport.defines.name.gui.menu.button_exclusion] = button_exclusion
 action[ritnmods.teleport.defines.name.gui.menu.button_tp] = button_tp
 action[ritnmods.teleport.defines.name.gui.menu.button_clean] = button_clean
 action[ritnmods.teleport.defines.name.gui.menu.button_close] = button_close

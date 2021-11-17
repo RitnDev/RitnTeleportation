@@ -24,6 +24,7 @@ modules.gui_portal =            require(ritnmods.teleport.defines.lib.gui_portal
 modules.gui_teleporter =        require(ritnmods.teleport.defines.lib.gui_teleporter)             
 modules.gui_teleporter_remote = require(ritnmods.teleport.defines.lib.gui_teleporter_remote)
 modules.gui_menu =              require(ritnmods.teleport.defines.lib.gui_menu)
+modules.gui_lobby =              require(ritnmods.teleport.defines.lib.gui_lobby)
 
 ------------------------------------------------------------------------------
 return modules

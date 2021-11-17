@@ -147,6 +147,21 @@ local function createEmptyWidget(source)
 end
 
 
+--Create Line
+local function createLineH(source, name, visible)
+    local vis = true
+    if visible ~= nil then vis = visible end
+
+    local line = {
+        type = "line",
+        name = name,
+        direction = "horizontal",
+        visible = vis,
+    }
+
+    return source.add(line)
+end
+
 
 ----------------------------
 -- Chargement des fonctions
@@ -161,6 +176,7 @@ flib.createButton = createButton
 flib.createScrollPane = createScrollPane
 flib.createList = createList
 flib.createEmptyWidget = createEmptyWidget
+flib.createLineH = createLineH
 
 -- Retourne la liste des fonctions
 return flib

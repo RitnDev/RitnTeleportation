@@ -233,6 +233,9 @@ defines.name.gui = {
     -- GUI MENU
     menu = {},
 
+    -- GUI LOBBY
+    lobby = {},
+
     -- COMMONS GUI
     panel_main = "panel-main",
     SurfacesFlow = "Surfaces-Flow",
@@ -281,6 +284,7 @@ defines.name.gui.menu = {
     label_warning2 = "label-warning2",
 
     button_restart = "button-restart",
+    button_exclusion = "button-exclusion",
     button_tp = "button-tp",
     button_clean = "button-clean",
     button_close = "button-close",
@@ -288,6 +292,32 @@ defines.name.gui.menu = {
     button_cancel = "button-cancel",
 
 }
+
+-- GUI LOBBY elements names
+defines.name.gui.lobby = {
+
+    flow_common = "flow-common",
+    frame_lobby = "frame-lobby",
+    MainFlow = "flow-main",
+
+    line = "line-line",
+    label_welcome = "label-welcome",
+    
+    button_create = "button-create",
+    button_join = "button-join",
+
+    SurfacesFlow = "flow-surfaces",
+    Pane = "pane",
+    list = "surfaces-list",
+
+    panel_dialog = "flow-dialog",
+    button_request = "button-request",
+    label_main_surfaces = "label-main_surfaces",
+    label_nb_surfaces = "label-nb_surfaces",
+
+}
+
+
 
 defines.name.gui.styles = {
 
@@ -310,6 +340,19 @@ defines.name.gui.styles = {
     ritn_remote_listbox = "ritn_remote_listbox",
     ritn_scroll_pane = "ritn_scroll_pane",
     ritn_label = "ritn_label",
+
+    font = {
+        defaut12 = "ritn-default-12",
+        defaut14 = "ritn-default-14",
+        defaut16 = "ritn-default-16",
+        defaut18 = "ritn-default-18",
+        defaut20 = "ritn-default-20",
+        bold12 = "ritn-default-bold-12",
+        bold14 = "ritn-default-bold-14",
+        bold16 = "ritn-default-bold-16",
+        bold18 = "ritn-default-bold-18",
+        bold20 = "ritn-default-bold-20",
+    }
     
 }
 
@@ -346,6 +389,7 @@ defines.name.caption = {
     frame_menu = {
         titre = {"frame-menu.titre"},
         button_restart = {"frame-menu.button-restart"},
+        button_exclusion = {"frame-menu.button-exclusion"},
         label_admin = {"frame-menu.label-admin"},
         button_tp= {"frame-menu.button-tp"},
         button_clean = {"frame-menu.button-clean"},

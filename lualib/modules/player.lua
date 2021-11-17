@@ -38,11 +38,12 @@ local function on_player_changed_surface(e)
 
   if not global.teleport.surfaces[LuaSurface.name] then return end
   if global.teleport.surfaces[LuaSurface.name].name == nil then return end
+  ritnlib.surface.addPlayer(LuaPlayer)
+  ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
+  
   if not global.teleport.surfaces[oldSurface.name] then return end
   if global.teleport.surfaces[oldSurface.name].name == nil then return end
-  ritnlib.surface.addPlayer(LuaPlayer)
   ritnlib.surface.removePlayer(LuaPlayer, oldSurface)
-  ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
 end
 
 
@@ -52,6 +53,8 @@ local function on_pre_player_left_game(e)
   local reason = e.reason -- defines.disconnect_reason
   
   ritnlib.utils.ritnLog(">> PRE left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
+
+  if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.3
   
   -- 1.6.2 ---------
   local statut, errorMsg = pcall(function() 
@@ -97,6 +100,7 @@ local function on_player_left_game(e)
   local LuaPlayer = game.players[e.player_index]
   local LuaSurface = LuaPlayer.surface
   ritnlib.utils.ritnLog(">> left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
+  if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.3
   ritnlib.surface.removePlayer(LuaPlayer, LuaSurface)
 end
 
@@ -132,17 +136,11 @@ end
 local function NewPlayerSurface(LuaPlayer)
 
       ritnlib.surface.createLobby(LuaPlayer)
+      --if not game.is_multiplayer() then
+          -- Creation de la surface joueur
+          --ritnlib.surface.createSurface(LuaPlayer)
+      --end
 
-      -- activer le gui lobby ici
-      --ritnGui.lobby.open(LuaPlayer)
-
-      -- Si le nombre de surface est uniquement inférieur au max paramétrés.
-      if #global.teleport.surfaces < global.settings.surfaceMax then 
-        -- Creation de la surface joueur
-        ritnlib.surface.createSurface(LuaPlayer)
-      else
-        game.kick_player(LuaPlayer.name, ritnmods.teleport.defines.name.caption.msg.serveur_full)
-      end
 end
 
 

@@ -32,7 +32,9 @@ local function give_start_item(LuaPlayer, vanilla)
   end
 
   if game.is_multiplayer() then
-    LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
+    if global.teleport.surfaces[LuaPlayer.name] then -- add 1.8.3
+      LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
+    end
   end
 
 end
@@ -46,11 +48,35 @@ local function is_died(LuaPlayer)
 end
 
 
+local function createRequest(LuaPlayer, request)
+  if global.teleport.surfaces[request] then 
+    if not global.teleport.surfaces[request].request[LuaPlayer.name] then   
+      global.teleport.surfaces[request].request[LuaPlayer.name] = {
+        name = LuaPlayer.name,
+        state = 1,
+        reject_all=false
+      }
+      LuaPlayer.print(">> Demande envoyer !")
+
+      local PlayerRequest = game.players[request]
+      if PlayerRequest.connected then 
+          PlayerRequest.print(">> Nouvelle demande reçu de : " .. LuaPlayer.name)
+          PlayerRequest.print(">> Execute la commande : ")
+          PlayerRequest.print(">> /accept " .. LuaPlayer.name .. " /reject " .. LuaPlayer.name .. " /reject_all " .. LuaPlayer.name)
+      end
+    end
+  end
+end
+
+
+
+
 ----------------------------
 -- Chargement des fonctions
 local flib = {}
 flib.give_start_item = give_start_item
 flib.is_died = is_died
+flib.createRequest = createRequest
 
 -- Retourne la liste des fonctions
 return flib

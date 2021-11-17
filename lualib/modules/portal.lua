@@ -83,6 +83,9 @@ local function portal_breaks(e)
   buffer :: LuaInventory: The temporary inventory that holds the result of mining the entity.
 ]]
 
+-- gerer la suppression de portail par joueur originaire de la map mais pas propriétaire.
+
+
     local isDestination = false
 
     local LuaEntity = {}

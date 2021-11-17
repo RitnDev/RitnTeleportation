@@ -122,15 +122,14 @@ local function restart(LuaPlayer)
     if LuaPlayer.name ~= surface then return end
     if surface == nil then return end
 
-    -- modif 1.8.0
-    local tab_players = {}
+    local tab_player = {}
 
     if global.teleport.surfaces[surface] then
         if game.surfaces[surface] then 
             local result = false 
             for _,player in pairs(game.players) do 
-                if player.name ~= surface then
-                    if player.surface.name == surface then 
+                if player.surface.name == surface then
+                    if global.teleport.players[player.name].origine ~= surface then
                         if player.connected == true then
                             result = true
                         end  
@@ -147,9 +146,10 @@ local function restart(LuaPlayer)
             for i,player in pairs(global.teleport.surfaces[surface].origine) do 
                 global.teleport.players[player] = nil
 
-                -- a modifié par lobby ici
+                -- modif 1.8.3
                 game.players[player].teleport({i-1,i-1}, "nauvis")
-                table.insert(tab_players, player)
+                game.players[player].character.active = false
+                table.insert(tab_player, player)
             end
             
             game.delete_surface(surface)
@@ -159,15 +159,13 @@ local function restart(LuaPlayer)
         global.teleport.surfaces[surface] = nil
         global.teleport.surface_value = global.teleport.surface_value - 1
         print(">> RESTART OK for : " .. LuaPlayer.name)
-    end
 
-    -- modif 1.8.0
-    if #tab_players >= 1 then
-        for i=1, #tab_players do 
-            game.kick_player(tab_players[i])
+        for i = 1, #tab_player do 
+            local player = tab_player[i]
+            game.players[player].teleport({0,0}, "lobby~" .. player)
+            game.players[player].clear_items_inside()
         end
     end
-    
     
 end
 
@@ -264,7 +262,7 @@ local function mapGeneratorNewSeed()
 
     local map_gen = global.map_gen_settings
 
-    if global.generate_seed == false then
+    if global.generate_seed == false and game.is_multiplayer() then
         -- Change la seed
         map_gen.seed = math.random(1,4294967290)
     end

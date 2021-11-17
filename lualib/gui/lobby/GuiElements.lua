@@ -7,9 +7,7 @@ ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
 -- Properties
 local visible = false
 local prefix_lobby = ritnmods.teleport.defines.name.gui.prefix.lobby
---local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
---local prefix_surfaces_menu = ritnmods.teleport.defines.name.gui.prefix.surfaces_menu
---local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
+local definesGuiLobby = ritnmods.teleport.defines.name.gui.lobby
 local luaGui = {}
 
 
@@ -25,209 +23,140 @@ local function create_gui_lobby(LuaPlayer)
   -- flow commun (Menu/Surfaces)
   content.main = ritnlib.gui.createFlowH(
     center,
-    prefix_lobby .. ritnmods.teleport.defines.name.gui.MainFlow
+    prefix_lobby .. definesGuiLobby.flow_common
   )
   
   -- frame Menu
   content.frame_lobby = ritnlib.gui.createFrame(
     content.main,
-    "ritn-frame-lobby",
-    ""
+    prefix_lobby .. definesGuiLobby.frame_lobby,
+    "Lobby"
   )
   ritnlib.styles.ritn_frame_style(content.frame_lobby.style)
-  
+  content.frame_lobby.style.maximal_height = 450
+  content.frame_lobby.style.maximal_width = 260
+
+  -- Main Flow : Flow principale de la frame
+  content.MainFlow = ritnlib.gui.createFlowV(
+    content.frame_lobby,
+    prefix_lobby .. definesGuiLobby.MainFlow
+  )
+  ritnlib.styles.ritn_flow_surfaces(content.MainFlow.style)
+  content.MainFlow.style.horizontally_stretchable = true
+  content.MainFlow.style.vertically_stretchable = true
+ 
+
+  -- label welcome
+  content.label_welcome = ritnlib.gui.createLabel(
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.label_welcome,
+    {"frame-lobby.label-welcome", LuaPlayer.name}
+  )
+  ritnlib.styles.ritn_label(content.label_welcome.style)
+
+  -- ligne séparatrice avant les boutons
+  content.line1 = ritnlib.gui.createLineH(
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.line .. "1"
+  )
+
+
   -- button creation de map
   content.button_create = ritnlib.gui.createButton(
-    content.frame_lobby,
-    prefix_lobby .. "button-create",
-    "Créer sa map"
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.button_create,
+    {"frame-lobby.button-create"}
   )
   ritnlib.styles.ritn_normal_button(content.button_create.style)
-  content.button_create.style.minimal_height = 35
+  content.button_create.style.minimal_width = 220
+  content.button_create.style.font = ritnmods.teleport.defines.name.gui.styles.font.bold18
+  content.button_create.style.font_color = {0.109804, 0.109804, 0.109804}
+  content.button_create.style.hovered_font_color = {0.109804, 0.109804, 0.109804}
+  content.button_create.style.clicked_font_color = {0.109804, 0.109804, 0.109804}
 
-  -- button rejoindre une map
-  content.button_join = ritnlib.gui.createButton(
-    content.frame_lobby,
-    prefix_lobby .. "button-join",
-    "Rejoindre une map"
+  -- ligne séparatrice entre les 2 actions
+  content.line2 = ritnlib.gui.createLineH(
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.line .. "2"
   )
-  ritnlib.styles.ritn_normal_button(content.button_join.style)
-  content.button_join.style.minimal_height = 35
-
---[[
-
-  -- flow_admin
-  content.flow_admin = ritnlib.gui.createFlowV(
-    content.frame_menu,
-    GuiElement.flow_admin
-  )
-  ritnlib.styles.ritn_flow_surfaces(content.flow_admin.style)
-  content.flow_admin.visible = admin
-
-
-    -- label_admin
-    content.label_admin = ritnlib.gui.createLabel(
-      content.flow_admin,
-      GuiElement.label_admin.name,
-      GuiElement.label_admin.caption
-    )
-    ritnlib.styles.ritn_label(content.label_admin.style)
-
-    -- button_tp
-    content.button_tp = ritnlib.gui.createButton(
-      content.flow_admin,
-      GuiElement.button_tp.name,
-      GuiElement.button_tp.caption
-    )
-    
-    -- button_clean
-    content.button_admin = ritnlib.gui.createButton(
-      content.flow_admin,
-      GuiElement.button_clean.name,
-      GuiElement.button_clean.caption
-    )
-
-
-  -- frame surfaces
-  content.frame_surfaces = ritnlib.gui.createFrame(
-    content.main,
-    GuiElement.frame_surfaces,
-    ""
-  )
-  content.frame_surfaces.visible = visible
-  ritnlib.styles.ritn_frame_style(content.frame_surfaces.style)
-
-  -- panel main
-  content.panel_main = ritnlib.gui.createFlowV(
-    content.frame_surfaces,
-    GuiElement.panel_main
-  )
-  ritnlib.styles.ritn_flow_panel_main(content.panel_main.style)
-
-  content.panel_tp = ritnlib.gui.createFlowV(
-    content.panel_main,
-    GuiElement.panel_tp,
-    visible
-  )
-  content.panel_clean = ritnlib.gui.createFlowV(
-    content.panel_main,
-    GuiElement.panel_clean,
-    visible
-  )
-
-  -- PANEL TP :
 
   -- SurfacesFlow
-  content.SurfacesFlow_tp = ritnlib.gui.createFlowV(
-    content.panel_tp,
-    GuiElement.SurfacesFlow
+  content.SurfacesFlow = ritnlib.gui.createFlowV(
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.SurfacesFlow
   )
-  ritnlib.styles.ritn_flow_surfaces(content.SurfacesFlow_tp.style)
-    -- Pane
-    content.Pane = ritnlib.gui.createScrollPane(
-      content.SurfacesFlow_tp,
-      GuiElement.Pane
-    )
-    ritnlib.styles.ritn_scroll_pane(content.Pane.style)
-    -- list_tp
-    content.list = ritnlib.gui.createList(
-      content.Pane,
-      GuiElement.list
-    )
+  ritnlib.styles.ritn_flow_surfaces(content.SurfacesFlow.style)
+  content.SurfacesFlow.style.horizontal_align = "left"
     
-    local MySurface = LuaPlayer.surface.name
+  -- label main surfaces
+  content.label_main_surfaces = ritnlib.gui.createLabel(
+    content.SurfacesFlow,
+    prefix_lobby .. definesGuiLobby.label_main_surfaces,
+    {"frame-lobby.label-main-surfaces"}
+  )
+  ritnlib.styles.ritn_label(content.label_main_surfaces.style)
+  content.label_main_surfaces.style.font = ritnmods.teleport.defines.name.gui.styles.font.bold14
 
-    for _,surface in pairs(global.teleport.surfaces) do 
-      if surface.name ~= nil then
-        if MySurface ~= surface.name then
-          content.list.add_item(surface.name)
-        end
+  -- Pane
+  content.Pane = ritnlib.gui.createScrollPane(
+    content.SurfacesFlow,
+    prefix_lobby .. definesGuiLobby.Pane
+  )
+  ritnlib.styles.ritn_scroll_pane(content.Pane.style)
+    
+  -- list
+  content.list = ritnlib.gui.createList(
+    content.Pane,
+    prefix_lobby .. definesGuiLobby.list
+  )
+  ritnlib.styles.ritn_remote_listbox(content.list.style)
+  
+  --> ajout des maps dnas la liste
+  local nauvis = "nauvis"
+  for _,surface in pairs(global.teleport.surfaces) do 
+    if surface.name ~= nil then
+      if nauvis ~= surface.name then
+        content.list.add_item(surface.name)
       end
     end
+  end
 
 
   -- panel_dialog
   content.panel_dialog = ritnlib.gui.createFlowH(
-    content.panel_tp,
-    GuiElement.panel_dialog
+    content.MainFlow,
+    prefix_lobby .. definesGuiLobby.panel_dialog
   )
   ritnlib.styles.ritn_flow_dialog(content.panel_dialog.style)
+  content.panel_dialog.style.vertical_align = "center"
 
-    -- button_close
-    content.button_close = ritnlib.gui.createButton(
-      content.panel_dialog,
-      GuiElement.button_close_surfaces.name,
-      GuiElement.button_close_surfaces.caption,
-      "red_back_button"
-    )
-    ritnlib.styles.ritn_small_button(content.button_close.style)
+  local nbMaps = global.teleport.surface_value-1
+  if nbMaps < 0 then nbMaps = 0 end
 
-    -- button_valid
-    content.button_valid = ritnlib.gui.createButton(
-      content.panel_dialog,
-      GuiElement.button_valid_surfaces.name,
-      GuiElement.button_valid_surfaces.caption,
-      "confirm_button"
-    )
-    ritnlib.styles.ritn_small_button(content.button_valid.style)
-
-
-    -- PANEL CLEAN :
-
-  -- SurfacesFlow
-  content.SurfacesFlow_clean = ritnlib.gui.createFlowV(
-    content.panel_clean,
-    GuiElement.SurfacesFlow
+  -- label main surfaces
+  content.label_nb_surfaces = ritnlib.gui.createLabel(
+    content.panel_dialog,
+    prefix_lobby .. definesGuiLobby.label_nb_surfaces,
+    {"frame-lobby.label-nb-surface", nbMaps, global.settings.surfaceMax}
   )
-  ritnlib.styles.ritn_flow_surfaces(content.SurfacesFlow_clean.style)
-    -- Pane
-    content.Pane = ritnlib.gui.createScrollPane(
-      content.SurfacesFlow_clean,
-      GuiElement.Pane
-    )
-    ritnlib.styles.ritn_scroll_pane(content.Pane.style)
-    -- list_clean
-    content.list = ritnlib.gui.createList(
-      content.Pane,
-      GuiElement.list
-    )
- 
-    for _,surface in pairs(global.teleport.surfaces) do 
-      if surface.name ~= nil then
-        if game.players[surface.name] ~= nil then
-          if game.players[surface.name].connected == false then
-            content.list.add_item(surface.name)
-          end
-        end
-      end
-    end
+  ritnlib.styles.ritn_label(content.label_nb_surfaces.style)
 
-  -- panel_dialog
-  content.panel_dialog = ritnlib.gui.createFlowH(
-    content.panel_clean,
-    GuiElement.panel_dialog
+
+  --empty
+  content.empty = ritnlib.gui.createEmptyWidget(content.panel_dialog)
+  content.empty.style.height = 30
+  content.empty.style.width = 30
+
+  -- button_valid
+  content.button_request = ritnlib.gui.createButton(
+    content.panel_dialog,
+    prefix_lobby .. definesGuiLobby.button_request,
+    {"frame-lobby.button-valid"},
+    "confirm_button"
   )
-  ritnlib.styles.ritn_flow_dialog(content.panel_dialog.style)
-
-    -- button_close
-    content.button_close = ritnlib.gui.createButton(
-      content.panel_dialog,
-      GuiElement.button_close_surfaces.name,
-      GuiElement.button_close_surfaces.caption,
-      "red_back_button"
-    )
-    ritnlib.styles.ritn_small_button(content.button_close.style)
-
-    -- button_valid
-    content.button_valid = ritnlib.gui.createButton(
-      content.panel_dialog,
-      GuiElement.button_valid_surfaces.name,
-      GuiElement.button_valid_surfaces.caption,
-      "confirm_button"
-    )
-    ritnlib.styles.ritn_small_button(content.button_valid.style)
-
-]]
+  ritnlib.styles.ritn_small_button(content.button_request.style)
+  content.button_request.style.maximal_width = 120
+  content.button_request.tooltip = {"tooltip.button-valid"}
 
 end
 
@@ -241,7 +170,7 @@ end
 -- close gui
 local function frame_lobby_close(LuaPlayer)
   local center = LuaPlayer.gui.center
-  local frame_lobby = center[prefix_lobby .. ritnmods.teleport.defines.name.gui.MainFlow]
+  local frame_lobby = center[prefix_lobby .. definesGuiLobby.flow_common]
 
   if frame_lobby then 
     frame_lobby.destroy()

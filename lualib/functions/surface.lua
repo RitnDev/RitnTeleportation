@@ -103,6 +103,7 @@ local function generateSurface(LuaSurface)
     last_use = 0,
     map_used = false,
     origine = {},
+    request = {},
     value = {
         portal = 0,
         id_portal = 0,
@@ -181,6 +182,8 @@ end
 
 -- Creation de la surface et force du joueur
 local function createSurface(LuaPlayer)
+  -- Si le nombre de surface est uniquement inférieur au max paramétrés.
+  if global.teleport.surface_value-1 < global.settings.surfaceMax then 
 
         --return map_gen avec nouvelle seed
         local map_gen = ritnlib.utils.mapGeneratorNewSeed()
@@ -254,76 +257,11 @@ local function createSurface(LuaPlayer)
           util.remove_safe(LuaPlayer, global.crashed_ship_items)
           util.remove_safe(LuaPlayer, global.crashed_debris_items)
         end
-
-end
-
-
-
--- Test 1.8.0
-commands.add_command("test", "<name>", 
-  function (e)
-
-    if e.player_index then 
-      local LuaPlayer = game.players[e.player_index]
-      if LuaPlayer.name == "Ritn" then
-        if e.parameter ~= nil then
-          local LuaPlayerFake = {
-            name = e.parameter,
-            admin = false,
-            force = {},
-          }
-          
-                  --return map_gen avec nouvelle seed
-                  local map_gen = ritnlib.utils.mapGeneratorNewSeed()
-
-                  local LuaSurface = game.create_surface(LuaPlayerFake.name, map_gen)  
-                  local tiles = {}
-
-                  LuaSurface.set_tiles(tiles) 
-                  local LuaForce = game.create_force(LuaPlayerFake.name)
-                  -- add force à LuaPlayerFake
-                  LuaPlayerFake.force = LuaForce
-                  --
-                  LuaForce.reset()
-                  LuaForce.research_queue_enabled = true
-                  LuaForce.chart(LuaSurface, {{x = -100, y = -100}, {x = 100, y = 100}})
-                  if game.active_mods["SeaBlock"] then  
-                    ritnlib.seablock.startMap(LuaSurface)
-                  end
-
-                  for k,v in pairs(game.forces) do
-                    if v.name ~= "enemy" and v.name ~= "neutral" then
-                      LuaForce.set_friend(v.name,true)
-                      game.forces["player"].set_friend(LuaForce.name, true)
-                    end
-                  end
-
-                  for r_name,recipe in pairs(LuaPlayerFake.force.recipes) do
-                    LuaForce.recipes[r_name].enabled = recipe.enabled
-                  end
-
-                  -- Creation de la structure de map dans les données
-                  generateSurface(game.surfaces.nauvis)
-                  global.teleport.surfaces["nauvis"].exception = true
-                  global.teleport.surfaces["nauvis"].map_used = true
-                  generateSurface(LuaSurface)
-                  global.teleport.surfaces[LuaSurface.name].exception = LuaPlayerFake.admin
-                  global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayerFake.name] = ritnlib.inventory.init()
-                  table.insert(global.teleport.surfaces[LuaSurface.name].origine, LuaPlayerFake.name)
-
-                  -- 1.8.0
-                  -- Enregistrement de la surface d'origine
-                  if not global.teleport.players[LuaPlayerFake.name] then 
-                    global.teleport.players[LuaPlayerFake.name] = {origine = LuaSurface.name}
-                  end
-
-          print(">> debug : function : test -> ok !")
-        end
-      end
-    end
-    
+        
+  else
+    game.kick_player(LuaPlayer.name, ritnmods.teleport.defines.name.caption.msg.serveur_full)
   end
-)
+end
 
 
 

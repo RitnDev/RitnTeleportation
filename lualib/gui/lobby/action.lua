@@ -1,21 +1,51 @@
 -- INITIALISATION
 ---------------------------------------------------------------------------------------------
+local ritnlib = {}
+ritnlib.surface =     require(ritnmods.teleport.defines.functions.surface)
+ritnlib.player =     require(ritnmods.teleport.defines.functions.player)
+---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.lobby =        require(ritnmods.teleport.defines.gui.lobby.GuiElements)
 ---------------------------------------------------------------------------------------------
-
+local prefix_lobby = ritnmods.teleport.defines.name.gui.prefix.lobby
+local definesGuiLobby = ritnmods.teleport.defines.name.gui.lobby
+---------------------------------------------------------------------------------------------
 local action = {
-    [ritnmods.teleport.defines.name.gui.menu.button_main] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_restart] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_tp] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_clean] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_close] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_valid] = {},
-    [ritnmods.teleport.defines.name.gui.menu.button_cancel] = {},
+    [ritnmods.teleport.defines.name.gui.lobby.button_create] = {},
+    [ritnmods.teleport.defines.name.gui.lobby.button_request] = {},
 }
 
 
+-- Fonctions
 
+-- renvoie l'element souhaitez selon son nom
+local function returnElement(LuaPlayer, element_name)
+    local center = LuaPlayer.gui.center
+    local guiLobby = center[prefix_lobby .. definesGuiLobby.flow_common]
+
+    if element_name == "list" then 
+        return guiLobby[prefix_lobby .. definesGuiLobby.frame_lobby][prefix_lobby .. definesGuiLobby.MainFlow][prefix_lobby .. definesGuiLobby.SurfacesFlow][prefix_lobby .. definesGuiLobby.Pane][prefix_lobby .. definesGuiLobby.list]
+    end
+end
+
+
+
+
+local function button_create(LuaPlayer)
+    -- Creation de la surface joueur
+    ritnlib.surface.createSurface(LuaPlayer)
+    -- fermeture de la fenetre après la création de la map
+    ritnGui.lobby.close(LuaPlayer)
+end
+
+
+
+local function button_request(LuaPlayer)
+    local index = returnElement(LuaPlayer, "list").selected_index
+    if index == nil or index == 0 then return end
+    local surface = returnElement(LuaPlayer, "list").get_item(index)
+    ritnlib.player.createRequest(LuaPlayer, surface)
+end
 
 
 
@@ -23,12 +53,7 @@ local action = {
 
 
 -- Tableau de fonction : permet d'appeler la fonction correspondant au bouton
-action[ritnmods.teleport.defines.name.gui.menu.button_main] = button_main
-action[ritnmods.teleport.defines.name.gui.menu.button_restart] = button_restart
-action[ritnmods.teleport.defines.name.gui.menu.button_tp] = button_tp
-action[ritnmods.teleport.defines.name.gui.menu.button_clean] = button_clean
-action[ritnmods.teleport.defines.name.gui.menu.button_close] = button_close
-action[ritnmods.teleport.defines.name.gui.menu.button_valid] = button_valid
-action[ritnmods.teleport.defines.name.gui.menu.button_cancel] = button_cancel
+action[ritnmods.teleport.defines.name.gui.lobby.button_create] = button_create
+action[ritnmods.teleport.defines.name.gui.lobby.button_request] = button_request
 
 return action

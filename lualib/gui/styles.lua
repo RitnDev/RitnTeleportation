@@ -72,4 +72,72 @@ data:extend({
 		ritnmods.teleport.defines.name.sprite.portal,
 		ritnmods.teleport.defines.graphics.gui.portal
 	),
+
+	
+
+	
+	-- FONTS
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.defaut12,
+		from = "default",
+		size = 12
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.defaut14,
+		from = "default",
+		size = 14
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.defaut16,
+		from = "default",
+		size = 16
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.defaut18,
+		from = "default",
+		size = 18
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.defaut20,
+		from = "default",
+		size = 20
+	},
+	--bold
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.bold12,
+		from = "default-bold",
+		size = 12
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.bold14,
+		from = "default-bold",
+		size = 14
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.bold16,
+		from = "default-bold",
+		size = 16
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.bold18,
+		from = "default-bold",
+		size = 18
+	},
+	{
+		type = "font",
+		name = ritnmods.teleport.defines.name.gui.styles.font.bold20,
+		from = "default-bold",
+		size = 20
+	},
+
+
 })

@@ -40,6 +40,11 @@ local GuiElement = {
     caption = ritnmods.teleport.defines.name.caption.frame_menu.button_restart,
   },
 
+  button_exclusion = {
+    name = prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.button_exclusion,
+    caption = ritnmods.teleport.defines.name.caption.frame_menu.button_exclusion,
+  },
+
   label_admin = {
     name = prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.label_admin,
     caption = ritnmods.teleport.defines.name.caption.frame_menu.label_admin, 
@@ -163,8 +168,7 @@ local function create_gui_menu(LuaPlayer)
   -- flow_restart
   content.flow_restart = ritnlib.gui.createFlowV(
     content.frame_menu,
-    GuiElement.flow_restart,
-    finish
+    GuiElement.flow_restart
   )
   
   -- button restart
@@ -172,6 +176,13 @@ local function create_gui_menu(LuaPlayer)
     content.flow_restart,
     GuiElement.button_restart.name,
     GuiElement.button_restart.caption
+  )
+  content.button_restart.visible = finish
+
+  content.button_exclusion = ritnlib.gui.createButton(
+    content.flow_restart,
+    GuiElement.button_exclusion.name,
+    GuiElement.button_exclusion.caption
   )
 
   -- flow_admin
