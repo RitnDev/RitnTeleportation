@@ -34,7 +34,7 @@ end
 local function on_tick_local(e)
 
   local setting_value = settings.global[ritnmods.teleport.defines.name.settings.clean].value
-  if game.is_multiplayer == false then return end
+  if game.is_multiplayer() == false then return end
 
   if setting_value > 0 then 
     if e.tick % 3600 == 0 then -- toutes les minutes

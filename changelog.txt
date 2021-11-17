@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.0
+Date: 17.11.2021
+  Notes:
+    - Préparation de la version 2.0.
+  Add:
+    - System de lobby mis en place.
+    - Ajout d'un paramètre de mod du nombre max de surface joueur pouvant être créer dans la partie (max du paramètre : 30).
+    - Relancer renvoie au lobby au lieu d'être déconnecté.
+    - Possibilité de rejoindre une map sans portail depuis le lobby, 
+      une demande doit être faite et accepter par le propriétaire.
+    - Relancer renvoi tous les joueurs ayant cette map d'origine à leur lobby respectif.
+    - Jouer en local ne génère plus une nouvelle seed, garde celle dans les paramètres de partie.
+    - Jouer en local ne donne pas de portail dans les items de début.
+    - Possibilité de Relancer en local (retour lobby).
+    - Jouer en local créer la map automatiquement, pas de d'ouverture du GUI_Lobby.
+    - Système d'exclusion pour les joueurs déjà accepter sur une map (pour le propriétaire de la map).
+---------------------------------------------------------------------------------------------------
 Version: 1.8.0
 Date: 08.11.2021
   Notes:

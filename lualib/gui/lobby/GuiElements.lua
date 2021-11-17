@@ -18,7 +18,6 @@ local luaGui = {}
 local function create_gui_lobby(LuaPlayer)
   local center = LuaPlayer.gui.center
   local content = {}
-  local LuaSurface = LuaPlayer.surface
   
   -- flow commun (Menu/Surfaces)
   content.main = ritnlib.gui.createFlowH(
@@ -30,7 +29,7 @@ local function create_gui_lobby(LuaPlayer)
   content.frame_lobby = ritnlib.gui.createFrame(
     content.main,
     prefix_lobby .. definesGuiLobby.frame_lobby,
-    "Lobby"
+    ritnmods.teleport.defines.name.caption.frame_lobby.titre
   )
   ritnlib.styles.ritn_frame_style(content.frame_lobby.style)
   content.frame_lobby.style.maximal_height = 450
@@ -65,7 +64,7 @@ local function create_gui_lobby(LuaPlayer)
   content.button_create = ritnlib.gui.createButton(
     content.MainFlow,
     prefix_lobby .. definesGuiLobby.button_create,
-    {"frame-lobby.button-create"}
+    ritnmods.teleport.defines.name.caption.frame_lobby.button_create
   )
   ritnlib.styles.ritn_normal_button(content.button_create.style)
   content.button_create.style.minimal_width = 220
@@ -92,7 +91,7 @@ local function create_gui_lobby(LuaPlayer)
   content.label_main_surfaces = ritnlib.gui.createLabel(
     content.SurfacesFlow,
     prefix_lobby .. definesGuiLobby.label_main_surfaces,
-    {"frame-lobby.label-main-surfaces"}
+    ritnmods.teleport.defines.name.caption.frame_lobby.label_main_surfaces
   )
   ritnlib.styles.ritn_label(content.label_main_surfaces.style)
   content.label_main_surfaces.style.font = ritnmods.teleport.defines.name.gui.styles.font.bold14
@@ -151,7 +150,7 @@ local function create_gui_lobby(LuaPlayer)
   content.button_request = ritnlib.gui.createButton(
     content.panel_dialog,
     prefix_lobby .. definesGuiLobby.button_request,
-    {"frame-lobby.button-valid"},
+    ritnmods.teleport.defines.name.caption.frame_lobby.button_request,
     "confirm_button"
   )
   ritnlib.styles.ritn_small_button(content.button_request.style)

@@ -65,6 +65,7 @@ local GuiElement = {
   panel_main = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main,
   panel_tp = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_tp,
   panel_clean = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_clean,
+  panel_exclusion = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_exclusion,
   SurfacesFlow = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.SurfacesFlow,
   Pane = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.Pane,
   list = prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.list,
@@ -243,6 +244,12 @@ local function create_gui_menu(LuaPlayer)
     GuiElement.panel_clean,
     visible
   )
+  -- add 1.9.0
+  content.panel_exclusion = ritnlib.gui.createFlowV(
+    content.panel_main,
+    GuiElement.panel_exclusion,
+    visible
+  )
 
   -- PANEL TP :
 
@@ -334,6 +341,65 @@ local function create_gui_menu(LuaPlayer)
   -- panel_dialog
   content.panel_dialog = ritnlib.gui.createFlowH(
     content.panel_clean,
+    GuiElement.panel_dialog
+  )
+  ritnlib.styles.ritn_flow_dialog(content.panel_dialog.style)
+
+    -- button_close
+    content.button_close = ritnlib.gui.createButton(
+      content.panel_dialog,
+      GuiElement.button_close_surfaces.name,
+      GuiElement.button_close_surfaces.caption,
+      "red_back_button"
+    )
+    ritnlib.styles.ritn_small_button(content.button_close.style)
+
+    -- button_valid
+    content.button_valid = ritnlib.gui.createButton(
+      content.panel_dialog,
+      GuiElement.button_valid_surfaces.name,
+      GuiElement.button_valid_surfaces.caption,
+      "confirm_button"
+    )
+    ritnlib.styles.ritn_small_button(content.button_valid.style)
+
+
+  -- PANEL EXCLUSION (add 1.9.0) :
+
+  -- SurfacesFlow
+  content.SurfacesFlow_exclusion = ritnlib.gui.createFlowV(
+    content.panel_exclusion,
+    GuiElement.SurfacesFlow
+  )
+  ritnlib.styles.ritn_flow_surfaces(content.SurfacesFlow_tp.style)
+    -- Pane
+    content.Pane = ritnlib.gui.createScrollPane(
+      content.SurfacesFlow_exclusion,
+      GuiElement.Pane
+    )
+    ritnlib.styles.ritn_scroll_pane(content.Pane.style)
+    -- list_tp
+    content.list = ritnlib.gui.createList(
+      content.Pane,
+      GuiElement.list
+    )
+    
+    -- remplissage de la liste
+    local MySurface = LuaPlayer.surface.name
+    if global.teleport.surfaces[MySurface] then
+      for _,player in pairs(global.teleport.surfaces[MySurface].origine) do 
+        if player ~= nil then
+          if MySurface ~= player then
+            content.list.add_item(player)
+          end
+        end
+      end
+    end
+
+
+  -- panel_dialog
+  content.panel_dialog = ritnlib.gui.createFlowH(
+    content.panel_exclusion,
     GuiElement.panel_dialog
   )
   ritnlib.styles.ritn_flow_dialog(content.panel_dialog.style)

@@ -37,20 +37,18 @@ local function returnElement(LuaPlayer, element_name)
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces]
     elseif element_name == "frame_restart" then 
         return center[prefix_restart .. ritnmods.teleport.defines.name.gui.menu.frame_restart]
-    elseif element_name == "button_restart" then 
-        return menu[prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.frame_menu][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.flow_restart][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.button_restart]
-    elseif element_name == "button_tp" then 
-        return menu[prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.frame_menu][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.flow_admin][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.button_tp]
-    elseif element_name == "button_clean" then 
-        return menu[prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.frame_menu][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.flow_admin][prefix_main_menu .. ritnmods.teleport.defines.name.gui.menu.button_clean]
     elseif element_name == "panel_tp" then 
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_tp]
     elseif element_name == "panel_clean" then 
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_clean]
+    elseif element_name == "panel_exclusion" then 
+        return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_exclusion]
     elseif element_name == "list_tp" then 
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_tp][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.SurfacesFlow][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.Pane][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.list]
     elseif element_name == "list_clean" then 
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_clean][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.SurfacesFlow][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.Pane][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.list]
+    elseif element_name == "list_exclusion" then 
+        return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_exclusion][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.SurfacesFlow][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.Pane][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.list]
     elseif element_name == "button_close_tp" then 
         return menu[prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.frame_surfaces][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_main][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.menu.panel_tp][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.panel_dialog][prefix_surfaces_menu .. ritnmods.teleport.defines.name.gui.button_close]
     elseif element_name == "button_valid_tp" then 
@@ -83,27 +81,20 @@ local function button_restart(LuaPlayer)
 end
 
 
--- Action du bouton Exclure - add 1.8.3
-local function button_exclusion(LuaPlayer)
-    local LuaGui = returnElement(LuaPlayer, "menu")
-    local frame_restart = returnElement(LuaPlayer, "frame_restart")
-    if frame_restart then return end
-
-
-end
-
 
 -- Action du bouton /tp
 local function button_tp(LuaPlayer)
     local frame_surfaces = returnElement(LuaPlayer, "frame_surfaces")
     local panel_tp = returnElement(LuaPlayer, "panel_tp")
     local panel_clean = returnElement(LuaPlayer, "panel_clean")
+    local panel_exclusion = returnElement(LuaPlayer, "panel_exclusion")
     local list = returnElement(LuaPlayer, "list_tp")
 
     frame_surfaces.caption = {"frame-surfaces.titre", "(tp)"}
     frame_surfaces.visible = true
     panel_tp.visible = true
     panel_clean.visible = false
+    panel_exclusion.visible = false
 end
 
 -- Action du bouton /clean
@@ -111,12 +102,30 @@ local function button_clean(LuaPlayer)
     local frame_surfaces = returnElement(LuaPlayer, "frame_surfaces")
     local panel_tp = returnElement(LuaPlayer, "panel_tp")
     local panel_clean = returnElement(LuaPlayer, "panel_clean")
+    local panel_exclusion = returnElement(LuaPlayer, "panel_exclusion")
     local list = returnElement(LuaPlayer, "list_clean")
 
     frame_surfaces.visible = true
     frame_surfaces.caption = {"frame-surfaces.titre", "(clean)"}
     panel_tp.visible = false
     panel_clean.visible = true
+    panel_exclusion.visible = false
+end
+
+
+-- Action du bouton Exclure - add 1.9.0
+local function button_exclusion(LuaPlayer)
+    local frame_surfaces = returnElement(LuaPlayer, "frame_surfaces")
+    local panel_tp = returnElement(LuaPlayer, "panel_tp")
+    local panel_clean = returnElement(LuaPlayer, "panel_clean")
+    local panel_exclusion = returnElement(LuaPlayer, "panel_exclusion")
+    local list = returnElement(LuaPlayer, "list_clean")
+
+    frame_surfaces.visible = true
+    frame_surfaces.caption = {"frame-surfaces.titre-exclusion"}
+    panel_tp.visible = false
+    panel_clean.visible = false
+    panel_exclusion.visible = true
 end
 
 
@@ -152,6 +161,32 @@ local function button_valid_clean(LuaPlayer)
     ritnGui.menu.frame_menu_close(LuaPlayer)
 end
 
+
+local function button_valid_excude(LuaPlayer)
+    local index = returnElement(LuaPlayer, "list_exclusion").selected_index
+    if index == nil or index == 0 then return end
+    local playerExclure = returnElement(LuaPlayer, "list_exclusion").get_item(index)
+    local surface = LuaPlayer.name
+    if global.teleport.surfaces[surface] then
+        for i,player in pairs(global.teleport.surfaces[surface].origine) do 
+            if player == playerExclure then 
+                -- suppression du joueur dans origine de la map
+                table.remove(global.teleport.surfaces[surface].origine, i)
+                if game.players[playerExclure] 
+                and game.players[playerExclure].valid 
+                and game.players[playerExclure].connected then 
+                    game.players[playerExclure].character.active = false
+                    game.players[playerExclure].teleport({0,0}, "lobby~" .. playerExclure)
+                end
+            end
+        end
+    end
+    -- reinit du joueur
+    if global.teleport.players[playerExclure] then 
+        global.teleport.players[playerExclure] = nil
+    end
+    ritnGui.menu.frame_menu_close(LuaPlayer)
+end
 
 
 local function button_valid_restart(LuaPlayer)
@@ -189,6 +224,10 @@ local sub_action = {
         },
         ["panel_clean"] = {
             ["button-valid"] = button_valid_clean,
+            ["button-close"] = button_close_menu,
+        },
+        ["panel_exclusion"] = {
+            ["button-valid"] = button_valid_excude,
             ["button-close"] = button_close_menu,
         },
     },

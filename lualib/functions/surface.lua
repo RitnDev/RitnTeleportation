@@ -259,7 +259,7 @@ local function createSurface(LuaPlayer)
         end
         
   else
-    game.kick_player(LuaPlayer.name, ritnmods.teleport.defines.name.caption.msg.serveur_full)
+    -- mettre un message sympathique pour lui dire : CHEH !
   end
 end
 

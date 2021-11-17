@@ -181,6 +181,7 @@ local function on_gui_click(e)
   if click.ui == "main_menu" then
     if click.action == ritnmods.teleport.defines.name.gui.menu.button_restart
     or click.action == ritnmods.teleport.defines.name.gui.menu.button_tp
+    or click.action == ritnmods.teleport.defines.name.gui.menu.button_exclusion
     or click.action == ritnmods.teleport.defines.name.gui.menu.button_clean then
       ritnGui.menu.action[click.action](LuaPlayer)
       return 

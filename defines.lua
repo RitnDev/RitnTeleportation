@@ -236,6 +236,9 @@ defines.name.gui = {
     -- GUI LOBBY
     lobby = {},
 
+    -- GUI REQUEST
+    request = {},
+
     -- COMMONS GUI
     panel_main = "panel-main",
     SurfacesFlow = "Surfaces-Flow",
@@ -278,6 +281,7 @@ defines.name.gui.menu = {
 
     panel_tp = "panel_tp",
     panel_clean = "panel_clean",
+    panel_exclusion = "panel_exclusion",
 
     label_admin = "label-admin",
     label_warning1 = "label-warning1",
@@ -314,6 +318,11 @@ defines.name.gui.lobby = {
     button_request = "button-request",
     label_main_surfaces = "label-main_surfaces",
     label_nb_surfaces = "label-nb_surfaces",
+
+}
+
+-- GUI LOBBY elements names
+defines.name.gui.request = {
 
 }
 
@@ -406,6 +415,13 @@ defines.name.caption = {
         label_warning2 = {"frame-restart.label-warning2"}, 
         button_cancel = {"frame-restart.button-cancel"}, 
         button_valid = {"frame-restart.button-valid"}, 
+    },
+
+    frame_lobby = {
+        titre = {"frame-lobby.titre"},
+        button_create = {"frame-lobby.button-create"},
+        label_main_surfaces = {"frame-lobby.label-main-surfaces"},
+        button_request = {"frame-lobby.button-valid"},
     }
 }
 
