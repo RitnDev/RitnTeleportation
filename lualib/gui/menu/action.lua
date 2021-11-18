@@ -8,11 +8,19 @@ local ritnGui = {}
 ritnGui.menu =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
 ---------------------------------------------------------------------------------------------
 local modGui = require("mod-gui")
+local prefix_gui = ritnmods.teleport.defines.prefix.gui
 local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
 local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
 local prefix_surfaces_menu = ritnmods.teleport.defines.name.gui.prefix.surfaces_menu
 local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
 
+local GuiElement = {
+    flow_common = prefix_gui .. ritnmods.teleport.defines.name.gui.flow_common,
+    flow_menu = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu,
+    flow_menu_frame = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu_frame,
+}
+
+-- ACTIONS -- 
 local action = {
     [ritnmods.teleport.defines.name.gui.menu.button_main] = {},
     [ritnmods.teleport.defines.name.gui.menu.button_restart] = {},
@@ -29,7 +37,7 @@ local action = {
 local function returnElement(LuaPlayer, element_name)
     local left = modGui.get_frame_flow(LuaPlayer)
     local center = LuaPlayer.gui.center
-    local menu = left[prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common]
+    local menu = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
 
     if element_name == "menu" then 
         return menu

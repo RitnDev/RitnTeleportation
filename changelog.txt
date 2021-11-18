@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.1
+Date: 18.11.2021
+  Notes:
+    - Préparation de la version 2.0.
+  Add:
+    - Gestion des requêtes de demande à rejoindre une map.
+    - Création de fonctions pour 'accepter', 'refuser' ou 'refuser tout le temps' une requête.
+    - Commande /accept <player>  pour accepter une requête ou annuler un refus permanent.
+---------------------------------------------------------------------------------------------------
 Version: 1.9.0
 Date: 17.11.2021
   Notes:

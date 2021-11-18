@@ -26,6 +26,7 @@ if not global.teleport then global.teleport =
   {
     surfaces = {},
     players = {},
+    requests = {},
     player_died = {},
     surface_value = 0,
   }

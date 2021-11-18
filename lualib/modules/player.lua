@@ -175,6 +175,7 @@ local function on_player_joined_game(e)
       ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[surfaceOrigineName].inventories[LuaPlayer.name])
     else -- player is no home
       LuaPlayer.teleport({0,0}, global.teleport.players[LuaPlayer.name].origine)
+      LuaPlayer.character.active = true
     end
 end
   

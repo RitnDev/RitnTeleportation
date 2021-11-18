@@ -14,9 +14,16 @@ ritnGui.menu.action = require(ritnmods.teleport.defines.gui.menu.action)
 if not global.cutscene then global.cutscene = false end
 -- Chargement des elements à créer
 local modGui = require("mod-gui")
+local prefix_gui = ritnmods.teleport.defines.prefix.gui
 local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
 local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
 local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
+
+local GuiElement = {
+  flow_common = prefix_gui .. ritnmods.teleport.defines.name.gui.flow_common,
+  flow_menu = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu,
+  flow_menu_frame = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu_frame,
+}
 
 -- Creation du module
 local module = {}
@@ -145,7 +152,7 @@ local function on_gui_click(e)
   local LuaPlayer = game.players[e.player_index]
   local left = modGui.get_frame_flow(LuaPlayer)
   local center = LuaPlayer.gui.center
-  local LuaGui = left[prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common]
+  local LuaGui = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
   local LuaGuiRestart = center[prefix_restart .. ritnmods.teleport.defines.name.gui.menu.frame_restart]
   local pattern = "([^-]*)-?([^-]*)-?([^-]*)"
   local click = {
@@ -177,7 +184,7 @@ local function on_gui_click(e)
 
   -- Action de la frame menu
   if LuaGui == nil then return end 
-  if LuaGui.name ~= prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common then return end
+  if LuaGui.name ~= GuiElement.flow_menu_frame then return end
   if click.ui == "main_menu" then
     if click.action == ritnmods.teleport.defines.name.gui.menu.button_restart
     or click.action == ritnmods.teleport.defines.name.gui.menu.button_tp
@@ -193,7 +200,7 @@ local function on_gui_click(e)
   if LuaGui == nil then return end 
   -- Problème lors du compare donc je passe par une variable intermédiaire.
   local LuaGui_name = ""
-  LuaGui_name = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common
+  LuaGui_name = GuiElement.flow_menu_frame
 
   if LuaGui.name ~= LuaGui_name then return end
   if click.ui == "surfaces_menu" then

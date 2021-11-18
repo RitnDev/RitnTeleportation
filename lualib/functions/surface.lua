@@ -103,7 +103,7 @@ local function generateSurface(LuaSurface)
     last_use = 0,
     map_used = false,
     origine = {},
-    request = {},
+    requests = {},
     value = {
         portal = 0,
         id_portal = 0,

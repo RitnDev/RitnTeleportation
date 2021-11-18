@@ -1,6 +1,15 @@
 ---
 -- Fonction "player"
----
+---------------------------------------------------------------------------------------------
+local ritnlib = {}
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
+ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
+---------------------------------------------------------------------------------------------
+local ritnGui = {}
+ritnGui.lobby =        require(ritnmods.teleport.defines.gui.lobby.GuiElements)
+---------------------------------------------------------------------------------------------
+
+
 
 -- give des items
 local function give_start_item(LuaPlayer, vanilla)
@@ -47,22 +56,139 @@ local function is_died(LuaPlayer)
   return false
 end
 
-
+-- creation de la requete
 local function createRequest(LuaPlayer, request)
   if global.teleport.surfaces[request] then 
-    if not global.teleport.surfaces[request].request[LuaPlayer.name] then   
-      global.teleport.surfaces[request].request[LuaPlayer.name] = {
+    if not global.teleport.surfaces[request].requests[LuaPlayer.name] then   
+      global.teleport.surfaces[request].requests[LuaPlayer.name] = {
         name = LuaPlayer.name,
         state = 1,
         reject_all=false
       }
-      LuaPlayer.print(">> Demande envoyer !")
+      if not global.teleport.requests[LuaPlayer.name] then global.teleport.requests[LuaPlayer.name] = {} end
+      global.teleport.requests[LuaPlayer.name][request] = {name = request}
+            
+      LuaPlayer.print({"msg.send-request", request}, {r = 1, g = 0, b = 0, a = 0.3})
 
       local PlayerRequest = game.players[request]
+
+      -- a changer par la creation du gui_request au joueur recevant la requete. -----
       if PlayerRequest.connected then 
-          PlayerRequest.print(">> Nouvelle demande reçu de : " .. LuaPlayer.name)
-          PlayerRequest.print(">> Execute la commande : ")
-          PlayerRequest.print(">> /accept " .. LuaPlayer.name .. " /reject " .. LuaPlayer.name .. " /reject_all " .. LuaPlayer.name)
+          PlayerRequest.print("| Nouvelle demande reçu de : " .. LuaPlayer.name)
+          PlayerRequest.print("| Execute la commande : ")
+          PlayerRequest.print("| /accept " .. LuaPlayer.name .. " /reject " .. LuaPlayer.name .. " /reject_all " .. LuaPlayer.name)
+      end
+    end
+  end
+end
+
+-- accepter une demande en cours OU supprimer l'effet du rejectAll
+local function acceptRequest(LuaPlayer, reponse)
+  local playerSend = reponse.player
+  
+  if global.teleport.surfaces[LuaPlayer.name] then 
+    if global.teleport.surfaces[LuaPlayer.name].requests[playerSend] then
+      if global.teleport.surfaces[LuaPlayer.name].requests[playerSend].state == 1 then           
+        if not global.teleport.requests[playerSend] then 
+          -- une requete a déjà été accepté ailleurs
+            LuaPlayer.print({"msg.timeout-request"})
+            -- suppression de la request
+            global.teleport.surfaces[LuaSurface.name].requests[playerSend] = nil
+            return 
+        else
+          if global.teleport.requests[playerSend][LuaPlayer.name] then
+            
+            local LuaSurface = game.surfaces[LuaPlayer.name]
+
+            global.teleport.surfaces[LuaSurface.name].inventories[playerSend] = ritnlib.inventory.init()
+            table.insert(global.teleport.surfaces[LuaSurface.name].origine, playerSend)
+
+            -- Enregistrement de la surface d'origine
+            if not global.teleport.players[playerSend] then 
+              global.teleport.players[playerSend] = {origine = LuaSurface.name}
+            end
+            local origine = global.teleport.players[playerSend].origine
+
+            -- Teleportation sur la surface du personnage.
+            LuaPlayer = game.players[playerSend]
+            --if LuaPlayer.
+            ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
+            
+            if LuaPlayer.connected and LuaPlayer.valid then
+              LuaPlayer.teleport({0,0}, origine)
+              LuaPlayer.character.active = true
+            end
+            
+            -- Arrive sans rien
+            LuaPlayer.clear_items_inside()
+            
+            -- suppression de la request
+            global.teleport.surfaces[LuaSurface.name].requests[playerSend] = nil
+            global.teleport.requests[playerSend] = nil
+
+            -- fermeture de la fenetre après la création de la map
+            ritnGui.lobby.close(LuaPlayer)
+          end
+        end
+      elseif global.teleport.surfaces[LuaPlayer.name].requests[playerSend].state == 0 then
+          global.teleport.surfaces[LuaPlayer.name].requests[playerSend] = nil
+      end
+    end
+  end
+end
+
+-- rejeter une demande en cours
+local function rejectRequest(LuaPlayer, reponse)
+  local playerSend = reponse.player
+
+  if not global.teleport.requests[playerSend] then 
+    LuaPlayer.print({"msg.timeout-request"})
+    -- suppression de la request
+    global.teleport.surfaces[LuaPlayer.name].requests[playerSend] = nil
+    return 
+  end
+
+  if global.teleport.requests[playerSend][LuaPlayer.name] then
+    if global.teleport.surfaces[LuaPlayer.name] then 
+      if global.teleport.surfaces[LuaPlayer.name].requests[playerSend] then
+        if global.teleport.surfaces[LuaPlayer.name].requests[playerSend].state == 1 then 
+          -- suppression de la request
+          global.teleport.surfaces[LuaPlayer.name].requests[playerSend] = nil
+          global.teleport.requests[playerSend][LuaPlayer.name] = nil
+          -- envoie un message comme quoi la demande a été refusé !
+          if game.players[playerSend].valid and game.players[playerSend].connected then
+            game.players[playerSend].print({"msg.reject-request", LuaPlayer.name})
+          end
+        end
+      end
+    end
+  end
+end
+
+-- Rejeter toute demande de ce joueur
+local function rejectAllRequest(LuaPlayer, reponse)
+  local playerSend = reponse.player
+
+  if not global.teleport.requests[playerSend] then 
+    LuaPlayer.print({"msg.timeout-request"})
+    -- suppression de la request
+    global.teleport.surfaces[LuaPlayer.name].requests[playerSend] = nil
+    return 
+  end
+
+  if global.teleport.requests[playerSend][LuaPlayer.name] then
+    if global.teleport.surfaces[LuaPlayer.name] then 
+      if global.teleport.surfaces[LuaPlayer.name].requests[playerSend] then
+        if global.teleport.surfaces[LuaPlayer.name].requests[playerSend].state == 1 then 
+          -- suppression de la request
+          global.teleport.surfaces[LuaPlayer.name].requests[playerSend].state = 0
+          global.teleport.surfaces[LuaPlayer.name].requests[playerSend].reject_all=true
+          global.teleport.requests[playerSend][LuaPlayer.name] = nil
+          -- envoie un message comme quoi la demande a été refusé !
+          if game.players[playerSend].valid and game.players[playerSend].connected then
+            game.players[playerSend].print({"msg.reject-request", LuaPlayer.name})
+          end
+        end
       end
     end
   end
@@ -77,6 +203,9 @@ local flib = {}
 flib.give_start_item = give_start_item
 flib.is_died = is_died
 flib.createRequest = createRequest
+flib.acceptRequest = acceptRequest
+flib.rejectRequest = rejectRequest
+flib.rejectAllRequest = rejectAllRequest
 
 -- Retourne la liste des fonctions
 return flib

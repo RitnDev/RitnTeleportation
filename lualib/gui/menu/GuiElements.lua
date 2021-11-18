@@ -7,6 +7,7 @@ ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
 -- Properties
 local visible = false
 local modGui = require("mod-gui")
+local prefix_gui = ritnmods.teleport.defines.prefix.gui
 local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
 local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
 local prefix_surfaces_menu = ritnmods.teleport.defines.name.gui.prefix.surfaces_menu
@@ -23,8 +24,11 @@ local GuiElement = {
     style = ritnmods.teleport.defines.name.gui.styles.button_main,
   },
 
-  -- commons frame (Menu/Surfaces)
-  flow_common = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common,
+  flow_common = prefix_gui .. ritnmods.teleport.defines.name.gui.flow_common,
+
+  -- commons frame (Menu/Surfaces) 
+  flow_menu = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu,
+  flow_menu_frame = prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_menu_frame,
   
   -- Frame Menu
   frame_menu = {
@@ -152,10 +156,12 @@ local function create_gui_menu(LuaPlayer)
     if not admin then return end
   end
   
-  -- flow commun (Menu/Surfaces)
+  -- MAIN :
+  content.flow_menu = left[GuiElement.flow_common][GuiElement.flow_menu]
+
   content.main = ritnlib.gui.createFlowH(
-    left,
-    GuiElement.flow_common
+    content.flow_menu,
+    GuiElement.flow_menu_frame
   )
   
   -- frame Menu
@@ -520,7 +526,7 @@ end
 
 local function frame_menu_close(LuaPlayer)
   local left = modGui.get_frame_flow(LuaPlayer)
-  local frame_menu = left[prefix_menu .. ritnmods.teleport.defines.name.gui.menu.flow_common]
+  local frame_menu = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
 
   if frame_menu then 
     frame_menu.destroy()
@@ -561,6 +567,8 @@ end
 
 
 ------------------------------
+
+luaGui.GuiElement = GuiElement
 
 luaGui.button_main_show = create_button_main
 luaGui.button_main_open = button_main_open

@@ -20,11 +20,12 @@ modules.lobby =                 require(ritnmods.teleport.defines.lib.lobby)
 modules.enemy =                 require(ritnmods.teleport.defines.lib.enemy)
 
 -- Partie permettant la création des GUI et ses interactions
+modules.gui_request =           require(ritnmods.teleport.defines.lib.gui_request)
 modules.gui_portal =            require(ritnmods.teleport.defines.lib.gui_portal)                 
 modules.gui_teleporter =        require(ritnmods.teleport.defines.lib.gui_teleporter)             
 modules.gui_teleporter_remote = require(ritnmods.teleport.defines.lib.gui_teleporter_remote)
 modules.gui_menu =              require(ritnmods.teleport.defines.lib.gui_menu)
-modules.gui_lobby =              require(ritnmods.teleport.defines.lib.gui_lobby)
+modules.gui_lobby =             require(ritnmods.teleport.defines.lib.gui_lobby)
 
 ------------------------------------------------------------------------------
 return modules

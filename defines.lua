@@ -25,6 +25,7 @@ defines.lib = {
 
     events = classpath .. "events",
 
+    gui_request = modules .. "gui_request",
     gui_portal = modules .. "gui_portal",
     gui_menu = modules .. "gui_menu",
     gui_teleporter = modules .. "gui_teleporter",
@@ -88,6 +89,10 @@ defines.gui = {}
 defines.gui.styles = defines.lib.gui .. "styles"
 defines.gui.luaStyle = defines.lib.gui .. "LuaStyle"
 
+defines.gui.request = {
+    action = defines.lib.gui .. "request/action",
+    GuiElements = defines.lib.gui .. "request/GuiElements",
+}
 defines.gui.portal = {
     action = defines.lib.gui .. "portal/action",
     GuiElements = defines.lib.gui .. "portal/GuiElements",
@@ -117,6 +122,7 @@ defines.event_listener = core .. "event-listener"
 defines.name_prefix = "ritnmods-"
 defines.prefix = {
     name = "ritnmods-",
+    gui = "ritn-",
     enemy = "enemy~",
     lobby = "lobby~",
 }
@@ -243,6 +249,7 @@ defines.name.gui = {
     panel_main = "panel-main",
     SurfacesFlow = "Surfaces-Flow",
     ButtonFlow = "Button-Flow",
+    flow_common = "flow-common",
 
     Infos = "infos",
     Pane = "pane",
@@ -258,6 +265,7 @@ defines.name.gui = {
         remote = "remote-",
         menu = "menu-",
         main_menu = "main_menu-",
+        request = "request-",
         surfaces_menu = "surfaces_menu-",
         restart = "restart-",
         lobby = "lobby-"
@@ -274,7 +282,8 @@ defines.name.gui.menu = {
     frame_surfaces = "frame-surfaces",
     frame_restart = "frame-restart",
 
-    flow_common = "flow-common",
+    flow_menu = "flow-menu",
+    flow_menu_frame = "flow-menu_frame",
     flow_restart = "flow-restart",
     flow_admin = "flow-admin",
     flow_label = "flow-label",
@@ -323,6 +332,8 @@ defines.name.gui.lobby = {
 
 -- GUI LOBBY elements names
 defines.name.gui.request = {
+
+    flow_request = "flow-request",
 
 }
 
