@@ -14,6 +14,8 @@ local prefix_gui = ritnmods.teleport.defines.prefix.gui
 local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
 local prefix_request = ritnmods.teleport.defines.name.gui.prefix.request
 local flow_common = prefix_gui .. ritnmods.teleport.defines.name.gui.flow_common
+local definesGuiRequest = ritnmods.teleport.defines.name.gui.request
+local flow_request = prefix_request .. definesGuiRequest.flow_request
 
 
 ---
@@ -43,7 +45,7 @@ local function on_player_joined_game(e)
             -- flow des requests demandant de rejoindre la map.
             content.request = ritnlib.gui.createFlowV(
                 content.main,
-                prefix_request .. ritnmods.teleport.defines.name.gui.request.flow_request
+                flow_request
             )
         end
 
@@ -52,6 +54,45 @@ end
 
 
 
+-- Fonction : on_gui_click
+local function on_gui_click(e)
+    local element = e.element
+    local LuaPlayer = game.players[e.player_index]
+    local left = modGui.get_frame_flow(LuaPlayer)
+    local LuaGui = left[flow_common][flow_request]
+    local parent = element.parent
+    local pattern = "([^-]*)-?([^-]*)-?([^-]*)"
+    local LuaGui_name = ""
+    local click = {
+      ui, element, name, action
+    }
+  
+    -- Action de la frame : Gui_Lobby
+    if LuaGui == nil then return end
+    if parent == nil then return end 
+
+    LuaGui_name = flow_request
+    if LuaGui.name ~= LuaGui_name then return end
+    if element == nil then return end
+    if element.valid == false then return end
+    -- récupération des informations lors du clique
+    click.ui, click.element, click.name = string.match(element.name, pattern)
+    click.action = click.element .. "-" .. click.name
+
+    -- Actions
+    if click.ui == "request" then
+        -- recupération du nom du demandeur
+        local request_name = string.sub(parent.name,21)
+        if not game.players[request_name] then return end
+
+        if click.element ~= "button" then return end
+        if not ritnGui.request.action[click.action] then return end
+        ritnGui.request.action[click.action](LuaPlayer, request_name)
+        return
+    end
+
+
+end
 
 
 
@@ -63,6 +104,6 @@ local module = {}
 module.events = {}
 -----------------------
 module.events[defines.events.on_player_joined_game] = on_player_joined_game
---module.events[defines.events.on_gui_click] = on_gui_click
+module.events[defines.events.on_gui_click] = on_gui_click
 -----------------------
 return module

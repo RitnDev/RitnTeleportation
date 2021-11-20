@@ -51,13 +51,11 @@ end
 local function on_player_changed_surface(e)
   -- actualise TOUT les GUI lobby des joueurs sur les surfaces lobby
   for _,LuaPlayer in pairs(game.players) do 
-    if LuaPlayer.connected and LuaPlayer.valid and LuaPlayer.character then 
-      --if LuaPlayer.character.active == false then 
+    if LuaPlayer then 
         local surface = LuaPlayer.surface.name
         if string.sub(surface, 1, 6) == "lobby~" then 
           ritnGui.lobby.open(LuaPlayer)
         end
-      --end
     end
   end
 end
@@ -70,21 +68,21 @@ commands.add_command("accept", "<player>",
     local LuaPlayer = game.players[e.player_index]
 
     if e.parameter ~= nil then
-      local reponse = {player = e.parameter}
+      local reponse = {name = e.parameter}
       ritnlib.player.acceptRequest(LuaPlayer, reponse)
     end
 
   end
 )
 
-
+--[[
 commands.add_command("reject", "<player>", 
   function (e)  
 
     local LuaPlayer = game.players[e.player_index]
 
     if e.parameter ~= nil then
-      local reponse = {player = e.parameter}
+      local reponse = {name = e.parameter}
       ritnlib.player.rejectRequest(LuaPlayer, reponse)
     end
 
@@ -98,13 +96,13 @@ commands.add_command("reject_all", "<player>",
     local LuaPlayer = game.players[e.player_index]
 
     if e.parameter ~= nil then
-      local reponse = {player = e.parameter}
+      local reponse = {name = e.parameter}
       ritnlib.player.rejectAllRequest(LuaPlayer, reponse)
     end
 
   end
 )
-
+]]
 
 
 

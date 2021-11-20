@@ -92,10 +92,10 @@ local function on_player_joined_game(e)
 
     if global.teleport.surfaces[LuaPlayer.name] then 
       if LuaPlayer.name == LuaPlayer.surface.name then
-        if global.teleport.surfaces[LuaPlayer.name].finish == true then 
+        --if global.teleport.surfaces[LuaPlayer.name].finish == true then --(modif 1.9.2)
           ritnGui.menu.button_main_open(LuaPlayer)
           return
-        end
+        --end
       end
     end
 
@@ -107,10 +107,10 @@ local function on_player_changed_surface(e)
 
   if global.teleport.surfaces[LuaPlayer.name] then 
     if LuaPlayer.name == LuaPlayer.surface.name then
-      if global.teleport.surfaces[LuaPlayer.name].finish == true then 
+      --if global.teleport.surfaces[LuaPlayer.name].finish == true then --(modif 1.9.2)
         ritnGui.menu.button_main_open(LuaPlayer)
         return
-      end
+      --end
     end
   end
 end

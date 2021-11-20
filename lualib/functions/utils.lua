@@ -61,57 +61,62 @@ local function getn(tab)
     end
 end
 
+-- retourne une position selon l'index joueur
+local function positionTP(LuaPlayer, pointOrigine)
+    local point = 0.0
+    if pointOrigine ~= nil then 
+        point = pointOrigine
+    end
+    point = point + (0.1 * LuaPlayer.index)
+    return point
+end
+
+
 
 local function clean(player_name, LuaPlayer)
     if player_name == nil then return end 
 
+    -- vérification que personne est présent sur la map.
     if global.teleport.surfaces[player_name] then
-        if game.surfaces[player_name] then 
+        if game.surfaces[player_name] then
+
             local result = false
             for _,player in pairs(game.players) do 
-                if player.surface.name == player_name then 
+                
+                if global.teleport.players[player.name].origine == player_name 
+                or player.surface.name == player_name then
                     if player.connected == true then
+                        -- des joueurs sont connecté : annulation du clean.
                         result = true
                     end
                 end
             end
+            -- clean annulé
             if result == true then
                 if LuaPlayer then LuaPlayer.print("Clean impossible") end
                 print(">> Clean impossible")
                 return 
             end
+
+            -- Supression de la map d'origine
+            for i,player in pairs(global.teleport.surfaces[player_name].origine) do 
+                global.teleport.players[player] = nil
+            end
+
             game.delete_surface(player_name) 
         end
 
-        --Supression des forces (+ force "enemy" correspondant)
         if game.forces[player_name] then game.merge_forces(game.forces[player_name], "player") end
         if game.forces[prefix_enemy .. player_name] then game.merge_forces(game.forces[prefix_enemy .. player_name], "enemy") end
-
-        -- Add 1.8.0
-        if global.teleport.surfaces[player_name].origine then
-            for _,player in pairs(global.teleport.surfaces[player_name].origine) do 
-                global.teleport.players[player] = nil
-            end
-        end
-
-        -- Supression de la structure de données
         global.teleport.surfaces[player_name] = nil
         global.teleport.surface_value = global.teleport.surface_value - 1
-
-        -- verification que le joueur existe avant de le KICK !!!
-        if game.players[player_name] then
-            local players_name = player_name
-            game.kick_player(players_name, "clean map")
         
-            local tab_p = {}
-            table.insert(tab_p, players_name)
-            game.remove_offline_players(tab_p)
-        end
-        
+        -- message de confirmation
         if LuaPlayer then 
             LuaPlayer.print("Clean OK for : " .. player_name) 
         end
         print(">> CLEAN OK for : " .. player_name)
+
     end
 end
 
@@ -281,6 +286,7 @@ flib.split = split
 flib.getn = getn
 flib.ritnPrint = ritnPrint
 flib.ritnLog = ritnLog
+flib.positionTP = positionTP
 flib.clean = clean
 flib.restart = restart
 flib.mapGeneratorNewSeed = mapGeneratorNewSeed

@@ -180,18 +180,17 @@ local function button_valid_excude(LuaPlayer)
             if player == playerExclure then 
                 -- suppression du joueur dans origine de la map
                 table.remove(global.teleport.surfaces[surface].origine, i)
+                global.teleport.players[playerExclure] = nil
+
                 if game.players[playerExclure] 
                 and game.players[playerExclure].valid 
-                and game.players[playerExclure].connected then 
-                    game.players[playerExclure].character.active = false
+                and game.players[playerExclure].connected then   
+                    -- retour lobby
                     game.players[playerExclure].teleport({0,0}, "lobby~" .. playerExclure)
+                    game.players[playerExclure].clear_items_inside()
                 end
             end
         end
-    end
-    -- reinit du joueur
-    if global.teleport.players[playerExclure] then 
-        global.teleport.players[playerExclure] = nil
     end
     ritnGui.menu.frame_menu_close(LuaPlayer)
 end

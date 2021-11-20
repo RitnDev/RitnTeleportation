@@ -6,7 +6,8 @@ ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
-ritnGui.lobby =        require(ritnmods.teleport.defines.gui.lobby.GuiElements)
+ritnGui.lobby =       require(ritnmods.teleport.defines.gui.lobby.GuiElements)
+ritnGui.request =     require(ritnmods.teleport.defines.gui.request.GuiElements)
 ---------------------------------------------------------------------------------------------
 
 
@@ -71,20 +72,15 @@ local function createRequest(LuaPlayer, request)
       LuaPlayer.print({"msg.send-request", request}, {r = 1, g = 0, b = 0, a = 0.3})
 
       local PlayerRequest = game.players[request]
-
-      -- a changer par la creation du gui_request au joueur recevant la requete. -----
-      if PlayerRequest.connected then 
-          PlayerRequest.print("| Nouvelle demande reçu de : " .. LuaPlayer.name)
-          PlayerRequest.print("| Execute la commande : ")
-          PlayerRequest.print("| /accept " .. LuaPlayer.name .. " /reject " .. LuaPlayer.name .. " /reject_all " .. LuaPlayer.name)
-      end
+      -- créer la fenetre "gui_request" à l'utilisateur ciblé
+      ritnGui.request.open(PlayerRequest, global.teleport.surfaces[request].requests[LuaPlayer.name])
     end
   end
 end
 
 -- accepter une demande en cours OU supprimer l'effet du rejectAll
 local function acceptRequest(LuaPlayer, reponse)
-  local playerSend = reponse.player
+  local playerSend = reponse.name
   
   if global.teleport.surfaces[LuaPlayer.name] then 
     if global.teleport.surfaces[LuaPlayer.name].requests[playerSend] then
@@ -93,7 +89,7 @@ local function acceptRequest(LuaPlayer, reponse)
           -- une requete a déjà été accepté ailleurs
             LuaPlayer.print({"msg.timeout-request"})
             -- suppression de la request
-            global.teleport.surfaces[LuaSurface.name].requests[playerSend] = nil
+            global.teleport.surfaces[LuaPlayer.name].requests[playerSend] = nil
             return 
         else
           if global.teleport.requests[playerSend][LuaPlayer.name] then
@@ -111,7 +107,6 @@ local function acceptRequest(LuaPlayer, reponse)
 
             -- Teleportation sur la surface du personnage.
             LuaPlayer = game.players[playerSend]
-            --if LuaPlayer.
             ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
             
             if LuaPlayer.connected and LuaPlayer.valid then
@@ -139,7 +134,7 @@ end
 
 -- rejeter une demande en cours
 local function rejectRequest(LuaPlayer, reponse)
-  local playerSend = reponse.player
+  local playerSend = reponse.name
 
   if not global.teleport.requests[playerSend] then 
     LuaPlayer.print({"msg.timeout-request"})
@@ -167,7 +162,7 @@ end
 
 -- Rejeter toute demande de ce joueur
 local function rejectAllRequest(LuaPlayer, reponse)
-  local playerSend = reponse.player
+  local playerSend = reponse.name
 
   if not global.teleport.requests[playerSend] then 
     LuaPlayer.print({"msg.timeout-request"})

@@ -50,6 +50,7 @@ defines.graphics = {
         link = gui .. "icon-link.png",
         unlink = gui .. "icon-unlink.png",
         portal = gui .. "icon-portal.png",
+        rejectAll = gui .. "button-rejectAll.png",
     },
 }
 
@@ -207,6 +208,7 @@ defines.name.sprite = {
     link = "sprite-link",
     unlink = "sprite-unlink",
     portal = "sprite-portal",
+    rejectAll = "sprite-close",
 }
 
 -- GUI elements names
@@ -335,6 +337,16 @@ defines.name.gui.request = {
 
     flow_request = "flow-request",
 
+    frame_request = "frame-request",
+    flow_label = "flow-label",
+    panel_dialog = "flow-dialog",
+
+    label_explication = "label-explic",
+
+    button_accept = "button-accept",
+    button_reject = "button-reject",
+    button_rejectAll = "button-reject_all"
+
 }
 
 
@@ -433,6 +445,12 @@ defines.name.caption = {
         button_create = {"frame-lobby.button-create"},
         label_main_surfaces = {"frame-lobby.label-main-surfaces"},
         button_request = {"frame-lobby.button-valid"},
+    },
+
+    frame_request = {
+        button_accept = {"frame-request.button-accept"},
+        button_reject = {"frame-request.button-reject"},
+        button_rejectAll = {"frame-request.button-reject_all"},
     }
 }
 

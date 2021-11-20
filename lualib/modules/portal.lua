@@ -80,11 +80,8 @@ local function portal_breaks(e)
   Contains:
   player_index :: uint: The index of the player doing the mining.
   entity :: LuaEntity: The entity that has been mined.
-  buffer :: LuaInventory: The temporary inventory that holds the result of mining the entity.
+  buffer :: LuaInventory: The temporary inventory that holds the result of mining the entity. 
 ]]
-
--- gerer la suppression de portail par joueur originaire de la map mais pas propriétaire.
-
 
     local isDestination = false
 
@@ -114,7 +111,6 @@ local function portal_breaks(e)
         LuaSurface.destination = game.surfaces[ritnlib.portal.getDestination(LuaSurface.origine, TabPosition.origine)] 
         
 
-
         -- Si le portail a une destination
         -- Mise à true de l'info : isDestination
         if LuaSurface.destination ~= nil then 
@@ -124,7 +120,7 @@ local function portal_breaks(e)
           ritnlib.utils.ritnLog(">> (debug) - break portal - no surface destination")
         end
         
-        -- Récupération des Joueurs concernés
+        -- Récupération des Joueurs concernés (propriétaire des surfaces)
         for i,player in pairs(game.players) do     
             if player.name == LuaSurface.origine.name then
               LuaPlayer.origine = player -- Joueur createur origine du portail
@@ -141,11 +137,9 @@ local function portal_breaks(e)
         -- Si le portail n'a aucune destination on ajoute 1 portail dans l'inventaire
         -- Le joueur a juste enlevé le portail non lié
         if isDestination == false then 
-            LuaPlayer.origine.insert({name = ritnmods.teleport.defines.name.item.portal, count = 1})
-            -- Suppression de la structure "portal" dans global.teleport.surfaces[surface.name].portals
-            ritnlib.portal.delete(LuaSurface.origine, TabPosition.origine, nil, nil)
-            ritnlib.utils.ritnLog(">> (debug) - break portal - delete portal - no destination")
-            return
+          ritnlib.portal.insertPortal(LuaPlayer.origine, LuaSurface.origine, TabPosition.origine)
+          ritnlib.utils.ritnLog(">> (debug) - break portal - delete portal - no destination")
+          return
         end
 
         -- Récupère les coordonées du portail destination lié à la surface d'origine.
@@ -154,19 +148,8 @@ local function portal_breaks(e)
         -- Si le portail a été miné mais ni par le joueur d'origine ni de destination
         if LuaPlayer.mined.name ~= LuaPlayer.origine.name then
             if LuaPlayer.mined.name ~= LuaPlayer.destination.name then 
-              -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)
-              local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name)
-                       
-              local renderId = rendering.draw_text{
-                text=LuaSurface.destination.name,
-                surface=LuaSurface.origine,
-                target=LuaEntity1,
-                alignment = "center",
-                target_offset={0, -2.0},
-                color = {r = 0.217, g = 0.715, b = 0.874, a = 1},
-                scale_with_zoom = true,
-                scale = 1.5
-              }
+              -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)   
+              ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
               ritnlib.utils.ritnLog(">> (debug) - break portal - rebuild portal")
             return
           end 
@@ -176,58 +159,25 @@ local function portal_breaks(e)
         -- Si le joueur n'est pas mort
         if ritnlib.player.is_died(LuaPlayer.destination) == false then
 
-          -- On téléporte le joueur d'origine s'il n'est pas chez lui
-          if LuaPlayer.origine.surface.name == LuaSurface.destination.name then 
-            if TabPosition.destination ~= nil then         
-              local id = ritnlib.portal.getId(LuaSurface.destination, TabPosition.destination)
-              ritnlib.portal.teleport(LuaSurface.destination, id, LuaPlayer.origine, true) -- add instantTP 1.5.8
-              ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (origine)")
-              -- Add 1.5.1
-              local LuaPlayerDest = game.players[LuaSurface.destination.name]
-              if LuaPlayerDest.valid then 
-                  LuaPlayerDest.print({"msg.unlink", LuaPlayer.name}, {r = 0.217, g = 0.715, b = 0.874, a = 1})
-              end
-            else
-              ritnlib.inventory.save(LuaPlayer.origine, global.teleport.surfaces[LuaSurface.destination.name].inventories[LuaPlayer.origine.name])
-              LuaPlayer.destination.teleport({0,0}, LuaPlayer.origine.name)
-              ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (origine)")
-              print(">> " .. LuaPlayer.origine.name .." -> " .. LuaSurface.destination.name)
-            end
-          end 
+          -- On téléporte les joueurs d'origine s'ils ne sont pas chez eux
+          ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.origine.name .. " - " .. LuaSurface.destination.name)
+          local id = ritnlib.portal.getId(LuaSurface.origine, TabPosition.origine)
+          ritnlib.portal.returnHome(LuaSurface.origine, LuaSurface.destination, TabPosition.destination, id)
 
-          -- On téléporte le joueur venant de la destination s'il n'est pas chez lui
-          if LuaPlayer.destination.surface.name == LuaSurface.origine.name then  
-            local id = ritnlib.portal.getId(LuaSurface.origine, TabPosition.origine)
-            ritnlib.portal.teleport(LuaSurface.origine, id, LuaPlayer.destination, true)
-            ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (destination)")
-          end 
-  
-          if LuaPlayer.origine.surface.name == LuaSurface.origine.name then
-              LuaPlayer.origine.insert({name = ritnmods.teleport.defines.name.item.portal, count = 1})
-          end
+          -- On téléporte les joueurs venant de la destination s'il ne sont pas chez eux
+          ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.destination.name .. " - " .. LuaSurface.origine.name)
+          id = ritnlib.portal.getId(LuaSurface.destination, TabPosition.destination)
+          ritnlib.portal.returnHome(LuaSurface.destination, LuaSurface.origine, TabPosition.origine, id)
 
-          -- Suppression de la structure "portal" dans global.teleport.surfaces[surface.name].portals
-          ritnlib.portal.delete(LuaSurface.origine, TabPosition.origine, LuaSurface.destination, TabPosition.destination)
+          -- insert portal
+          ritnlib.portal.insertPortal(LuaPlayer.origine,LuaSurface.origine, TabPosition.origine, LuaSurface.destination, TabPosition.destination)
 
         else --Si le joueur est mort
           -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)
-          local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name)
-          
           LuaPlayer.origine.print({"frame.is-died", LuaPlayer.destination.name})
-
-          local renderId = rendering.draw_text{
-            text=LuaSurface.destination.name,
-            surface=LuaSurface.origine,
-            target=LuaEntity1,
-            alignment = "center",
-            target_offset={0, -2.0},
-            color = {r = 0.217, g = 0.715, b = 0.874, a = 1},
-            scale_with_zoom = true,
-            scale = 1.5
-          }
+          ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
           ritnlib.utils.ritnLog(">> (debug) - break portal - player dead")
         end
-
     end
 
 end
@@ -243,18 +193,7 @@ local function portal_died(e)
     local LuaPlayer = LuaEntity.last_user
     local position = LuaEntity.position
     
-    local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface, position, LuaPlayer.name)
-       
-    local renderId = rendering.draw_text{
-      text= ritnlib.portal.getDestination(LuaSurface, position),
-      surface=LuaSurface,
-      target=LuaEntity1,
-      alignment = "center",
-      target_offset={0, -2.0},
-      color = {r = 0.217, g = 0.715, b = 0.874, a = 1},
-      scale_with_zoom = true,
-      scale = 1.5
-    }
+    local renderId = ritnlib.portal.replacePortal(LuaSurface, position, LuaPlayer.name, LuaSurface.name)
     ritnlib.portal.setRenderId(LuaSurface, position, renderId)
   end
 

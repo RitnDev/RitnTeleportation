@@ -85,8 +85,10 @@ end
 local function getId(LuaSurface, position)
   for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
     if portal.teleport == 1 then
-      if portal.position.x == position.x and portal.position.y == position.y then
-        return portal.id
+      if position ~= nil then
+        if portal.position.x == position.x and portal.position.y == position.y then
+          return portal.id
+        end
       end
     end
   end
@@ -217,7 +219,12 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
   ritnlib.utils.ritnLog(">> (debug) - portal teleport - function ok")
   
   -- Récupère la surface de destination
-  local LuaSurface_dest = game.surfaces[getDestinationId(LuaSurface, id)]
+  ritnlib.utils.ritnLog(">> (debug) - portal teleport - li.223 (1) : " .. LuaSurface.name .. " - " .. id)
+  local surfaceDest_name = getDestinationId(LuaSurface, id)
+  ritnlib.utils.ritnLog(">> (debug) - portal teleport - li.223 (2): " .. surfaceDest_name)
+  
+  --if surfaceDest_name ~= nil then return end
+  local LuaSurface_dest = game.surfaces[surfaceDest_name]
 
   if LuaSurface_dest ~= nil then
       if global.teleport.surfaces[LuaSurface_dest.name] then
@@ -275,11 +282,15 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                   end
                   -------------
                   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
-                  if LuaPlayer.name == LuaSurface_dest.name then
-                    LuaPlayer.teleport({portal_position.x+1.1, portal_position.y+1.1},LuaSurface_dest)
+                  
+                  -- gestion d'un decalage au moment du teleport pour eviter la colision des joueurs
+                  local decalage = ritnlib.utils.positionTP(LuaPlayer, 1.0)
+                  -- teleportation                  
+                  if origine == LuaSurface_dest.name then
+                    LuaPlayer.teleport({portal_position.x+decalage, portal_position.y+decalage},LuaSurface_dest)
                     ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   else
-                    LuaPlayer.teleport({portal_position.x-1.1, portal_position.y+1.1},LuaSurface_dest)
+                    LuaPlayer.teleport({portal_position.x-decalage, portal_position.y+decalage},LuaSurface_dest)
                     ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
                   end
               else
@@ -310,6 +321,67 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
   end
   
 end
+
+
+-- Insert un portail dans l'inventaire du joueur (supprime la structure portal)
+local function insertPortal(LuaPlayer, LuaSurface_origine, TabPosition_origine, LuaSurface_destination, TabPosition_destination)
+  if LuaPlayer.name == LuaPlayer.surface.name then
+    if LuaPlayer.connected then
+      -- insert portail dans l'inventaire s'il est connecté
+      LuaPlayer.insert({name = ritnmods.teleport.defines.name.item.portal, count = 1})
+    else
+      -- insert dans l'inventaire sauvegardé s'il n'est pas connecté
+      global.teleport.surfaces[LuaSurface_origine.name].inventories[LuaPlayer.name][defines.inventory.character_main].insert({name = ritnmods.teleport.defines.name.item.portal, count = 1})
+    end
+  end
+  -- Suppression de la structure "portal" dans global.teleport.surfaces[surface.name].portals
+  delete(LuaSurface_origine, TabPosition_origine, LuaSurface_destination, TabPosition_destination)
+  ritnlib.utils.ritnLog(">> (debug) - function portal - insert portal")
+end
+
+
+-- replace le portail en lieu et place
+local function replacePortal(LuaSurface_origine, LuaEntity_position, LuaPlayer_name, LuaSurface_destination)
+    local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface_origine, LuaEntity_position, LuaPlayer_name)
+    local renderId = rendering.draw_text{
+        text=LuaSurface_destination,
+        surface=LuaSurface_origine,
+        target=LuaEntity1,
+        alignment = "center",
+        target_offset={0, -2.0},
+        color = {r = 0.217, g = 0.715, b = 0.874, a = 1},
+        scale_with_zoom = true,
+        scale = 1.5
+    }
+    ritnlib.utils.ritnLog(">> (debug) - function portal - replacePortal")
+    return renderId
+end
+
+
+-- Teleportation à la map d'origine des joueurs s'il ne sont pas chez eux
+local function returnHome(LuaSurfaceNoHome, LuaSurfaceHome, tabPositionHome, id)
+  for _,LuaPlayer in pairs(game.players) do
+    if global.teleport.players[LuaPlayer.name].origine == LuaSurfaceHome.name then
+      if LuaPlayer.surface.name == LuaSurfaceNoHome.name then  
+        ritnlib.utils.ritnLog(">> (debug) - returnHome - player : " .. LuaPlayer.name)
+        if tabPositionHome ~= nil or id~=nil then 
+          teleport(LuaSurfaceNoHome, id, LuaPlayer, true) -- recupère la position à TP depuis la map où le portail enlevé.
+          ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (return home)")
+        else
+          ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurfaceNoHome.name].inventories[LuaPlayer.name])
+          local posTP = ritnlib.utils.positionTP(LuaPlayer)
+          LuaPlayer.teleport({posTP,posTP}, LuaSurfaceHome.name)
+          ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (return home)")
+          print(">> " .. LuaPlayer.name .." -> " .. LuaSurfaceHome.name)
+        end
+      end
+    end
+  end
+
+end
+
+
+
 
 ----------------------------
 
@@ -348,6 +420,9 @@ flib.setIdValue = setIdValue
 flib.getValue = getValue
 flib.setValue = setValue
 flib.listLink = listLink
+flib.insertPortal = insertPortal
+flib.replacePortal = replacePortal
+flib.returnHome = returnHome
 
 -- Retourne la liste des fonctions
 return flib

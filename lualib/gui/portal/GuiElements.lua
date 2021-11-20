@@ -162,7 +162,10 @@ local function create_gui(LuaSurface, LuaPlayer, LuaEntity)
       local renderId = ritnlib.portal.getRenderId(LuaPlayer.surface, LuaEntity.position)
       if not game.surfaces[ritnlib.portal.getDestination(LuaPlayer.surface, LuaEntity.position)] then
         if renderId ~= -1 then 
-          rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
+          local result = pcall(function()
+            rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
+          end)
+          if result == false then print(">> (debug) guiElement - portal : create_gui : rendering.set_text non executé !") end
           ritnlib.portal.setDestination(LuaPlayer.surface, LuaEntity.position, ritnmods.teleport.defines.value.portal_not_link)
           content.LabelLink.caption = {"frame-portal.link", ritnlib.portal.getDestination(LuaPlayer.surface, LuaEntity.position)}
         end
@@ -247,9 +250,9 @@ local function close(LuaSurface, LuaPlayer)
     if LuaSurface then
       local info = guiPortal[prefix .. ritnmods.teleport.defines.name.gui.Infos].caption
       local position = ritnlib.utils.split(info, " ")
-      local find_e = LuaSurface.find_entity(ritnmods.teleport.defines.name.entity.portal, position)
-      find_e.operable = true
-      find_e.minable = true
+      local LuaEntity = LuaSurface.find_entity(ritnmods.teleport.defines.name.entity.portal, position)
+      LuaEntity.operable = true
+      LuaEntity.minable = true
     end
     guiPortal.destroy()
   end

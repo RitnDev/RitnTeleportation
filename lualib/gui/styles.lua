@@ -72,6 +72,10 @@ data:extend({
 		ritnmods.teleport.defines.name.sprite.portal,
 		ritnmods.teleport.defines.graphics.gui.portal
 	),
+	sprite_button(
+		ritnmods.teleport.defines.name.sprite.rejectAll,
+		ritnmods.teleport.defines.graphics.gui.rejectAll
+	),
 
 	
 

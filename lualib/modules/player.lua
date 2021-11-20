@@ -154,7 +154,7 @@ local function on_player_joined_game(e)
 
     -- No characters
     if LuaPlayer.character == nil then return end
-          
+              
     -- le joueur n'existe pas dans la structure
     if not global.teleport.players[LuaPlayer.name] then 
       print(">> debug : not surface : create")
@@ -173,6 +173,7 @@ local function on_player_joined_game(e)
     if  surfaceOrigineName == LuaSurface.name then
       ritnlib.surface.addPlayer(LuaPlayer)
       ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[surfaceOrigineName].inventories[LuaPlayer.name])
+      LuaPlayer.character.active = true
     else -- player is no home
       LuaPlayer.teleport({0,0}, global.teleport.players[LuaPlayer.name].origine)
       LuaPlayer.character.active = true
@@ -221,13 +222,14 @@ local function on_player_changed_position(e)
                       
                   -- Teleportation
                   ritnlib.portal.teleport(LuaSurface, id, LuaPlayer)
-  
-                  if LuaGui then
-                    local LuaEntity = LuaSurface.find_entity(ritnmods.teleport.defines.name.entity.portal, position)
-                    LuaEntity.operable = true
-                    LuaEntity.minable = true
-                    LuaGui.destroy()
-                  end
+
+                  -- Fermeture de tous les gui
+                  ritnGui.remote.close(LuaPlayer)
+                  ritnGui.teleporter.close(LuaPlayer.surface, LuaPlayer)
+                  ritnGui.portal.close(LuaPlayer.surface, LuaPlayer)
+                  ritnGui.menu.frame_menu_close(LuaPlayer)
+                  ritnGui.menu.frame_restart_close(LuaPlayer)
+                  
                 end 
   
             end

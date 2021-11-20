@@ -148,14 +148,23 @@ local function create_gui_menu(LuaPlayer)
   if global.teleport.surfaces[LuaSurface.name].name == nil then return end
   local finish = global.teleport.surfaces[LuaSurface.name].finish
   local admin = LuaPlayer.admin
+  local exclusion_enabled = false
 
   -- Seul le joueur de la surface à le bouton de disponible
   if LuaPlayer.name ~= LuaSurface.name then 
     finish = false
     -- S'il n'est pas admin pas de bouton menu
-    if not admin then return end
+    -- if not admin then return end  --> plus valable depuis la 1.9
+  else
+    if #global.teleport.surfaces[LuaSurface.name].origine > 1 then
+      -- activation si le joueur se trouve sur sa map uniquement.
+      exclusion_enabled = true
+    end
   end
   
+
+
+
   -- MAIN :
   content.flow_menu = left[GuiElement.flow_common][GuiElement.flow_menu]
 
@@ -171,6 +180,7 @@ local function create_gui_menu(LuaPlayer)
     GuiElement.frame_menu.caption
   )
   ritnlib.styles.ritn_frame_style(content.frame_menu.style)
+  content.frame_menu.style.maximal_width = 125
 
   -- flow_restart
   content.flow_restart = ritnlib.gui.createFlowV(
@@ -186,11 +196,13 @@ local function create_gui_menu(LuaPlayer)
   )
   content.button_restart.visible = finish
 
+  --button exclusion
   content.button_exclusion = ritnlib.gui.createButton(
     content.flow_restart,
     GuiElement.button_exclusion.name,
     GuiElement.button_exclusion.caption
   )
+  content.button_exclusion.enabled = exclusion_enabled
 
   -- flow_admin
   content.flow_admin = ritnlib.gui.createFlowV(

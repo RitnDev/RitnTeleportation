@@ -185,6 +185,11 @@ local function createSurface(LuaPlayer)
   -- Si le nombre de surface est uniquement inférieur au max paramétrés.
   if global.teleport.surface_value-1 < global.settings.surfaceMax then 
 
+        -- Suppression de toutes requêtes en cours sur le joueur
+        if global.teleport.requests[LuaPlayer.name] then
+          global.teleport.requests[LuaPlayer.name] = nil
+        end
+
         --return map_gen avec nouvelle seed
         local map_gen = ritnlib.utils.mapGeneratorNewSeed()
 

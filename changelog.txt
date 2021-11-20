@@ -1,4 +1,29 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.3
+Date: 20.11.2021
+  Notes:
+    - Préparation de la version 2.0.
+    - La 1.9.3 = Version bev.
+  Fixes:
+    - Testing et fix des différents bugs rencontrés liés aux modifications apportés au mod.
+    - fix : fermeture de tous les GUI en passant un portail.
+    - fix : active le menu sur les autres maps joueurs.
+    - fix : clean alors qu'un joueur est présent sur la map.
+    - fix : Le joueur est reTP au spawn de sa map avec inventaire vidé lorsqu'un autre joueur 
+      accepte une ancienne requête. 
+    - fix : module "portal" - fonction : "portal_breaks". 
+---------------------------------------------------------------------------------------------------
+Version: 1.9.2
+Date: 19.11.2021
+  Notes:
+    - Préparation de la version 2.0.
+  Add:
+    - Ajout du gui_request et gestion de celui-ci.
+  Fixes:
+    - Testing et fix des différents bugs rencontrés liés aux modifications apportés au mod.
+    - Suppression des commandes /reject et /reject_all.
+    - Amélioration du clean map (retour lobby).
+---------------------------------------------------------------------------------------------------
 Version: 1.9.1
 Date: 18.11.2021
   Notes:
