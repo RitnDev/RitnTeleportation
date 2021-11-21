@@ -9,7 +9,7 @@ if not ritnmods then ritnmods = {
 
 local setting_value = settings.startup[ritnmods.teleport.defines.name.settings.teleporter_enable].value
 test = false
--- test = true
+--test = true
 
 -- require
 require ("prototypes.custom-inputs")

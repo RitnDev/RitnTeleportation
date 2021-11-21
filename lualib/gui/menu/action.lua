@@ -198,11 +198,6 @@ end
 
 local function button_valid_restart(LuaPlayer)
     ritnGui.menu.frame_restart_close(LuaPlayer)
-
-    --if not game.is_multiplayer() then 
-        --LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.local_party)
-        --return 
-    --end
     ritnlib.utils.restart(LuaPlayer)
 end
 

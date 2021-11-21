@@ -67,7 +67,7 @@ local function positionTP(LuaPlayer, pointOrigine)
     if pointOrigine ~= nil then 
         point = pointOrigine
     end
-    point = point + (0.1 * LuaPlayer.index)
+    point = point + (0.3 * LuaPlayer.index)
     return point
 end
 

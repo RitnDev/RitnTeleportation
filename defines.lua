@@ -401,8 +401,7 @@ defines.name.caption = {
         button_valid = {"frame-portal.valid-button"},
     },
 
-    msg = {
-        serveur_full = {"msg.too-mush-player-kick"},        
+    msg = {       
         not_link = {"msg.not-link"},
         no_surface = {"msg.no-surfaces"},
         no_select = {"msg.no-selected"},

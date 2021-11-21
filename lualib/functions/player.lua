@@ -37,12 +37,11 @@ local function give_start_item(LuaPlayer, vanilla)
   elseif vanilla == 3 then --seablock
     LuaPlayer.insert{name = "iron-plate", count = 8}
     LuaPlayer.insert{name = "stone-furnace", count = 1}
-  else
-    LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
   end
 
+  -- modif 2.0
   if game.is_multiplayer() then
-    if global.teleport.surfaces[LuaPlayer.name] then -- add 1.8.3
+    if global.teleport.surfaces[LuaPlayer.name] then
       LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
     end
   end
@@ -110,7 +109,9 @@ local function acceptRequest(LuaPlayer, reponse)
             ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
             
             if LuaPlayer.connected and LuaPlayer.valid then
-              LuaPlayer.teleport({0,0}, origine)
+              -- gestion d'un decalage au moment du teleport pour eviter la colision des joueurs
+              local decalage = ritnlib.utils.positionTP(LuaPlayer)
+              LuaPlayer.teleport({decalage,decalage}, origine)
               LuaPlayer.character.active = true
             end
             

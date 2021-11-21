@@ -136,10 +136,10 @@ end
 local function NewPlayerSurface(LuaPlayer)
 
       ritnlib.surface.createLobby(LuaPlayer)
-      --if not game.is_multiplayer() then
+      if not game.is_multiplayer() then
           -- Creation de la surface joueur
-          --ritnlib.surface.createSurface(LuaPlayer)
-      --end
+          ritnlib.surface.createSurface(LuaPlayer)
+      end
 
 end
 

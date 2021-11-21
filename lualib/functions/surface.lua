@@ -264,7 +264,7 @@ local function createSurface(LuaPlayer)
         end
         
   else
-    -- mettre un message sympathique pour lui dire : CHEH !
+    LuaPlayer.print({"msg.server-full"})
   end
 end
 

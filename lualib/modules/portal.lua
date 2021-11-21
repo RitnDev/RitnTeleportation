@@ -155,28 +155,34 @@ local function portal_breaks(e)
           end 
         end
 
-
+        
         -- Si le joueur n'est pas mort
-        if ritnlib.player.is_died(LuaPlayer.destination) == false then
-
-          -- On téléporte les joueurs d'origine s'ils ne sont pas chez eux
-          ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.origine.name .. " - " .. LuaSurface.destination.name)
-          local id = ritnlib.portal.getId(LuaSurface.origine, TabPosition.origine)
-          ritnlib.portal.returnHome(LuaSurface.origine, LuaSurface.destination, TabPosition.destination, id)
-
-          -- On téléporte les joueurs venant de la destination s'il ne sont pas chez eux
-          ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.destination.name .. " - " .. LuaSurface.origine.name)
-          id = ritnlib.portal.getId(LuaSurface.destination, TabPosition.destination)
-          ritnlib.portal.returnHome(LuaSurface.destination, LuaSurface.origine, TabPosition.origine, id)
-
-          -- insert portal
-          ritnlib.portal.insertPortal(LuaPlayer.origine,LuaSurface.origine, TabPosition.origine, LuaSurface.destination, TabPosition.destination)
-
-        else --Si le joueur est mort
-          -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)
-          LuaPlayer.origine.print({"frame.is-died", LuaPlayer.destination.name})
-          ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
-          ritnlib.utils.ritnLog(">> (debug) - break portal - player dead")
+        if ritnlib.player.is_died(LuaPlayer.origine) == true 
+        or ritnlib.player.is_died(LuaPlayer.destination) == true then
+            --Si l'un des joueurs propriétaire est mort
+            -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)
+            if ritnlib.player.is_died(LuaPlayer.origine) then 
+              LuaPlayer.destination.print({"msg.is-died", LuaPlayer.origine.name})
+            end
+            if ritnlib.player.is_died(LuaPlayer.destination) then 
+              LuaPlayer.origine.print({"msg.is-died", LuaPlayer.destination.name})
+            end
+            ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
+            ritnlib.utils.ritnLog(">> (debug) - break portal - player dead")
+        else 
+            -- si aucun des joueurs propriétaire ne sont mort
+            -- On téléporte les joueurs d'origine s'ils ne sont pas chez eux
+            ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.origine.name .. " - " .. LuaSurface.destination.name)
+            local id = ritnlib.portal.getId(LuaSurface.origine, TabPosition.origine)
+            ritnlib.portal.returnHome(LuaSurface.origine, LuaSurface.destination, TabPosition.destination, id)
+        
+            -- On téléporte les joueurs venant de la destination s'il ne sont pas chez eux
+            ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome2 : " .. LuaSurface.destination.name .. " - " .. LuaSurface.origine.name)
+            id = ritnlib.portal.getId(LuaSurface.destination, TabPosition.destination)
+            ritnlib.portal.returnHome(LuaSurface.destination, LuaSurface.origine, TabPosition.origine, id)
+        
+            -- insert portal
+            ritnlib.portal.insertPortal(LuaPlayer.origine,LuaSurface.origine, TabPosition.origine, LuaSurface.destination, TabPosition.destination)
         end
     end
 

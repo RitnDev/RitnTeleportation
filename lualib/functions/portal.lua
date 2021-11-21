@@ -6,6 +6,7 @@ local flib = {}
 local ritnlib = {}
 ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
 ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
+ritnlib.surface =       require(ritnmods.teleport.defines.functions.surface)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.remote =            require(ritnmods.teleport.defines.gui.remote.GuiElements)
@@ -342,9 +343,9 @@ end
 
 -- replace le portail en lieu et place
 local function replacePortal(LuaSurface_origine, LuaEntity_position, LuaPlayer_name, LuaSurface_destination)
-    local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface_origine, LuaEntity_position, LuaPlayer_name)
+    local LuaEntity1 = ritnlib.surface.create_portal(LuaSurface_origine, LuaEntity_position, LuaPlayer_name) 
     local renderId = rendering.draw_text{
-        text=LuaSurface_destination,
+        text=getDestination(LuaSurface_origine, LuaEntity1.position),
         surface=LuaSurface_origine,
         target=LuaEntity1,
         alignment = "center",

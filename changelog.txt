@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+Date: 21.11.2021
+  Notes:
+    - Préparation de la version 2.0.
+  Changes:
+    - Les joueurs n'arrivent plus avec un portail en poche.
+    - En local : Vous spawnez directement sur la map (pas de lobby).
+  Add:
+    - Ajout d'un message quand le nombre de map est atteint et qu'un joueur essaye de créer une map.
+  Fixes:
+    - fix : fonctions "portal" - fonction : "replacePortal".
+    - fix : module "portal" - fonction : "portal_break" - player.is_died
+    - fix : fonctions "utils" - fonction : "positionTP"
+    - fix : function "teleporter" - fonction : "teleport" - ajout du système de décalage.
+---------------------------------------------------------------------------------------------------
 Version: 1.9.3
 Date: 20.11.2021
   Notes:

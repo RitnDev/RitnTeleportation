@@ -2,8 +2,10 @@
 -- Fonction Teleporter
 ---
 local flib = {}
-
-----------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+local ritnlib = {}
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
+---------------------------------------------------------------------------------------------
 
 -- getIdValue
 local function getIdValue(LuaSurface)
@@ -169,7 +171,8 @@ local function teleport(LuaPlayer, LuaSurface, name)
         if LuaSurface ~= nil then
           if name ~= nil then
             local position = getPosition(LuaSurface, name)
-            LuaPlayer.teleport({position.x + 1.1,position.y + 1.1}, LuaSurface)
+            local decalage = ritnlib.utils.positionTP(LuaPlayer, 1.0)
+            LuaPlayer.teleport({position.x + decalage,position.y + decalage}, LuaSurface)
           end
         end
     end 
