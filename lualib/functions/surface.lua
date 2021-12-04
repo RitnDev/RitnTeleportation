@@ -176,7 +176,9 @@ local function createLobby(LuaPlayer)
   LuaSurface.set_tiles(tiles) 
   LuaPlayer.clear_items_inside()
   LuaPlayer.teleport({0,0}, lobby_name)
-  LuaPlayer.character.active = false
+  if script.level.level_name == "freeplay" then
+    LuaPlayer.character.active = false
+  end
 end
 
 
@@ -241,7 +243,9 @@ local function createSurface(LuaPlayer)
         -- Teleportation sur la surface du personnage.
         ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
         LuaPlayer.teleport({0,0}, origine)
-        LuaPlayer.character.active = true
+        if script.level.level_name == "freeplay" then
+          LuaPlayer.character.active = true
+        end
 
         --Chargement des items
         LuaPlayer.clear_items_inside()

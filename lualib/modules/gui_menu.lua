@@ -152,6 +152,9 @@ local function on_gui_click(e)
   local LuaPlayer = game.players[e.player_index]
   local left = modGui.get_frame_flow(LuaPlayer)
   local center = LuaPlayer.gui.center
+  if not left[GuiElement.flow_common] then 
+    on_player_joined_game(e)
+  end
   local LuaGui = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
   local LuaGuiRestart = center[prefix_restart .. ritnmods.teleport.defines.name.gui.menu.frame_restart]
   local pattern = "([^-]*)-?([^-]*)-?([^-]*)"

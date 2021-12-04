@@ -6,8 +6,10 @@ ritnGui.menu =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
 ritnGui.menu.action = require(ritnmods.teleport.defines.gui.menu.action)
 ---------------------------------------------------------------------------------------------
 local events = {}
-events.lib =    require(ritnmods.teleport.defines.functions.inventory)
+events.inventory =    require(ritnmods.teleport.defines.functions.inventory)
 events.utils =  require(ritnmods.teleport.defines.functions.utils)
+events.surface =  require(ritnmods.teleport.defines.functions.surface)
+
 
 
 local function call_remote_functions()
@@ -63,6 +65,23 @@ local function on_tick_local(e)
 
 end
 
+-- Créer une surface nauvis si on charge une partie ne comportant pas RitnTP à la base.
+local function on_tick_loadGame(e) 
+  if e.tick > 3600 then
+    if not global.teleport.surfaces["nauvis"] then
+      -- Creation de la structure de map dans les données
+      events.surface.generateSurface(game.surfaces.nauvis)
+      global.teleport.surfaces["nauvis"].exception = true
+      global.teleport.surfaces["nauvis"].map_used = true
+      for i,LuaPlayer in pairs(game.players) do
+        global.teleport.surfaces["nauvis"].inventories[LuaPlayer.name] = events.inventory.init()
+        events.surface.addPlayer(LuaPlayer)
+      end
+    end
+  end
+end
+
+
 
 -- open_close_menu
 local function open_close_menu(e)
@@ -76,6 +95,7 @@ end
 -- event : on_tick
 script.on_event({defines.events.on_tick},function(e)
   on_tick_local(e)
+  on_tick_loadGame(e) 
 end)
 
 -- event : custom-input -> toggle_main_menu

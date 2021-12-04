@@ -7,6 +7,7 @@ ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.request =        require(ritnmods.teleport.defines.gui.request.GuiElements)
+ritnGui.menu    =        require(ritnmods.teleport.defines.gui.menu.GuiElements)
 ritnGui.request.action = require(ritnmods.teleport.defines.gui.request.action)
 ---------------------------------------------------------------------------------------------
 local modGui = require("mod-gui")
@@ -59,6 +60,9 @@ local function on_gui_click(e)
     local element = e.element
     local LuaPlayer = game.players[e.player_index]
     local left = modGui.get_frame_flow(LuaPlayer)
+    if not left[flow_common] then 
+        on_player_joined_game(e)
+    end
     local LuaGui = left[flow_common][flow_request]
     local parent = element.parent
     local pattern = "([^-]*)-?([^-]*)-?([^-]*)"

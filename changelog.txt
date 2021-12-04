@@ -1,4 +1,37 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.6
+Date: 05.12.2021
+  Changes:
+    - La télécommande est remis dans l'inventaire après une téléportation.
+    - Les téléporteurs peuvent être posé par tous les joueurs originaire d'une map (pas uniquement le propriétaire).
+---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+Date: 26.11.2021
+  Fixes:
+    - Fix bug "garr150354839" : Plus de bug lorsqu'on lance une nouvelle partie autre qu'en mode Freeplay.
+    - Fix : Correctif apportés contre les bugs lorsqu'on charge une partie qui ne comporté pas RitnTP à la base.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+Date: 25.11.2021
+  Changes:
+    - Les packs de science chimiques ont été enlevés pour la recherche "téléporteur".
+---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: 24.11.2021
+  Adds:
+    - Ajout des commandes : /exclure, /quit et /surfaces. /exclure et /surfaces sont des commandes pour admin seulement.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: 22.11.2021
+  Fixes:
+    - fix : Compatibilité avec le mod : Updated_Construction_Drones.
+    - fix : Les joueurs n'arrivent plus avec un portail en poche.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.1
+Date: 21.11.2021
+  Fixes:
+    - fix : Partie local.
+---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 21.11.2021
   Notes:
@@ -6,7 +39,7 @@ Date: 21.11.2021
   Changes:
     - Les joueurs n'arrivent plus avec un portail en poche.
     - En local : Vous spawnez directement sur la map (pas de lobby).
-  Add:
+  Adds:
     - Ajout d'un message quand le nombre de map est atteint et qu'un joueur essaye de créer une map.
   Fixes:
     - fix : fonctions "portal" - fonction : "replacePortal".

@@ -121,9 +121,13 @@ local function create_gui_request(LuaPlayer, request)
 -- close gui
 local function close(LuaPlayer, request)
     local left = modGui.get_frame_flow(LuaPlayer)
-    local frame_request = left[flow_common][flow_request][prefix_request .. definesGuiRequest.frame_request .. "_" .. request.name]
+    local frame_request = {}
+    local result = pcall(function()
+      frame_request = left[flow_common][flow_request][prefix_request .. definesGuiRequest.frame_request .. "_" .. request.name]
+    end)
   
-    if frame_request then 
+
+    if frame_request and result == true then 
       frame_request.destroy()
     end
 end

@@ -50,7 +50,7 @@ local function on_gui_opened(e)
       LuaEntity.operable = false
       LuaEntity.minable = false
       
-      if LuaPlayer.name == LuaSurface.name then
+      if global.teleport.players[LuaPlayer.name].origine == LuaSurface.name then
         ritnGui.teleporter.open(LuaSurface, LuaPlayer, LuaEntity)
       else
         LuaEntity.operable = true

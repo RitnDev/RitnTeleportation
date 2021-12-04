@@ -173,6 +173,10 @@ local function teleport(LuaPlayer, LuaSurface, name)
             local position = getPosition(LuaSurface, name)
             local decalage = ritnlib.utils.positionTP(LuaPlayer, 1.0)
             LuaPlayer.teleport({position.x + decalage,position.y + decalage}, LuaSurface)
+            pcall(function() -- add 2.0.6
+              local stack = LuaPlayer.cursor_stack
+              LuaPlayer.get_main_inventory.swap_stack(stack)
+            end)
           end
         end
     end 

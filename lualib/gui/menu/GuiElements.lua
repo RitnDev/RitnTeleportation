@@ -538,9 +538,13 @@ end
 
 local function frame_menu_close(LuaPlayer)
   local left = modGui.get_frame_flow(LuaPlayer)
-  local frame_menu = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
+  local frame_menu = {}
+  local result = pcall(function()
+    frame_menu = left[GuiElement.flow_common][GuiElement.flow_menu][GuiElement.flow_menu_frame]
+  end)
 
-  if frame_menu then 
+
+  if frame_menu and result == true then 
     frame_menu.destroy()
   end
 end

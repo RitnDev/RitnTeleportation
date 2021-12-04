@@ -4,6 +4,7 @@
 local ritnlib = {}
 ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 ritnlib.player =     require(ritnmods.teleport.defines.functions.player)
+ritnlib.surface =     require(ritnmods.teleport.defines.functions.surface)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.lobby =        require(ritnmods.teleport.defines.gui.lobby.GuiElements)
@@ -54,7 +55,7 @@ local function on_player_changed_surface(e)
     if LuaPlayer then 
         local surface = LuaPlayer.surface.name
         if string.sub(surface, 1, 6) == "lobby~" then 
-          ritnGui.lobby.open(LuaPlayer)
+            ritnGui.lobby.open(LuaPlayer)
         end
     end
   end

@@ -40,10 +40,16 @@ local function give_start_item(LuaPlayer, vanilla)
   end
 
   -- modif 2.0
+  --[[
   if game.is_multiplayer() then
     if global.teleport.surfaces[LuaPlayer.name] then
       LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
     end
+  end
+  ]]
+  
+  if game.active_mods["Updated_Construction_Drones"] then 
+    LuaPlayer.get_main_inventory().insert{name="Construction Drone",count=10}
   end
 
 end

@@ -26,7 +26,7 @@ local function teleporter_place(e)
 
   local surface = LuaEntity.surface
 
-  if surface.name ~= LuaPlayer.name then return end
+  if surface.name ~= global.teleport.players[LuaPlayer.name].origine then return end
   -- No characters
   if LuaPlayer.character == nil then return end
   if LuaEntity.name ~= ritnmods.teleport.defines.name.entity.teleporter then return end
@@ -106,7 +106,7 @@ local function teleporter_breaks(e)
         
         print(">> " .. LuaSurface.name .." -> break teleporter")
 
-        if LuaPlayer.name == LuaEntity.last_user.name then 
+        if global.teleport.players[LuaPlayer.name].origine == LuaEntity.surface.name then 
           -- Suppression de la structure "teleporter" dans global.teleport.surfaces[surface.name].teleporters
           ritnlib.teleporter.delete(LuaSurface, TabPosition)
           if LuaPlayer.cursor_stack 

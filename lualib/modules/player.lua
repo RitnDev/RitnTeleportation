@@ -25,15 +25,35 @@ local function on_player_changed_surface(e)
   local surface = LuaSurface.name
   local oldSurface = game.surfaces[e.surface_index]
 
-  if LuaPlayer.force.name ~= "guides" then
-    if game.forces[surface] then --modif 1.8.0 -> old : game.players[surface]
-      LuaPlayer.force = surface 
-    else
-      -- prendre en charge le lobby ici
-      if surface == "nauvis" then 
-        LuaPlayer.force = "player" 
+  if script.level.level_name == "freeplay" then -- correctif 2.0.5
+    
+    --version freeplay (normal game)
+    if LuaPlayer.force.name ~= "guides" then
+      if game.forces[surface] then --modif 1.8.0 -> old : game.players[surface]
+        LuaPlayer.force = surface 
+      else
+        -- prendre en charge le lobby ici
+        if surface == "nauvis" then 
+          LuaPlayer.force = "player" 
+        end
       end
     end
+
+  else
+    -- Correctif 2.0.5
+    if not global.teleport.surfaces[LuaSurface.name] then 
+      ritnlib.surface.generateSurface(game.surfaces[LuaSurface.name])
+      global.teleport.surfaces[LuaSurface.name].exception = true
+      global.teleport.surfaces[LuaSurface.name].map_used = true
+      global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+    end
+    if not global.teleport.surfaces[oldSurface.name] then 
+      ritnlib.surface.generateSurface(game.surfaces[oldSurface.name])
+      global.teleport.surfaces[oldSurface.name].exception = true
+      global.teleport.surfaces[oldSurface.name].map_used = true
+      global.teleport.surfaces[oldSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+    end
+
   end
 
   if not global.teleport.surfaces[LuaSurface.name] then return end
@@ -134,13 +154,9 @@ end
 -- Nouveau joueur arrivant
 -- Créer une surface avec les paramètres enregistrés en map gen settings
 local function NewPlayerSurface(LuaPlayer)
-
-      ritnlib.surface.createLobby(LuaPlayer)
-      if not game.is_multiplayer() then
-          -- Creation de la surface joueur
-          ritnlib.surface.createSurface(LuaPlayer)
-      end
-
+  if script.level.level_name == "freeplay" then
+    ritnlib.surface.createLobby(LuaPlayer)
+  end
 end
 
 
@@ -152,8 +168,18 @@ local function on_player_joined_game(e)
     local LuaPlayer = game.players[e.player_index]
     local LuaSurface = LuaPlayer.surface
 
+    if script.level.campaign_name 
+    or script.level.level_name ~= "wave-defense"
+    or script.level.level_name ~= "pvp" then 
+      -- Creation de la structure de map dans les données
+      ritnlib.surface.generateSurface(game.surfaces.nauvis)
+      global.teleport.surfaces["nauvis"].exception = true
+      global.teleport.surfaces["nauvis"].map_used = true
+      global.teleport.surfaces["nauvis"].inventories[LuaPlayer.name] = ritnlib.inventory.init()
+    end
+
     -- No characters
-    if LuaPlayer.character == nil then return end
+    --if LuaPlayer.character == nil then return end
               
     -- le joueur n'existe pas dans la structure
     if not global.teleport.players[LuaPlayer.name] then 
