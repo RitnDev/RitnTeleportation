@@ -86,6 +86,7 @@ local function on_gui_click(e)
             ritnlib.teleporter.teleport(LuaPlayer, LuaSurface, name)
             if LuaPlayer.cursor_stack then 
                 LuaPlayer.cursor_stack.drain_durability(1.0)
+                LuaPlayer.clear_cursor()
             end
         end
     end

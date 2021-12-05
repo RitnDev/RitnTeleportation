@@ -42,7 +42,7 @@ local function teleporter_place(e)
   end
 
   if LuaEntity.name == ritnmods.teleport.defines.name.entity.teleporter then
-    if LuaPlayer.name == surface.name then
+    if global.teleport.players[LuaPlayer.name].origine == surface.name then
       
       local idValue = ritnlib.teleporter.getIdValue(surface) + 1
       ritnlib.teleporter.setIdValue(surface, idValue) -- id_value + 1   
