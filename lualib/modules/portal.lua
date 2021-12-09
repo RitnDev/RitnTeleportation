@@ -210,7 +210,17 @@ end
 
 local function on_player_cursor_stack_changed(e) 
   local LuaPlayer = game.players[e.player_index]
-  ritnlib.inventory.clearCursor(LuaPlayer, ritnmods.teleport.defines.name.item.portal)
+  -- modif 2.0.10
+  if LuaPlayer == nil then return end
+  if LuaPlayer.cursor_stack.count == 0 then return end
+  
+  local LuaItemStack = LuaPlayer.cursor_stack
+  if LuaItemStack == nil then return end
+  if LuaItemStack.valid == false then return end
+
+  if LuaItemStack.name == ritnmods.teleport.defines.name.item.portal then 
+    ritnlib.inventory.clearCursor(LuaPlayer, ritnmods.teleport.defines.name.item.portal, false)
+  end
 end
 
 

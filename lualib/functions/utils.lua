@@ -83,11 +83,13 @@ local function clean(player_name, LuaPlayer)
             local result = false
             for _,player in pairs(game.players) do 
                 
-                if global.teleport.players[player.name].origine == player_name 
-                or player.surface.name == player_name then
-                    if player.connected == true then
-                        -- des joueurs sont connecté : annulation du clean.
-                        result = true
+                if global.teleport.players[player.name] then -- fix 2.0.9
+                    if global.teleport.players[player.name].origine == player_name 
+                    or player.surface.name == player_name then
+                        if player.connected == true then
+                            -- des joueurs sont connecté : annulation du clean.
+                            result = true
+                        end
                     end
                 end
             end

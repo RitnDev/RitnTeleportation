@@ -149,7 +149,6 @@ local function create_gui(LuaSurface, LuaPlayer, LuaEntity)
         ritnmods.teleport.defines.name.gui.styles.ritn_red_sprite_button
       )
 
-
     if game.surfaces[ritnlib.portal.getDestination(LuaPlayer.surface, LuaEntity.position)] ~= nil 
     or game.surfaces[ritnlib.portal.getDestination(LuaPlayer.surface, LuaEntity.position)] == ritnmods.teleport.defines.value.portal_not_link then
       content.button_link.enabled = false

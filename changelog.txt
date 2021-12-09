@@ -1,4 +1,32 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.12
+Date: 09.12.2021
+  Fixes:
+    - Correction des textes de locale fr & en par Snouz.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.11
+Date: 09.12.2021
+  Fixes:
+    - Fix : Modules portal et teleporter -> ajout de condition plus sévère pour l'event "on_player_cursor_stack_changed".
+---------------------------------------------------------------------------------------------------
+Version: 2.0.10
+Date: 09.12.2021
+  Changes:
+    - Function inventory : clearCursor -> stop du spam de log.
+  Adds:
+    - Modules portal et teleporter -> ajout de condition plus sévère pour l'event "on_player_cursor_stack_changed".
+---------------------------------------------------------------------------------------------------
+Version: 2.0.9
+Date: 05.12.2021
+  Fixes:
+    - Fix : commande /clean (function - utils : clean).
+---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+Date: 05.12.2021
+  Fixes:
+    - fix : function portal : getDestination.
+    - fix : function inventory : clearCursor.
+---------------------------------------------------------------------------------------------------
 Version: 2.0.7
 Date: 05.12.2021
   Fixes:

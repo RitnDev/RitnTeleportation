@@ -200,8 +200,16 @@ end
 
 -- fonction non local, renvoie le curseur dans l'inventaire principale
 -- selon un nom de l'item et la surface où le joueur se trouve.
-local function clearCursor(LuaPlayer, itemName)
-  if LuaPlayer.surface.name == global.teleport.players[LuaPlayer.name].origine then return end
+local function clearCursor(LuaPlayer, itemName, origine)
+  -- modif 2.0.8
+  if origine then 
+    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> origine")
+    if LuaPlayer.surface.name == global.teleport.players[LuaPlayer.name].origine then return end 
+  else 
+    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> player")
+    if LuaPlayer.surface.name == LuaPlayer.name then return end 
+  end
+
   if LuaPlayer.cursor_stack.count == 0 then return end
   
   local LuaItemStack = LuaPlayer.cursor_stack

@@ -22,6 +22,7 @@ local function getDestination(LuaSurface, position)
       end
     end
   end
+  return global.teleport.defines.value.portal_not_link -- fix 2.0.8
 end
 
 -- setDestination

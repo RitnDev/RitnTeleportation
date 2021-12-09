@@ -50,6 +50,7 @@ local function on_gui_opened(e)
         LuaEntity.operable = false
         LuaEntity.minable = false
         
+        print(">> (debug) gui_portal - on_gui_opened : Player : " .. LuaPlayer.name .. ", surface : " .. LuaSurface.name)
         if LuaPlayer.name == LuaSurface.name then
           ritnGui.portal.open(LuaPlayer, LuaSurface, LuaEntity)
         else
