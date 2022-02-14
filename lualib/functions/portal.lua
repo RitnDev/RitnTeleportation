@@ -15,69 +15,137 @@ ritnGui.teleporter =        require(ritnmods.teleport.defines.gui.teleporter.Gui
 
 -- getDestination
 local function getDestination(LuaSurface, position)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.position.x == position.x and portal.position.y == position.y then
-          return portal.dest
+  if LuaSurface ~= nil then 
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if position ~= nil then 
+  -------
+      for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+          if portal.teleport == 1 then
+            if portal.position.x == position.x and portal.position.y == position.y then
+              return portal.dest
+            end
+          end
       end
-    end
+  -------
   end
-  return global.teleport.defines.value.portal_not_link -- fix 2.0.8
+  end
+  end
+
 end
 
 -- setDestination
 local function setDestination(LuaSurface, position, strDest)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.position.x == position.x and portal.position.y == position.y then
-          portal.dest = strDest
+  if LuaSurface ~= nil then 
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if position ~= nil then 
+  -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.position.x == position.x and portal.position.y == position.y then
+          if strDest ~= nil then
+            portal.dest = strDest
+            return
+          else
+            portal.dest = ritnmods.teleport.defines.value.portal_not_link
+            return
+          end
+        end
       end
     end
+  -------
+  end 
+  end 
   end
 end
 
+
 -- getDestinationId
 local function getDestinationId(LuaSurface, id)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.id == id then
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if id ~= nil then
+  -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.id == id then
           return portal.dest
+        end
       end
     end
+  -------
+  end 
+  end 
   end
 end
 
 -- setDestinationId
 local function setDestinationId(LuaSurface, id, strDest)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.id == id then
-          portal.dest = strDest
+
+  if LuaSurface ~= nil then 
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if id ~= nil then 
+
+  -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.id == id then
+          if strDest ~= nil then
+            portal.dest = strDest
+            return
+          else 
+            portal.dest = ritnmods.teleport.defines.value.portal_not_link
+            return
+          end
+        end
       end
     end
+  -------
+  end
+  end
   end
 end
 
 
 -- getPositionDestination
 local function getPositionDestination(LuaSurface, LuaSurface_dest)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface_dest.name].portals) do
-    if portal.teleport == 1 then
-      if portal.dest == LuaSurface.name then
-          return portal.position
+
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if LuaSurface_dest ~= nil then 
+  if global.teleport.surfaces[LuaSurface_dest.name] ~= nil then 
+
+  -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface_dest.name].portals) do
+      if portal.teleport == 1 then
+        if portal.dest == LuaSurface.name then
+            return portal.position
+        end
       end
     end
+  -------
+  end
+  end
+  end
   end
 end
 
 -- getPositionDestination
 local function getPositionId(LuaSurface, id)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.id == id then
+
+  if LuaSurface ~= nil then 
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then 
+  if id ~= nil then 
+  -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.id == id then
           return portal.position
+        end
       end
     end
+  -------
+  end
+  end
   end
 end
 
@@ -85,71 +153,121 @@ end
 
 -- getId
 local function getId(LuaSurface, position)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if position ~= nil then
-        if portal.position.x == position.x and portal.position.y == position.y then
-          return portal.id
+
+    if LuaSurface ~= nil then
+    if global.teleport.surfaces[LuaSurface.name] ~= nil then
+    if position ~= nil then
+    
+    -------
+      for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+        if portal.teleport == 1 then
+          if position ~= nil then
+            if portal.position.x == position.x and portal.position.y == position.y then
+              return portal.id
+            end
+          end
         end
       end
+    -------
     end
-  end
+    end
+    end
+
+    return
 end
 
 ----------------------------------------------------------------------------------
 
 -- getRenderId
 local function getRenderId(LuaSurface, position)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.position.x == position.x and portal.position.y == position.y then
-        if portal.render_id then
-          return portal.render_id
-        else
-          return -1
+
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then
+  if position ~= nil then
+    
+    -------
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.position.x == position.x and portal.position.y == position.y then
+          if portal.render_id then
+            return portal.render_id
+          else return -1 end
         end
       end
     end
-  end
+  -------
+  else return -1 end
+  else return -1 end
+  else return -1 end
 end
 
 -- setRenderId
 local function setRenderId(LuaSurface, position, renderId)
-  for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
-    if portal.teleport == 1 then
-      if portal.position.x == position.x and portal.position.y == position.y then
-          portal.render_id = renderId
+  local result = -1
+
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then
+  if position ~= nil then
+  -------
+    if renderId ~= nil then result = renderId end
+
+    for i,portal in pairs(global.teleport.surfaces[LuaSurface.name].portals) do
+      if portal.teleport == 1 then
+        if portal.position.x == position.x and portal.position.y == position.y then
+            portal.render_id = result
+            return
+        end
       end
     end
+  -------
   end
+  end
+  end
+
 end
 
 ----------------------------------------------------------------------------------
 
 -- getIdValue
 local function getIdValue(LuaSurface)
-  if global.teleport.surfaces[LuaSurface.name] then
-    return global.teleport.surfaces[LuaSurface.name].value.id_portal
-  else return -1 end -- maj 1.8.2
+  if LuaSurface ~= nil then
+    if global.teleport.surfaces[LuaSurface.name] then
+      return global.teleport.surfaces[LuaSurface.name].value.id_portal
+    else return -1 end
+  else return -1 end
 end
 
 -- setIdValue
 local function setIdValue(LuaSurface, value)
-  global.teleport.surfaces[LuaSurface.name].value.id_portal = value
+  if LuaSurface ~= nil then
+    if global.teleport.surfaces[LuaSurface.name] ~= nil then
+      if value ~= nil then
+        global.teleport.surfaces[LuaSurface.name].value.id_portal = value
+      end
+    end
+  end
 end
 
 ----------------------------------------------------------------------------------
 
 -- getPortalValue
 local function getValue(LuaSurface)
-  if global.teleport.surfaces[LuaSurface.name] then
-    return global.teleport.surfaces[LuaSurface.name].value.portal
-  else return -1 end -- maj 1.8.2
+  if LuaSurface ~= nil then
+    if global.teleport.surfaces[LuaSurface.name] then
+      return global.teleport.surfaces[LuaSurface.name].value.portal
+    else return -1 end
+  else return -1 end
 end
 
 -- setPortalValue
 local function setValue(LuaSurface, value)
-  global.teleport.surfaces[LuaSurface.name].value.portal = value
+  if LuaSurface ~= nil then
+    if global.teleport.surfaces[LuaSurface.name] ~= nil then
+      if value ~= nil then
+        global.teleport.surfaces[LuaSurface.name].value.portal = value
+      end
+    end
+  end
 end
 
 ----------------------------------------------------------------------------------
@@ -163,7 +281,6 @@ local function new(id, position, dest, render_id, teleport)
     render_id = render_id,
     teleport = teleport,
   }
-  ritnlib.utils.ritnLog(">> (debug) - function portal : new -> ok")
   return portal
 end
 
@@ -196,10 +313,11 @@ end
 -- Téléportation entre portail
 local function teleport(LuaSurface, id, LuaPlayer, instantTP)
   
-  if not id then ritnlib.utils.ritnLog(">> (debug) - portal teleport - not id") return end
-  if LuaPlayer.driving then ritnlib.utils.ritnLog(">> (debug) - portal teleport - driving") return end
+  if not id then return end
+  if LuaSurface == nil then return end
+  if LuaPlayer.driving then return end
   -- No characters
-  if LuaPlayer.character == nil then ritnlib.utils.ritnLog(">> (debug) - portal teleport - no character")  return end
+  if LuaPlayer.character == nil then return end
   
   -- Via commande ADMIN (pas d'attente)
   local instant = false
@@ -211,19 +329,37 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name] then 
         if instant == false then
           if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name].tp == true then 
-            ritnlib.utils.ritnLog(">> (debug) - portal teleport - waiting tp ...") 
+            ritnlib.utils.pcallLog(">> (" .. LuaPlayer.name .. ") : portal teleport - waiting tp ...", nil, true)
             return 
           end
         end
       end
     end
   end
-  ritnlib.utils.ritnLog(">> (debug) - portal teleport - function ok")
-  
+  ------
+  local details = {
+    lib = "functions",
+    category = "portal",
+    funct = "teleport",
+    state = "before : getDestinationId()",
+    surface = LuaSurface.name,
+    id = id,
+  }
+  ritnlib.utils.pcallLog(details, nil, true)
+  ------
   -- Récupère la surface de destination
-  ritnlib.utils.ritnLog(">> (debug) - portal teleport - li.223 (1) : " .. LuaSurface.name .. " - " .. id)
   local surfaceDest_name = getDestinationId(LuaSurface, id)
-  ritnlib.utils.ritnLog(">> (debug) - portal teleport - li.223 (2): " .. surfaceDest_name)
+  ------
+  details.destination = surfaceDest_name
+  details.state = "after : getDestinationId()"
+  ritnlib.utils.pcallLog(details, nil, true)
+
+  details = {
+    lib = "functions",
+    category = "portal",
+    funct = "teleport",
+  }
+  ------
   
   --if surfaceDest_name ~= nil then return end
   local LuaSurface_dest = game.surfaces[surfaceDest_name]
@@ -269,7 +405,7 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                 end
                 -- fermeture de la fenetre des teleporteurs
                 ritnGui.remote.close(LuaPlayer)
-                  print(">> " .. origine .." -> " .. LuaSurface_dest.name)
+                  ritnlib.utils.pcallLog(">> " .. origine .." -> " .. LuaSurface_dest.name, nil, true)
 
                   -- 1.6.1 ----
                   local statut, errorMsg = pcall(function() 
@@ -278,9 +414,8 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                     end
                   end)
                   if statut then 
-                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
                   else
-                    ritnlib.utils.ritnLog(">> (debug) - ERROR = " .. errorMsg)
+                    log(">> [RITNTP] ERROR = " .. errorMsg)
                   end
                   -------------
                   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
@@ -290,19 +425,23 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
                   -- teleportation                  
                   if origine == LuaSurface_dest.name then
                     LuaPlayer.teleport({portal_position.x+decalage, portal_position.y+decalage},LuaSurface_dest)
-                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
+                    details.state = "teleport ok"
+                    ritnlib.utils.pcallLog(details, nil, true)
                   else
                     LuaPlayer.teleport({portal_position.x-decalage, portal_position.y+decalage},LuaSurface_dest)
-                    ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport ok")
+                    details.state = "teleport ok"
+                    ritnlib.utils.pcallLog(details, nil, true)
                   end
               else
                 LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.no_access)
-                ritnlib.utils.ritnLog(">> (debug) - portal teleport - no tp : no access")
+                details.state = "no tp : no access"
+                ritnlib.utils.pcallLog(details, nil, true)
               end
           end
         else
           LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.dest_not_find)
-          ritnlib.utils.ritnLog(">> (debug) - portal teleport - no tp : no destination")
+          details.state = "no tp : no destination"
+          ritnlib.utils.pcallLog(details, nil, true)
           return
         end
       end
@@ -316,7 +455,8 @@ local function teleport(LuaSurface, id, LuaPlayer, instantTP)
       local renderId = getRenderId(LuaSurface, getPositionId(LuaSurface, id))
       if renderId ~= -1 then 
         rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
-        ritnlib.utils.ritnLog(">> (debug) - portal teleport - rendering : portal not link")
+          details.state = "rendering : portal not link"
+          ritnlib.utils.pcallLog(details, nil, true)
       end
       
     end
@@ -338,7 +478,14 @@ local function insertPortal(LuaPlayer, LuaSurface_origine, TabPosition_origine, 
   end
   -- Suppression de la structure "portal" dans global.teleport.surfaces[surface.name].portals
   delete(LuaSurface_origine, TabPosition_origine, LuaSurface_destination, TabPosition_destination)
-  ritnlib.utils.ritnLog(">> (debug) - function portal - insert portal")
+  
+  local details = {
+    lib = "functions",
+    category = "portal",
+    funct = "insertPortal",
+  }
+  details.state = "ok"
+  ritnlib.utils.pcallLog(details, nil, true)
 end
 
 
@@ -355,7 +502,15 @@ local function replacePortal(LuaSurface_origine, LuaEntity_position, LuaPlayer_n
         scale_with_zoom = true,
         scale = 1.5
     }
-    ritnlib.utils.ritnLog(">> (debug) - function portal - replacePortal")
+    
+    local details = {
+      lib = "functions",
+      category = "portal",
+      funct = "replacePortal",
+    }
+    details.state = "ok"
+    ritnlib.utils.pcallLog(details, nil, true)
+
     return renderId
 end
 
@@ -363,18 +518,33 @@ end
 -- Teleportation à la map d'origine des joueurs s'il ne sont pas chez eux
 local function returnHome(LuaSurfaceNoHome, LuaSurfaceHome, tabPositionHome, id)
   for _,LuaPlayer in pairs(game.players) do
-    if global.teleport.players[LuaPlayer.name].origine == LuaSurfaceHome.name then
-      if LuaPlayer.surface.name == LuaSurfaceNoHome.name then  
-        ritnlib.utils.ritnLog(">> (debug) - returnHome - player : " .. LuaPlayer.name)
-        if tabPositionHome ~= nil or id~=nil then 
-          teleport(LuaSurfaceNoHome, id, LuaPlayer, true) -- recupère la position à TP depuis la map où le portail enlevé.
-          ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (return home)")
-        else
-          ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurfaceNoHome.name].inventories[LuaPlayer.name])
-          local posTP = ritnlib.utils.positionTP(LuaPlayer)
-          LuaPlayer.teleport({posTP,posTP}, LuaSurfaceHome.name)
-          ritnlib.utils.ritnLog(">> (debug) - break portal - teleportation ok (return home)")
-          print(">> " .. LuaPlayer.name .." -> " .. LuaSurfaceHome.name)
+    if global.teleport.players[LuaPlayer.name] then -- fix bug ness056
+      if global.teleport.players[LuaPlayer.name].origine == LuaSurfaceHome.name then
+        if LuaPlayer.surface.name == LuaSurfaceNoHome.name then         
+          ----
+          local details = {
+            lib = "functions",
+            category = "portal",
+            funct = "returnHome",
+            player = LuaPlayer.name
+          }
+          ----
+          if tabPositionHome ~= nil or id~=nil then 
+            -- fix 2.0.23
+            if LuaPlayer.driving then 
+              -- on fait sortir le joueur du vehicule
+              LuaPlayer.driving = false
+            end
+            teleport(LuaSurfaceNoHome, id, LuaPlayer, true) -- recupère la position à TP depuis la map où le portail enlevé.
+            ritnlib.utils.pcallLog(details, nil, true)
+          else
+            ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurfaceNoHome.name].inventories[LuaPlayer.name])
+            local posTP = ritnlib.utils.positionTP(LuaPlayer)
+            LuaPlayer.teleport({posTP,posTP}, LuaSurfaceHome.name)
+            
+            details.destination = LuaSurfaceHome.name
+            ritnlib.utils.pcallLog(details, nil, true)
+          end
         end
       end
     end
@@ -398,7 +568,6 @@ local function listLink(surface_name)
       end
     end   
   end
-  ritnlib.utils.ritnLog(">> (debug) - listing link")
   return list
 end
 

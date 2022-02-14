@@ -43,6 +43,7 @@ end
 -- GUI click button CLOSE
 local function close(LuaPlayer, LuaSurface)
     ritnGui.portal.close(LuaSurface, LuaPlayer)
+    ritnlib.utils.pcallLog("lib.gui.portal.action.close(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ")")
 end
 
 -- GUI click button UNLINK
@@ -76,7 +77,13 @@ local function unlink(LuaPlayer, LuaSurface, id, position)
         -- Add v1.2.5
         local renderId = ritnlib.portal.getRenderId(LuaSurface, position)
         if renderId ~= -1 then 
-            rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
+            local status, retval = pcall(function() 
+                rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
+            end)
+            if status then 
+            else
+                ritnlib.utils.pcallLog("[RITNTP] lib.gui.portal.action.unlink.rendering.set_text -> Error : " .. retval, nil, true) 
+            end
         end
         --
 
@@ -91,6 +98,7 @@ local function unlink(LuaPlayer, LuaSurface, id, position)
     else
         LuaPlayer.print(ritnmods.teleport.defines.name.caption.no_access)
     end
+    ritnlib.utils.pcallLog("lib.gui.portal.action.unlink(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ", id, position)")
 end
 
 
@@ -111,6 +119,7 @@ local function link(LuaPlayer, LuaSurface, id, position) -- id not use but neces
     else
         LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.no_access)
     end
+    ritnlib.utils.pcallLog("lib.gui.portal.action.link(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ", position)")
 end
 
 
@@ -122,6 +131,7 @@ local function back(LuaPlayer)
         returnElement(LuaGui, "ListFlow").visible = false
         LuaGui.auto_center = true 
     end
+    ritnlib.utils.pcallLog("lib.gui.portal.action.back(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -146,7 +156,13 @@ local function valid(LuaPlayer, LuaSurface, id, position)
                 -- Add 1.2.5
                 local renderId = ritnlib.portal.getRenderId(LuaSurface, position)
                 if renderId ~= -1 then 
-                    rendering.set_text(renderId, dest) -- Change text
+                    local status, retval = pcall(function() 
+                        rendering.set_text(renderId, dest)
+                    end)
+                    if status then 
+                    else
+                        ritnlib.utils.pcallLog("[RITNTP] lib.gui.portal.action.valid.rendering.set_text -> Error : " .. retval, nil, true) 
+                    end
                 end
                 --
                 LuaPlayer.print({"msg.select", dest})
@@ -164,6 +180,7 @@ local function valid(LuaPlayer, LuaSurface, id, position)
     else
         LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.no_select)   
     end
+    ritnlib.utils.pcallLog("lib.gui.portal.action.valid(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ", id, position)")
 end
 
 

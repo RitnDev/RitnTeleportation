@@ -4,6 +4,7 @@ local ritnlib = {}
 ritnlib.player =      require(ritnmods.teleport.defines.functions.player)
 ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
 ritnlib.inventory =   require(ritnmods.teleport.defines.functions.inventory)
+ritnlib.utils =           require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.remote =            require(ritnmods.teleport.defines.gui.remote.GuiElements)
@@ -35,15 +36,19 @@ local function teleporter_place(e)
   local frame_restart = center[prefix_restart .. ritnmods.teleport.defines.name.gui.menu.frame_restart]
   if frame_restart then return end
 
-
+  local details = {
+    lib = "modules",
+    category = "teleporter"
+  }
 
   if LuaPlayer.name ~= nil then 
-    print(">> " .. LuaPlayer.name .." -> place teleporter")
+    details.state = LuaPlayer.name .." -> place teleporter"
+    ritnlib.utils.pcallLog(details, e)
   end
 
   if LuaEntity.name == ritnmods.teleport.defines.name.entity.teleporter then
     if global.teleport.players[LuaPlayer.name].origine == surface.name then
-      
+
       local idValue = ritnlib.teleporter.getIdValue(surface) + 1
       ritnlib.teleporter.setIdValue(surface, idValue) -- id_value + 1   
       
@@ -57,6 +62,7 @@ local function teleporter_place(e)
         scale_with_zoom = true,
         scale = 1.5
       }
+      LuaEntity.destructible = false
 
       local table_prep = ritnlib.teleporter.new(idValue, LuaEntity.position, renderId, 1)
  
@@ -66,6 +72,8 @@ local function teleporter_place(e)
 
       ritnGui.remote.close(LuaPlayer) -- fermeture du GUI remote s'il est ouvert.
 
+      details.state = "place"
+      ritnlib.utils.pcallLog(details, e)
     else
       LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.teleporter, count = 1}
       LuaEntity.destroy()
@@ -79,7 +87,7 @@ end
 -- Quand on enlève le teleporter sur le terrain
 local function teleporter_breaks(e)
 
-    local isMined = false
+    local isDied = false
     local LuaEntity = {}
     local LuaSurface = {}
 
@@ -94,17 +102,28 @@ local function teleporter_breaks(e)
       -- Position du portail enlevé
       TabPosition = LuaEntity.position
 
+      local details = {
+        lib = "modules",
+        category = "portal",
+        event_name = "on_player_mined_entity",
+        func = "teleporter_breaks",
+      }
+      ritnlib.utils.pcallLog(details)
+
+
       if e.cause ~= nil then 
         -- Suppression de la structure "teleporter" dans global.teleport.surfaces[surface.name].teleporters
         ritnlib.teleporter.delete(LuaSurface, TabPosition)
-        print(">> " .. LuaSurface.name .." -> break teleporter")
+        details.state = LuaSurface.name .." -> break teleporter"
+        ritnlib.utils.pcallLog(details)
         return 
       end
 
       if e.player_index == nil then return else 
         LuaPlayer = game.players[e.player_index]
         
-        print(">> " .. LuaSurface.name .." -> break teleporter")
+        details.state = LuaSurface.name .." -> break teleporter"
+        ritnlib.utils.pcallLog(details)
 
         if global.teleport.players[LuaPlayer.name].origine == LuaEntity.surface.name then 
           -- Suppression de la structure "teleporter" dans global.teleport.surfaces[surface.name].teleporters
@@ -128,6 +147,7 @@ local function teleporter_breaks(e)
             player = LuaEntity.last_user.name,
             create_build_effect_smoke = false
           })
+          LuaEntity1.destructible = false
           
           local name = ritnlib.teleporter.getNamePosition(LuaSurface, TabPosition)
           
@@ -141,6 +161,8 @@ local function teleporter_breaks(e)
             scale_with_zoom = true,
             scale = 1.5
           }
+          
+          ritnlib.teleporter.setRenderId(LuaSurface, TabPosition, renderId)
 
         end
       end
@@ -162,20 +184,22 @@ local function on_player_cursor_stack_changed(e)
   
   if LuaItemStack.name == ritnmods.teleport.defines.name.item.teleporter then 
     ritnlib.inventory.clearCursor(LuaPlayer, ritnmods.teleport.defines.name.item.teleporter, true)
+
+    local details = {
+      lib = "modules",
+      category = "teleporter",
+    }
+    ritnlib.utils.pcallLog(details, e)
   end
 end
 
 
 ----------------------------------------------------------------------------
--- Break teleporter
-module.events[defines.events.on_entity_died] = teleporter_breaks
+-- events
 module.events[defines.events.on_player_mined_entity] = teleporter_breaks
-
--- Place teleporter
 module.events[defines.events.on_built_entity] = teleporter_place
 
 -- Autres events
 module.events[defines.events.on_player_cursor_stack_changed] = on_player_cursor_stack_changed
-
 
 return module

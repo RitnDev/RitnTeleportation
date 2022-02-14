@@ -56,7 +56,12 @@ local function on_gui_opened(e)
         LuaEntity.operable = true
         LuaEntity.minable = true
       end
-      
+
+      local details = {
+        lib = "modules",
+        category = "gui_teleporter",
+      }
+      ritnlib.utils.pcallLog(details, e)
     end
   end
 end
@@ -91,6 +96,12 @@ local function on_gui_click(e)
     local position = ritnlib.utils.split(info, " ")
     local LuaEntity = LuaSurface.find_entity(ritnmods.teleport.defines.name.entity.teleporter, position)
     ritnGui.teleporter.action[click.action](LuaSurface, LuaPlayer, LuaEntity, position)
+
+    local details = {
+      lib = "modules",
+      category = "gui_teleporter",
+    }
+    ritnlib.utils.pcallLog(details, e)
   else return
   end
 
@@ -114,6 +125,12 @@ local function on_gui_confirmed(e)
     local position = ritnlib.utils.split(info, " ")
     local LuaEntity = LuaSurface.find_entity(ritnmods.teleport.defines.name.entity.teleporter, position)
     ritnGui.teleporter.action[ritnmods.teleport.defines.name.gui.button_valid](LuaSurface, LuaPlayer, LuaEntity, position)
+
+    local details = {
+      lib = "modules",
+      category = "gui_teleporter",
+    }
+    ritnlib.utils.pcallLog(details, e)
   end
 
 end

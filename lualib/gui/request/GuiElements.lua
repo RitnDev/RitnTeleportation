@@ -2,6 +2,7 @@
 local ritnlib = {}
 ritnlib.gui =         require(ritnmods.teleport.defines.functions.gui)
 ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 
 -- Properties
@@ -13,9 +14,6 @@ local definesGuiRequest = ritnmods.teleport.defines.name.gui.request
 local caption = ritnmods.teleport.defines.name.caption
 local flow_common = prefix_gui .. ritnmods.teleport.defines.name.gui.flow_common
 local flow_request = prefix_request .. definesGuiRequest.flow_request
-local luaGui = {}
-
-
 
 
 ---
@@ -129,6 +127,7 @@ local function close(LuaPlayer, request)
 
     if frame_request and result == true then 
       frame_request.destroy()
+      ritnlib.utils.pcallLog("lib.gui.request.close(" .. LuaPlayer.name .. ", " ..  request.name .. ")")
     end
 end
 
@@ -137,10 +136,12 @@ end
 local function open(LuaPlayer, request)
     close(LuaPlayer, request)
     create_gui_request(LuaPlayer, request)
+    ritnlib.utils.pcallLog("lib.gui.request.open(" .. LuaPlayer.name .. ", " ..  request.name .. ")")
 end
   
   
   ------------------------------
+  local luaGui = {}
   luaGui.open = open
   luaGui.close = close
   

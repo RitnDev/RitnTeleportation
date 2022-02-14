@@ -7,8 +7,8 @@ ritnGui.menu.action = require(ritnmods.teleport.defines.gui.menu.action)
 ---------------------------------------------------------------------------------------------
 local events = {}
 events.inventory =    require(ritnmods.teleport.defines.functions.inventory)
-events.utils =  require(ritnmods.teleport.defines.functions.utils)
-events.surface =  require(ritnmods.teleport.defines.functions.surface)
+events.utils =        require(ritnmods.teleport.defines.functions.utils)
+events.surface =      require(ritnmods.teleport.defines.functions.surface)
 
 
 
@@ -22,6 +22,14 @@ end
 function events.on_init(event)
   -- Call remote functions.
   call_remote_functions()
+  pcall(function() remote.call("EvoGUI", "create_remote_sensor", 
+    { 
+      mod_name = "RitnTeleportation",
+      name = "evolution_factor_ritntp", 
+      text = "", 
+      caption = {'sensor.evo_factor_name'}
+    }
+  ) end)
 end
   
 function events.on_load(event)
@@ -53,6 +61,7 @@ local function on_tick_local(e)
                 local surface = player.name
                 if global.teleport.surfaces[surface].exception == true then return end
                 events.utils.clean(surface)
+                events.utils.pcallLog("Clean map by inactivity !", "on_tick_local")
                 return
             end
 
@@ -81,6 +90,53 @@ local function on_tick_loadGame(e)
   end
 end
 
+local function on_tick_evoGui(e)
+  if game.tick % 60 ~= 0 then return end
+  if global.enemy.setting == false then return end
+  if global.enemy.value == false then return end
+
+  if game.active_mods["EvoGUI"] then 
+
+    for i,LuaPlayer in pairs(game.players) do
+
+      if LuaPlayer.valid then 
+          if LuaPlayer.gui.top["evogui_root"] ~= nil then
+            local LuaGui = LuaPlayer.gui.top["evogui_root"]["sensor_flow"]["always_visible"]["remote_sensor_evolution_factor_ritntp"]
+
+            if LuaGui then
+                local LuaSurface = LuaPlayer.surface 
+
+                if LuaSurface.name == "nauvis" or string.sub(LuaSurface.name, 1, 6) == "lobby~" then
+                  -- enemy (nauvis)
+                  local LuaForceEnemy = game.forces["enemy"]
+                  local percent_evo_factor = LuaForceEnemy.evolution_factor * 100
+                  local whole_number = math.floor(percent_evo_factor)
+                  local fractional_component = math.floor((percent_evo_factor - whole_number) * 100)
+
+                  LuaGui.caption = {"sensor.evo_factor_format", LuaForceEnemy.name, string.format("%d.%02d%%", whole_number, fractional_component)}
+                else
+                  -- enemy surface (ritnTP)
+                  local LuaForceEnemy = game.forces["enemy~" .. LuaSurface.name]
+                  local percent_evo_factor = LuaForceEnemy.evolution_factor * 100
+                  local whole_number = math.floor(percent_evo_factor)
+                  local fractional_component = math.floor((percent_evo_factor - whole_number) * 100)
+
+                  LuaGui.caption = {"sensor.evo_factor_format", LuaForceEnemy.name, string.format("%d.%02d%%", whole_number, fractional_component)}
+                end
+            else
+                local text = ""
+            end
+          else
+            events.utils.pcallLog("no 'evogui_root'", "on_tick_evoGui")
+          end
+      else
+        events.utils.pcallLog("no 'top'", "on_tick_evoGui")
+      end
+    end
+    
+  end
+end
+
 
 
 -- open_close_menu
@@ -96,6 +152,7 @@ end
 script.on_event({defines.events.on_tick},function(e)
   on_tick_local(e)
   on_tick_loadGame(e) 
+  on_tick_evoGui(e)
 end)
 
 -- event : custom-input -> toggle_main_menu

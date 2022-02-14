@@ -9,38 +9,58 @@ ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 
 -- getIdValue
 local function getIdValue(LuaSurface)
-  return global.teleport.surfaces[LuaSurface.name].value.id_teleporter
+  local result
+  pcall(function() 
+    result = global.teleport.surfaces[LuaSurface.name].value.id_teleporter
+  end)
+  return result
 end
 
 -- setIdValue
 local function setIdValue(LuaSurface, value)
-  global.teleport.surfaces[LuaSurface.name].value.id_teleporter = value
+  pcall(function() 
+    global.teleport.surfaces[LuaSurface.name].value.id_teleporter = value
+  end)
 end
 
 ----------------------------------------------------------------------------------
 
 -- getTeleporterValue
 local function getValue(LuaSurface)
-  return global.teleport.surfaces[LuaSurface.name].value.teleporter
+  local result
+  pcall(function() 
+    result = global.teleport.surfaces[LuaSurface.name].value.teleporter
+  end)
+  return result
 end
 
 -- setTeleporterValue
 local function setValue(LuaSurface, value)
-  global.teleport.surfaces[LuaSurface.name].value.teleporter = value
+  pcall(function() 
+    global.teleport.surfaces[LuaSurface.name].value.teleporter = value
+  end)
 end
 
 ----------------------------------------------------------------------------------
 
 -- getId
 local function getId(LuaSurface, position)
-  if global.teleport.surfaces[LuaSurface.name].teleporters then
-    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
-      if teleporter.teleport == 1 then
-        if teleporter.position.x == position.x and teleporter.position.y == position.y then
-          return teleporter.id
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then
+  if position ~= nil then
+  ------
+    if global.teleport.surfaces[LuaSurface.name].teleporters then
+      for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+        if teleporter.teleport == 1 then
+          if teleporter.position.x == position.x and teleporter.position.y == position.y then
+            return teleporter.id
+          end
         end
       end
     end
+  ------
+  end
+  end
   end
 end
 
@@ -48,26 +68,42 @@ end
 
 -- getName
 local function getNamePosition(LuaSurface, position)
-  if global.teleport.surfaces[LuaSurface.name].teleporters then
-    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
-      if teleporter.teleport == 1 then
-        if teleporter.position.x == position.x and teleporter.position.y == position.y then
-          return teleporter.name
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then
+  if position ~= nil then
+  ------
+    if global.teleport.surfaces[LuaSurface.name].teleporters then
+      for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+        if teleporter.teleport == 1 then
+          if teleporter.position.x == position.x and teleporter.position.y == position.y then
+            return teleporter.name
+          end
         end
       end
     end
+  ------
+  end
+  end
   end
 end
 
 local function getNameId(LuaSurface, id)
-  if global.teleport.surfaces[LuaSurface.name].teleporters then
-    for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
-      if teleporter.teleport == 1 then
-        if teleporter.id == id then
-          return teleporter.name
+  if LuaSurface ~= nil then
+  if global.teleport.surfaces[LuaSurface.name] ~= nil then
+  if id ~= nil then
+  ------
+    if global.teleport.surfaces[LuaSurface.name].teleporters then
+      for i,teleporter in pairs(global.teleport.surfaces[LuaSurface.name].teleporters) do
+        if teleporter.teleport == 1 then
+          if teleporter.id == id then
+            return teleporter.name
+          end
         end
       end
     end
+  ------
+  end
+  end
   end
 end
 

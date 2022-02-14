@@ -30,7 +30,16 @@ local function UpdateCeaseFires(LuaSurface)
       -- Map active
       for _,force in pairs(forces) do
         if game.forces[force] then 
-          print(">> active enemy : " .. force)
+
+          -- log
+          local details = {
+            lib = "function",
+            category = "surface",
+            funct = "UpdateCeaseFires",
+            state = "active enemy : " .. force
+          }
+          ritnlib.utils.pcallLog(details)
+
           if LuaSurface.name == "nauvis" then 
             game.forces["enemy"].set_cease_fire(force, false)
           else 
@@ -46,7 +55,16 @@ local function UpdateCeaseFires(LuaSurface)
       -- Map inactive
       for _,force in pairs(forces) do
         if game.forces[force] then 
-          print(">> désactive enemy : " .. force)
+          
+          -- log
+          local details = {
+            lib = "function",
+            category = "surface",
+            funct = "UpdateCeaseFires",
+            state = "desactive enemy : " .. force
+          }
+          ritnlib.utils.pcallLog(details)
+
           if LuaSurface.name == "nauvis" then 
             game.forces["enemy"].set_cease_fire(force, true)
           else 
@@ -81,6 +99,7 @@ local function create_portal(LuaSurface, position, player_name, raiseBuilt, crea
         player = player_name,
         create_build_effect_smoke = create_build_effect_smoke
     })
+    LuaEntity.destructible = false
 
     return LuaEntity
 end
@@ -117,7 +136,13 @@ local function generateSurface(LuaSurface)
     finish = settings.startup[ritnmods.teleport.defines.name.settings.restart].value,
   }
 
-  print(">> (debug) - function : generateSurface ok !")
+  local details = {
+    lib = "functions",
+    category = "surfaces",
+    func = "generateSurface",
+    statut = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 -- Ajoute un player dans la structure de donnée surface.player()
@@ -128,11 +153,15 @@ local function addPlayer(LuaPlayer)
     tp = true,
     tick = game.tick,
   }
-  pcall(function()
-    if global.teleport.surfaces[LuaSurface.name].players[LuaPlayer.name] then 
-      print(">> player add '" .. LuaPlayer.name .. "' - Surface : " .. LuaSurface.name)
-    end
-  end)
+      
+  local details = {
+    lib = "functions",
+    category = "surfaces",
+    func = "addPlayer",
+    player = LuaPlayer.name,
+    surface = LuaSurface.name,
+  }
+  ritnlib.utils.pcallLog(details)
 
   global.teleport.surfaces[LuaSurface.name].map_used = ritnlib.utils.tableBusy(global.teleport.surfaces[LuaSurface.name].players)
   UpdateCeaseFires(LuaSurface)
@@ -143,11 +172,15 @@ local function removePlayer(LuaPlayer, oldSurface)
     for i,player in pairs(global.teleport.surfaces[oldSurface.name].players) do
       if global.teleport.surfaces[oldSurface.name].players[i].name == LuaPlayer.name then 
         global.teleport.surfaces[oldSurface.name].players[i] = nil
-        pcall(function()
-          if global.teleport.surfaces[oldSurface.name].players[i] == nil then 
-            print(">> player removed '" .. LuaPlayer.name .. "' - Surface : " .. oldSurface.name)
-          end
-        end)
+
+        local details = {
+          lib = "functions",
+          category = "surfaces",
+          func = "removePlayer",
+          player = LuaPlayer.name,
+          surface = oldSurface.name
+        }
+        ritnlib.utils.pcallLog(details)
       end 
     end
     
@@ -177,7 +210,9 @@ local function createLobby(LuaPlayer)
   LuaPlayer.clear_items_inside()
   LuaPlayer.teleport({0,0}, lobby_name)
   if script.level.level_name == "freeplay" then
-    LuaPlayer.character.active = false
+    if LuaPlayer.character then
+      LuaPlayer.character.active = false
+    end
   end
 end
 
@@ -244,7 +279,9 @@ local function createSurface(LuaPlayer)
         ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
         LuaPlayer.teleport({0,0}, origine)
         if script.level.level_name == "freeplay" then
-          LuaPlayer.character.active = true
+          if LuaPlayer.character then
+            LuaPlayer.character.active = true
+          end
         end
 
         --Chargement des items

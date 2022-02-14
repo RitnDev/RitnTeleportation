@@ -2,10 +2,12 @@
 -- >>  GUI REMOTE TELEPORTER
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
-ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
+ritnlib.teleporter =    require(ritnmods.teleport.defines.functions.teleporter)
+ritnlib.utils =         require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.remote =        require(ritnmods.teleport.defines.gui.remote.GuiElements)
+ritnGui.remote.action = require(ritnmods.teleport.defines.gui.remote.action)
 ---------------------------------------------------------------------------------------------
 
 -- INITIALISATION
@@ -40,17 +42,20 @@ local function on_player_cursor_stack_changed(e)
     and LuaPlayer.cursor_stack.valid_for_read 
     and LuaPlayer.cursor_stack.name == ritnmods.teleport.defines.name.item.remote then
         ritnGui.remote.open(LuaPlayer)
+
+        local details = {
+            lib = "modules",
+            category = "gui_teleporter_remote",
+            func = "on_player_cursor_stack_changed",
+            state = "ritnGui.remote.open(" .. LuaPlayer.name .. ")"
+        }
+        ritnlib.utils.pcallLog(details, e)
     else
         ritnGui.remote.close(LuaPlayer)
     end
 
 end
 
-
-
-local function elementlist(LuaGui)
-    return LuaGui[prefix .. ritnmods.teleport.defines.name.gui.panel_main][prefix .. ritnmods.teleport.defines.name.gui.SurfacesFlow][prefix .. ritnmods.teleport.defines.name.gui.Pane][prefix .. ritnmods.teleport.defines.name.gui.NameList]
-end
 
 
 -- Event click GUI
@@ -77,24 +82,12 @@ local function on_gui_click(e)
     
     if click.ui ~= "remote" then return end
     if click.element ~= "button" then return end
-        
-    local elementList = elementlist(LuaGui)
-    if elementList ~= nil then
-        local index = elementList.selected_index
-        if index ~= nil and index ~= 0 then
-            local name = elementList.get_item(index)
-            ritnlib.teleporter.teleport(LuaPlayer, LuaSurface, name)
-            if LuaPlayer.cursor_stack then 
-                LuaPlayer.cursor_stack.drain_durability(1.0)
-                LuaPlayer.clear_cursor()
-            end
-        end
-    end
+       
+    ritnGui.remote.action[click.action](LuaPlayer)
 
 end
 
 
-module.events[defines.events.on_player_changed_position] = on_player_changed_position
 module.events[defines.events.on_gui_click] = on_gui_click
 module.events[defines.events.on_player_cursor_stack_changed] = on_player_cursor_stack_changed
 

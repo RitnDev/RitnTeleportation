@@ -10,7 +10,6 @@ ritnlib.styles =        require(ritnmods.teleport.defines.functions.styles)
 -- Properties
 local visible = false
 local prefix = ritnmods.teleport.defines.name.gui.prefix.teleporter
-local luaGui = {}
 
 
 -- CREATION DU GUI
@@ -125,6 +124,7 @@ local function close(LuaSurface, LuaPlayer, LuaEntity)
       LuaEntity.minable = true
     end
     guiTeleport.destroy()
+    ritnlib.utils.pcallLog("lib.gui.teleporter.close(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ", LuaEntity)")
   end
 end
 
@@ -133,11 +133,13 @@ end
 local function open(LuaSurface, LuaPlayer, LuaEntity)
   close(LuaSurface, LuaPlayer, LuaEntity)
   create_gui(LuaSurface, LuaPlayer, LuaEntity)
+  ritnlib.utils.pcallLog("lib.gui.teleporter.open(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ", LuaEntity)")
 end
 
 
 
 ------------------------------
+local luaGui = {}
 luaGui.show = create_gui
 luaGui.open = open
 luaGui.close = close

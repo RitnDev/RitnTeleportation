@@ -49,7 +49,11 @@ local function on_player_joined_game(e)
                 flow_request
             )
         end
-
+        local details = {
+            lib = "modules",
+            category = "gui_request",
+        }
+        ritnlib.utils.pcallLog(details, e)
     end
 end
 
@@ -92,6 +96,12 @@ local function on_gui_click(e)
         if click.element ~= "button" then return end
         if not ritnGui.request.action[click.action] then return end
         ritnGui.request.action[click.action](LuaPlayer, request_name)
+
+        local details = {
+            lib = "modules",
+            category = "gui_request",
+        }
+        ritnlib.utils.pcallLog(details, e)
         return
     end
 

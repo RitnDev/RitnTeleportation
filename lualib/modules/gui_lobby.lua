@@ -42,6 +42,14 @@ local function on_gui_click(e)
         if click.element ~= "button" then return end
         if not ritnGui.lobby.action[click.action] then return end
         ritnGui.lobby.action[click.action](LuaPlayer)
+
+        local details = {
+          lib = "modules",
+          category = "gui_lobby",
+          state = "ok"
+        }
+        ritnlib.utils.pcallLog(details, e)
+
         return
     end
 
@@ -55,10 +63,19 @@ local function on_player_changed_surface(e)
     if LuaPlayer then 
         local surface = LuaPlayer.surface.name
         if string.sub(surface, 1, 6) == "lobby~" then 
-            ritnGui.lobby.open(LuaPlayer)
+          ritnGui.lobby.open(LuaPlayer)
+        else
+          ritnGui.lobby.close(LuaPlayer)
         end
     end
   end
+  
+  local details = {
+    lib = "modules",
+    category = "gui_lobby",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details, e)
 end
 
 

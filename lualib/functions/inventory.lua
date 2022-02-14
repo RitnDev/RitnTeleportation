@@ -22,7 +22,13 @@ local function initInventory()
     {name="character_personal_logistic_requests_enabled", value = false}
   }
 
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : init -> ok")
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "initInventory",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
   return invGlobal
 end
 
@@ -39,7 +45,6 @@ local function saveInventory(invGlobal, LuaPlayer, defines)
         end
       end
     end
-    ritnlib.utils.ritnLog(">> (debug) - function inventory : saveInventory -> ok")
 end
 
 --LoadInventory
@@ -54,7 +59,6 @@ local function loadInventory(invGlobal, LuaPlayer, defines)
       end
     end
   end
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadInventory -> ok")
 end
 
 
@@ -66,7 +70,14 @@ local function save_all_inventory(LuaPlayer, invGlobal)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_ammo)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_armor)
   saveInventory(invGlobal, LuaPlayer, defines.inventory.character_trash)
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : saveAllInventory -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "save_all_inventory",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 --New Get
@@ -76,7 +87,14 @@ local function load_all_inventory(LuaPlayer, invGlobal)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_guns)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_ammo)
   loadInventory(invGlobal, LuaPlayer, defines.inventory.character_trash)
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadAllInventory -> ok")
+  
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "load_all_inventory",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 
@@ -101,7 +119,14 @@ local function saveLogistic(LuaPlayer, invGlobal)
   else 
     invGlobal["logistic_inv"] = nil
   end
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : savelogistic -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "saveLogistic",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 -- Load Logistic
@@ -122,7 +147,14 @@ local function loadLogistic(LuaPlayer, invGlobal)
       end
     end
   end
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadLogistic -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "loadLogistic",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 ------------------------------------------------------------------------------------------
@@ -134,7 +166,14 @@ local function saveCursor(LuaPlayer, invGlobal)
   if stack.valid then
     invGlobal["cursor"][1].swap_stack(stack)
   end
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : saveCursor -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "saveCursor",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 -- Load Cursor
@@ -143,23 +182,43 @@ local function loadCursor(LuaPlayer, invGlobal)
   if stack.valid then
     LuaPlayer.cursor_stack.swap_stack(stack)
   end
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : loadCursor -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "loadCursor",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 ------------------------------------------------------------------------------------------
 -- Cancel All Crafting
 local function cancel_all_crafting(LuaPlayer)
-  local len = LuaPlayer.crafting_queue_size
-  if len > 0 then
-    pcall(function()
-      for i,craft in pairs(LuaPlayer.crafting_queue) do
-        local options = {index=craft.index, count=craft.count}
-        LuaPlayer.cancel_crafting(options)
-      end
-      ritnlib.utils.ritnLog(">> (debug) - function inventory : cancel_all_crafting -> ok")
-    end)
-  end
-  
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "cancel_all_crafting",
+    state = "start"
+  }
+  ritnlib.utils.pcallLog(details)
+
+  pcall(function()
+    while LuaPlayer.crafting_queue_size > 0 do
+        LuaPlayer.cancel_crafting({
+            index=LuaPlayer.crafting_queue[1].index, 
+            count=LuaPlayer.crafting_queue[1].count
+        })
+    end
+  end)
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "cancel_all_crafting",
+    state = "finish"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 ------------------------------------------------------------------------------------------
@@ -178,7 +237,14 @@ local function save(LuaPlayer, invGlobal)
   save_all_inventory(LuaPlayer, invGlobal)
   saveCursor(LuaPlayer, invGlobal)
   saveLogistic(LuaPlayer, invGlobal)
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : SAVE -> ok")
+  
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "save",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 --- LOAD
@@ -194,19 +260,34 @@ local function load(LuaPlayer, invGlobal)
   load_all_inventory(LuaPlayer, invGlobal)
   loadCursor(LuaPlayer, invGlobal)
   loadLogistic(LuaPlayer, invGlobal)
-  ritnlib.utils.ritnLog(">> (debug) - function inventory : LOAD -> ok")
+
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "load",
+    state = "ok"
+  }
+  ritnlib.utils.pcallLog(details)
 end
 
 
 -- fonction non local, renvoie le curseur dans l'inventaire principale
 -- selon un nom de l'item et la surface où le joueur se trouve.
 local function clearCursor(LuaPlayer, itemName, origine)
+  local details = {
+    lib = "function",
+    category = "inventory",
+    funct = "clearCursor",
+  }
+  
   -- modif 2.0.8
   if origine then 
-    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> origine")
+    details.state = "origine"
+    ritnlib.utils.pcallLog(details)
     if LuaPlayer.surface.name == global.teleport.players[LuaPlayer.name].origine then return end 
   else 
-    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> player")
+    details.state = "player"
+    ritnlib.utils.pcallLog(details)
     if LuaPlayer.surface.name == LuaPlayer.name then return end 
   end
 
@@ -218,7 +299,8 @@ local function clearCursor(LuaPlayer, itemName, origine)
   else 
     LuaPlayer.clear_cursor()
     LuaPlayer.print(ritnmods.teleport.defines.name.caption.msg.cursor)
-    ritnlib.utils.ritnLog(">> (debug) - function inventory : clear cursor -> ok")
+    details.state = "ok"
+    ritnlib.utils.pcallLog(details)
   end
 end
 

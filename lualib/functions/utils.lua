@@ -4,6 +4,25 @@
 local prefix_enemy = ritnmods.teleport.defines.prefix.enemy
 
 
+-- create log via RitnLog (remote command)
+local function pcallLog(details, ev, event_name)
+    local statut, errorMsg = pcall(function() 
+        local data = {}
+        if type(details) == "table" then 
+            data = details
+        else 
+            data.details = details
+        end
+        if event_name ~= nil then 
+            data.event_name = eventName 
+        end
+        remote.call("ritnlog", "trace_event", {mod_name="RitnTP", data=data, e=ev}) 
+    end)
+    if statut == (false or nil) then 
+        log("[RITNTP] > Error log : " .. errorMsg) 
+    end
+end
+
 -- Le tableau est plein ?
 local function tableBusy(T)
     for k,v in pairs(T) do
@@ -14,19 +33,10 @@ local function tableBusy(T)
     return false
 end
 
-
+--ritnPrint
 local function ritnPrint(txt)
     if game.players.Ritn.valid then
         game.players.Ritn.print(txt)
-    end
-end
-
-local function ritnLog(txt) 
-    local statut, errorMsg = pcall(function() 
-        print(txt)
-    end)
-    if statut == (false or nil) then 
-        print(">> error ritnlog : " .. errorMsg)
     end
 end
 
@@ -82,7 +92,6 @@ local function clean(player_name, LuaPlayer)
 
             local result = false
             for _,player in pairs(game.players) do 
-                
                 if global.teleport.players[player.name] then -- fix 2.0.9
                     if global.teleport.players[player.name].origine == player_name 
                     or player.surface.name == player_name then
@@ -96,7 +105,7 @@ local function clean(player_name, LuaPlayer)
             -- clean annulé
             if result == true then
                 if LuaPlayer then LuaPlayer.print("Clean impossible") end
-                print(">> Clean impossible")
+                log("[RITNTP] > Clean impossible")
                 return 
             end
 
@@ -117,8 +126,7 @@ local function clean(player_name, LuaPlayer)
         if LuaPlayer then 
             LuaPlayer.print("Clean OK for : " .. player_name) 
         end
-        print(">> CLEAN OK for : " .. player_name)
-
+        log("[RITNTP] > CLEAN OK for : " .. player_name)
     end
 end
 
@@ -135,17 +143,19 @@ local function restart(LuaPlayer)
         if game.surfaces[surface] then 
             local result = false 
             for _,player in pairs(game.players) do 
-                if player.surface.name == surface then
-                    if global.teleport.players[player.name].origine ~= surface then
-                        if player.connected == true then
-                            result = true
-                        end  
+                if player.surface.name == surface then 
+                    if global.teleport.players[player.name] then  -- fix 2.0.21
+                        if global.teleport.players[player.name].origine ~= surface then
+                            if player.connected == true then
+                                result = true
+                            end  
+                        end
                     end
                 end
             end
             if result == true then 
                 LuaPlayer.print("Restart impossible")
-                print(">> Restart impossible")
+                log("[RITNTP] > Restart impossible")
                 return 
             end
             
@@ -155,7 +165,9 @@ local function restart(LuaPlayer)
 
                 -- modif 1.8.3
                 game.players[player].teleport({i-1,i-1}, "nauvis")
-                game.players[player].character.active = false
+                if game.players[player].character then 
+                    game.players[player].character.active = false
+                end
                 table.insert(tab_player, player)
             end
             
@@ -165,7 +177,7 @@ local function restart(LuaPlayer)
         if game.forces[prefix_enemy .. surface] then game.merge_forces(game.forces[prefix_enemy .. surface], "enemy") end
         global.teleport.surfaces[surface] = nil
         global.teleport.surface_value = global.teleport.surface_value - 1
-        print(">> RESTART OK for : " .. LuaPlayer.name)
+        log("[RITNTP] > RESTART OK for : " .. LuaPlayer.name)
 
         for i = 1, #tab_player do 
             local player = tab_player[i]
@@ -279,6 +291,21 @@ local function mapGeneratorNewSeed()
 end
 
 
+-- Sauvegarde de partie avant déclenchement d'erreur
+local function saveGameError(retValue, output)
+    -- save game
+    game.auto_save("rescue-ritntp")
+    --print error console
+    log("ERROR RitnTP : " .. retValue)
+    --print("error-report -> Factorio/write-output/RitnTeleportation/error/error-report.json")
+    --write file output 
+    --game.write_file("RitnTeleportation/error/error-report_" .. game.tick .. ".json", output)
+    -- stop server by error()
+    error("ERROR RitnTP : " .. retValue) --.. "\n\nerror-report -> Factorio/write-output/RitnTeleportation/error/error-report.json")
+end
+
+
+
 
 ----------------------------
 -- Chargement des fonctions
@@ -287,7 +314,7 @@ flib.tableBusy = tableBusy
 flib.split = split
 flib.getn = getn
 flib.ritnPrint = ritnPrint
-flib.ritnLog = ritnLog
+flib.pcallLog = pcallLog
 flib.positionTP = positionTP
 flib.clean = clean
 flib.restart = restart
@@ -302,6 +329,7 @@ flib.settings = {
     changeValue = changeValue_settings_player,
     remove = remove_settings_player
 }
+flib.saveGameError = saveGameError
 
 -- Retourne la liste des fonctions
 return flib

@@ -1,6 +1,9 @@
 local module = {}
 module.events = {}
-
+-------------------------
+local ritnlib = {}
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
+-------------------------
 
 
 -- Fonction utilisé dans le mod spaceblock pour générer la surface en landfill
@@ -64,6 +67,12 @@ end
 local function on_chunk_generated(e)
     if game.active_mods["spaceblock"] then
       spaceblock(e)
+      local details = {
+        lib = "mods",
+        category = "spaceblock",
+        state = "ok"
+      }
+      ritnlib.utils.pcallLog(details, e)
     end
 end
 

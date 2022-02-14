@@ -50,7 +50,16 @@ local function on_gui_opened(e)
         LuaEntity.operable = false
         LuaEntity.minable = false
         
-        print(">> (debug) gui_portal - on_gui_opened : Player : " .. LuaPlayer.name .. ", surface : " .. LuaSurface.name)
+        local details = {
+          lib = "modules",
+          category = "gui_portal",
+          funct = "on_gui_opened",
+          player = LuaPlayer.name,
+          surface = LuaSurface.name,
+          state = "ok"
+        }
+        ritnlib.utils.pcallLog(details, e)
+        
         if LuaPlayer.name == LuaSurface.name then
           ritnGui.portal.open(LuaPlayer, LuaSurface, LuaEntity)
         else
@@ -86,6 +95,12 @@ local function on_gui_click(e)
   
   if click.ui ~= "portal" then return end
   if click.element ~= "button" then return end
+
+  local details = {
+    lib = "modules",
+    category = "gui_portal",
+  }
+  ritnlib.utils.pcallLog(details, e)
 
   if click.action == ritnmods.teleport.defines.name.gui.button_close
   or click.action == ritnmods.teleport.defines.name.gui.button_unlink

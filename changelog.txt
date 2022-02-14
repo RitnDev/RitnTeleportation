@@ -1,4 +1,78 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.23
+Date: 10.02.2022
+  Fixes:
+    - fix : function : "utils" - restart -> character = nil.
+    - fix : Vérification de toute les references à LuaPlayer.character ~= nil.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.23
+Date: 10.02.2022
+  Fixes:
+    - Gestion des erreurs (partie 2)
+    - fix message locale en.
+    - Les joueurs se trouvant dans un vehicule son désormais teleporté si un portail est délié.
+  Adds:
+    - Ajouts de logs via RitnLog.
+    - gui_teleporter_remote possède désormais sont fichier action.lua.
+  Changes:
+    - Portail et Téléporteur sont maintenant indestructible (Ils peuvent toujours être miné)
+    - les joueurs peuvent marché sûr les portails et les téléporteurs. (pas de collision)
+    - L'inventaire peut être récupéré sur le retour d'un joueur sur une map dont il a été exclus.
+  Notes:
+    - Préparation de la version stable.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.22
+Date: 28.01.2022
+  Changes:
+    - Change thumbnail.png
+---------------------------------------------------------------------------------------------------
+Version: 2.0.21
+Date: 25.01.2022
+  Fixes:
+    - fix bug "snakes" : function - utils : restart
+---------------------------------------------------------------------------------------------------
+Version: 2.0.20
+Date: 06.01.2022
+  Fixes:
+    - fix : function - portal - getDestinationId : remplace position par id.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.19
+Date: 06.01.2022
+  Fixes:
+    - Gestion des erreurs (partie 1)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.18
+Date: 05.01.2022
+  Fixes:
+    - fix : fonction EvoGUI.
+    - Quelques ameliorations de codes.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.17
+Date: 05.01.2022
+  Adds:
+    - Ajout de l'evolution par surface dans EvoGUI.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.16
+Date: 05.01.2022
+  Fixes:
+    - fix : module player : on_player_changed_posiont : portal.close() changement de 'LuaPlayer.surface' en 'LuaSurface'.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.15
+Date: 01.01.2022
+  Fixes:
+    - fix : correction du bug ness056 -> functions - portal : returnHome
+---------------------------------------------------------------------------------------------------
+Version: 2.0.14
+Date: 14.12.2021
+  Fixes:
+    - fix : mode editor / modules - player : on_player_joined_game -> character = nil.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.13
+Date: 11.12.2021
+  Fixes:
+    - fix : module - gui_teleporter_remote : (function) on_gui_click : drain_durability non possible à cause du LuaItemStack non valid.
+    - fix : fermeture de la fenêtre LOBBY lorsqu'on rejoint une carte hors connexion.
+---------------------------------------------------------------------------------------------------
 Version: 2.0.12
 Date: 09.12.2021
   Fixes:

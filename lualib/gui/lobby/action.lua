@@ -1,8 +1,9 @@
 -- INITIALISATION
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
-ritnlib.surface =     require(ritnmods.teleport.defines.functions.surface)
+ritnlib.surface =    require(ritnmods.teleport.defines.functions.surface)
 ritnlib.player =     require(ritnmods.teleport.defines.functions.player)
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 local ritnGui = {}
 ritnGui.lobby =        require(ritnmods.teleport.defines.gui.lobby.GuiElements)
@@ -36,6 +37,7 @@ local function button_create(LuaPlayer)
     ritnlib.surface.createSurface(LuaPlayer)
     -- fermeture de la fenetre après la création de la map
     ritnGui.lobby.close(LuaPlayer)
+    ritnlib.utils.pcallLog("lib.gui.lobby.action.button_create(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -45,6 +47,7 @@ local function button_request(LuaPlayer)
     if index == nil or index == 0 then return end
     local surface = returnElement(LuaPlayer, "list").get_item(index)
     ritnlib.player.createRequest(LuaPlayer, surface)
+    ritnlib.utils.pcallLog("lib.gui.lobby.action.button_request(" .. LuaPlayer.name .. ")")
 end
 
 

@@ -1,6 +1,10 @@
 ---
 -- Module "lobby"
 ---
+local ritnlib = {}
+ritnlib.inventory = require(ritnmods.teleport.defines.functions.inventory)
+ritnlib.utils =     require(ritnmods.teleport.defines.functions.utils)
+---
 local prefix_lobby = ritnmods.teleport.defines.prefix.lobby
 
 
@@ -44,6 +48,8 @@ local function exclusion(playerExclure, surface)
     if playerExclure == surface then return end
     for i,player in pairs(global.teleport.surfaces[surface].origine) do 
         if player == playerExclure then 
+            -- sauvegarde de l'inventaire avant exclusion
+            ritnlib.inventory.save(game.players[playerExclure], global.teleport.surfaces[surface].inventories[playerExclure])
             -- suppression du joueur dans origine de la map
             table.remove(global.teleport.surfaces[surface].origine, i)
             global.teleport.players[playerExclure] = nil
@@ -56,6 +62,7 @@ local function exclusion(playerExclure, surface)
                 game.players[playerExclure].clear_items_inside()
             end
             print("Exclusion/Quit : " .. playerExclure .. " - surface : " .. surface .. " OK !")
+            log("Exclusion/Quit : " .. playerExclure .. " - surface : " .. surface .. " OK !")
         end
     end
 end

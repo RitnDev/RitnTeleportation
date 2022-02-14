@@ -77,6 +77,8 @@ local function button_main(LuaPlayer)
     if frame_restart then return end
     if LuaGui then ritnGui.menu.frame_menu_close(LuaPlayer)
     else ritnGui.menu.frame_menu_open(LuaPlayer) end
+
+    ritnlib.utils.pcallLog("lib.gui.menu.action.button_main(" .. LuaPlayer.name .. ")")
 end
 
 -- Action du bouton Relancer
@@ -86,6 +88,8 @@ local function button_restart(LuaPlayer)
     if frame_restart then return end
     if LuaGui then ritnGui.menu.frame_menu_close(LuaPlayer) end
     ritnGui.menu.frame_restart_show(LuaPlayer)
+
+    ritnlib.utils.pcallLog("lib.gui.menu.action.button_restart(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -103,6 +107,15 @@ local function button_tp(LuaPlayer)
     panel_tp.visible = true
     panel_clean.visible = false
     panel_exclusion.visible = false
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_tp",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 -- Action du bouton /clean
@@ -118,6 +131,8 @@ local function button_clean(LuaPlayer)
     panel_tp.visible = false
     panel_clean.visible = true
     panel_exclusion.visible = false
+
+    ritnlib.utils.pcallLog("lib.gui.menu.action.button_clean(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -134,6 +149,15 @@ local function button_exclusion(LuaPlayer)
     panel_tp.visible = false
     panel_clean.visible = false
     panel_exclusion.visible = true
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_exclusion",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
@@ -153,10 +177,19 @@ local function button_valid_tp(LuaPlayer)
         end
         ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaPlayer.surface.name].inventories[LuaPlayer.name])
         LuaPlayer.print("TP : " .. LuaPlayer.surface.name .. " -> " .. surface)
-        print(">> ADMIN TP (" .. LuaPlayer.name .. ") : " .. LuaPlayer.surface.name .. " -> " .. surface)
+        ritnlib.utils.pcallLog(">> ADMIN TP (" .. LuaPlayer.name .. ") : " .. LuaPlayer.surface.name .. " -> " .. surface, nil, true)
         LuaPlayer.teleport({0,0}, surface)
         ritnGui.menu.frame_menu_close(LuaPlayer)   
     end
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_valid_tp",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
@@ -167,6 +200,15 @@ local function button_valid_clean(LuaPlayer)
     local surface = returnElement(LuaPlayer, "list_clean").get_item(index)
     ritnlib.utils.clean(surface, LuaPlayer)
     ritnGui.menu.frame_menu_close(LuaPlayer)
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_valid_clean",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
@@ -178,6 +220,9 @@ local function button_valid_excude(LuaPlayer)
     if global.teleport.surfaces[surface] then
         for i,player in pairs(global.teleport.surfaces[surface].origine) do 
             if player == playerExclure then 
+                -- sauvegarde de l'inventaire avant exclusion
+                ritnlib.inventory.save(game.players[playerExclure], global.teleport.surfaces[surface].inventories[playerExclure])
+
                 -- suppression du joueur dans origine de la map
                 table.remove(global.teleport.surfaces[surface].origine, i)
                 global.teleport.players[playerExclure] = nil
@@ -185,6 +230,11 @@ local function button_valid_excude(LuaPlayer)
                 if game.players[playerExclure] 
                 and game.players[playerExclure].valid 
                 and game.players[playerExclure].connected then   
+                    -- fix 2.0.23
+                    if LuaPlayer.driving then 
+                        -- on fait sortir le joueur du vehicule
+                        LuaPlayer.driving = false
+                    end
                     -- retour lobby
                     game.players[playerExclure].teleport({0,0}, "lobby~" .. playerExclure)
                     game.players[playerExclure].clear_items_inside()
@@ -193,12 +243,30 @@ local function button_valid_excude(LuaPlayer)
         end
     end
     ritnGui.menu.frame_menu_close(LuaPlayer)
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_valid_excude",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
 local function button_valid_restart(LuaPlayer)
     ritnGui.menu.frame_restart_close(LuaPlayer)
     ritnlib.utils.restart(LuaPlayer)
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_valid_restart",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
@@ -206,11 +274,29 @@ end
 local function button_close_menu(LuaPlayer)
     local LuaGui = returnElement(LuaPlayer, "menu")
     if LuaGui then ritnGui.menu.frame_menu_close(LuaPlayer) end
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_close_menu",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 
 local function button_cancel(LuaPlayer)
     ritnGui.menu.frame_restart_close(LuaPlayer)
+
+    local details = {
+        lib = "gui",
+        gui = "menu",
+        category = "action",
+        funct = "button_cancel",
+        player = LuaPlayer.name,
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 

@@ -2,6 +2,7 @@
 -- >>  GUI MENU
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 ritnlib.gui =       require(ritnmods.teleport.defines.functions.gui)
 ritnlib.styles =    require(ritnmods.teleport.defines.functions.styles)
 ---------------------------------------------------------------------------------------------
@@ -42,6 +43,13 @@ local function on_cutscene_waypoint_reached(e)
       global.cutscene = true
     end
 
+    local details = {
+      lib = "modules",
+      category = "gui_menu",
+      state = "ok"
+    }
+    ritnlib.utils.pcallLog(details, e)
+
 end
 
 -- Annulation de la cutscene
@@ -50,6 +58,13 @@ local function on_cutscene_cancelled(e)
     if LuaPlayer.connected then
       global.cutscene = true
     end
+
+    local details = {
+      lib = "modules",
+      category = "gui_menu",
+      state = "ok"
+    }
+    ritnlib.utils.pcallLog(details, e)
 end
 
 local function on_rocket_launched(e)
@@ -79,11 +94,25 @@ local function on_rocket_launched(e)
 
     end
 
+    local details = {
+      lib = "modules",
+      category = "gui_menu",
+      state = "ok"
+    }
+    ritnlib.utils.pcallLog(details, e)
+
 end
 
 
 local function on_player_joined_game(e)
     local LuaPlayer = game.players[e.player_index]
+
+    local details = {
+      lib = "modules",
+      category = "gui_menu",
+      state = "show"
+    }
+    ritnlib.utils.pcallLog(details, e)
 
     if LuaPlayer.admin then 
       ritnGui.menu.button_main_open(LuaPlayer)
@@ -92,10 +121,8 @@ local function on_player_joined_game(e)
 
     if global.teleport.surfaces[LuaPlayer.name] then 
       if LuaPlayer.name == LuaPlayer.surface.name then
-        --if global.teleport.surfaces[LuaPlayer.name].finish == true then --(modif 1.9.2)
-          ritnGui.menu.button_main_open(LuaPlayer)
-          return
-        --end
+        ritnGui.menu.button_main_open(LuaPlayer)
+        return
       end
     end
 
@@ -107,10 +134,15 @@ local function on_player_changed_surface(e)
 
   if global.teleport.surfaces[LuaPlayer.name] then 
     if LuaPlayer.name == LuaPlayer.surface.name then
-      --if global.teleport.surfaces[LuaPlayer.name].finish == true then --(modif 1.9.2)
         ritnGui.menu.button_main_open(LuaPlayer)
+
+        local details = {
+          lib = "modules",
+          category = "gui_menu",
+          state = "ok"
+        }
+        ritnlib.utils.pcallLog(details, e)
         return
-      --end
     end
   end
 end
@@ -135,6 +167,7 @@ local function on_gui_click_restart(e, click)
     if click.action == ritnmods.teleport.defines.name.gui.menu.button_cancel
     or click.action == ritnmods.teleport.defines.name.gui.menu.button_valid then
       ritnGui.menu.action[click.action](LuaPlayer, click)
+
       return true
     end
   end
@@ -162,6 +195,12 @@ local function on_gui_click(e)
     ui, element, name, action
   }
  
+  local details = {
+    lib = "modules",
+    category = "gui_menu"
+  }
+  ritnlib.utils.pcallLog(details, e)
+
 
   if element == nil then return end
   if element.valid == false then return end

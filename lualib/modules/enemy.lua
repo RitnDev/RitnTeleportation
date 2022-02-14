@@ -3,6 +3,7 @@
 ---------------------------------------------------------------------------------------------
 local ritnlib = {}
 ritnlib.enemy =       require(ritnmods.teleport.defines.functions.enemy)
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 -- Variables :
 local prefix_enemy = ritnmods.teleport.defines.prefix.enemy
@@ -49,6 +50,13 @@ local function on_player_changed_surface(e)
         LuaForce.set_cease_fire("enemy", true)
         game.forces["enemy"].set_cease_fire(LuaForce, true)
     end
+
+    local details = {
+      lib = "modules",
+      category = "enemy",
+      state = "ok"
+    }
+    ritnlib.utils.pcallLog(details, e)
 
 end
 

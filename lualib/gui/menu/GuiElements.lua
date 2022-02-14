@@ -2,6 +2,7 @@
 local ritnlib = {}
 ritnlib.gui =         require(ritnmods.teleport.defines.functions.gui)
 ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 
 -- Properties
@@ -12,7 +13,7 @@ local prefix_menu = ritnmods.teleport.defines.name.gui.prefix.menu
 local prefix_main_menu = ritnmods.teleport.defines.name.gui.prefix.main_menu
 local prefix_surfaces_menu = ritnmods.teleport.defines.name.gui.prefix.surfaces_menu
 local prefix_restart = ritnmods.teleport.defines.name.gui.prefix.restart
-local luaGui = {}
+
 
 -- CREATION DU GUI
 local GuiElement = {
@@ -440,6 +441,8 @@ local function create_gui_menu(LuaPlayer)
     )
     ritnlib.styles.ritn_small_button(content.button_valid.style)
 
+
+  ritnlib.utils.pcallLog("lib.gui.menu.button_main_open(" .. LuaPlayer.name .. ")")
 end
 
 ---
@@ -500,6 +503,7 @@ local function create_gui_restart(LuaPlayer)
   )
   ritnlib.styles.ritn_small_button(content.button_valid.style)
   
+  ritnlib.utils.pcallLog("lib.gui.menu.frame_restart_open(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -533,6 +537,7 @@ local function button_main_close(LuaPlayer)
 
   if button_main then 
     button_main.destroy()
+    ritnlib.utils.pcallLog("lib.gui.menu.button_main_close(" .. LuaPlayer.name .. ")")
   end
 end
 
@@ -546,6 +551,7 @@ local function frame_menu_close(LuaPlayer)
 
   if frame_menu and result == true then 
     frame_menu.destroy()
+    ritnlib.utils.pcallLog("lib.gui.menu.frame_menu_close(" .. LuaPlayer.name .. ")")
   end
 end
 
@@ -555,6 +561,7 @@ local function frame_restart_close(LuaPlayer)
    
   if frame_restart then 
     frame_restart.destroy()
+    ritnlib.utils.pcallLog("lib.gui.menu.frame_restart_close(" .. LuaPlayer.name .. ")")
   end
 end
 
@@ -583,7 +590,7 @@ end
 
 
 ------------------------------
-
+local luaGui = {}
 luaGui.GuiElement = GuiElement
 
 luaGui.button_main_show = create_button_main

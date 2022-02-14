@@ -3,10 +3,10 @@ local ritnlib = {}
 ritnlib.teleporter =  require(ritnmods.teleport.defines.functions.teleporter)
 ritnlib.gui =         require(ritnmods.teleport.defines.functions.gui)
 ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 
 -- INIT
-local luaGui = {}
 local modGui = require("mod-gui")
 -- Properties
 local prefix = ritnmods.teleport.defines.name.gui.prefix.remote
@@ -110,16 +110,19 @@ local function close(LuaPlayer)
   local LuaGui = left[ritnmods.teleport.defines.name.gui.main_remote]
   if LuaGui then 
       LuaGui.destroy()
+      ritnlib.utils.pcallLog("lib.gui.teleporter-remote.close(" .. LuaPlayer.name .. ")")
   end
 end
 
 local function open(LuaPlayer)
   close(LuaPlayer)
   create_gui(LuaPlayer)
+  ritnlib.utils.pcallLog("lib.gui.teleporter-remote.open(" .. LuaPlayer.name .. ")")
 end
 
 
 --------------------------
+local luaGui = {}
 luaGui.show = create_gui
 luaGui.open = open
 luaGui.close = close 

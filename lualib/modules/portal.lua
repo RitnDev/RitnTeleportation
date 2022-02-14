@@ -27,13 +27,19 @@ local function portal_place(e)
     if LuaPlayer.character == nil then return end
     if LuaEntity.name ~= ritnmods.teleport.defines.name.entity.portal then return end
 
+    local details = {
+      lib = "modules",
+      category = "portal"
+    }
     
     if LuaPlayer.name ~= nil then 
-      print(">> " .. LuaPlayer.name .." -> place portal")
+      details.state = LuaPlayer.name .." -> place portal"
+      ritnlib.utils.pcallLog(details, e)
     end
     
     if LuaEntity.name == ritnmods.teleport.defines.name.entity.portal then
       if LuaPlayer.name == surface.name then
+        LuaEntity.destructible = false
 
         local renderId = rendering.draw_text{
           text=ritnmods.teleport.defines.value.portal_not_link,
@@ -53,8 +59,9 @@ local function portal_place(e)
   
         table.insert(global.teleport.surfaces[surface.name].portals , table_prep)
         ritnlib.portal.setValue(surface, ritnlib.portal.getValue(surface) + 1) -- value + 1
-
         
+        details.state = "place"
+        ritnlib.utils.pcallLog(details, e)
       else
         LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
         LuaEntity.destroy()
@@ -104,7 +111,16 @@ local function portal_breaks(e)
 
         --Qui a miné le portail ?
         LuaPlayer.mined = game.players[e.player_index]
-        print(">> " .. LuaPlayer.mined.name .." -> mine portal") 
+
+        local details = {
+          lib = "modules",
+          category = "portal",
+          event_name = "on_player_mined_entity",
+          func = "portal_breaks",
+          state = "mine",
+          player = LuaPlayer.mined.name
+        }
+        ritnlib.utils.pcallLog(details)
 
         -- Position du portail enlevé
         TabPosition.origine = LuaEntity.origine.position
@@ -115,21 +131,27 @@ local function portal_breaks(e)
         -- Mise à true de l'info : isDestination
         if LuaSurface.destination ~= nil then 
             isDestination = true
-            ritnlib.utils.ritnLog(">> (debug) - break portal - surface destination : " .. LuaSurface.destination.name)
+            details.destination = LuaSurface.destination.name
+            ritnlib.utils.pcallLog(details)
         else
-          ritnlib.utils.ritnLog(">> (debug) - break portal - no surface destination")
+            details.destination = "no destination"
+            ritnlib.utils.pcallLog(details)
         end
         
         -- Récupération des Joueurs concernés (propriétaire des surfaces)
         for i,player in pairs(game.players) do     
             if player.name == LuaSurface.origine.name then
               LuaPlayer.origine = player -- Joueur createur origine du portail
-              ritnlib.utils.ritnLog(">> (debug) - break portal - player origine : " .. LuaPlayer.origine.name)
+
+              details.player_origine = LuaPlayer.origine.name
+              ritnlib.utils.pcallLog(details)
             end
             if isDestination == true then
                 if player.name == LuaSurface.destination.name then 
                   LuaPlayer.destination = player -- Joueur destinataire lié à ce portail
-                  ritnlib.utils.ritnLog(">> (debug) - break portal - player destination : " .. LuaPlayer.destination.name)
+
+                  details.player_destination = LuaPlayer.destination.name
+                  ritnlib.utils.pcallLog(details)
                 end
             end
         end
@@ -138,7 +160,10 @@ local function portal_breaks(e)
         -- Le joueur a juste enlevé le portail non lié
         if isDestination == false then 
           ritnlib.portal.insertPortal(LuaPlayer.origine, LuaSurface.origine, TabPosition.origine)
-          ritnlib.utils.ritnLog(">> (debug) - break portal - delete portal - no destination")
+
+          details.state = "delete portal"
+          details.destination = "no destination"
+          ritnlib.utils.pcallLog(details)
           return
         end
 
@@ -147,10 +172,12 @@ local function portal_breaks(e)
 
         -- Si le portail a été miné mais ni par le joueur d'origine ni de destination
         if LuaPlayer.mined.name ~= LuaPlayer.origine.name then
-            if LuaPlayer.mined.name ~= LuaPlayer.destination.name then 
-              -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)   
-              ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
-              ritnlib.utils.ritnLog(">> (debug) - break portal - rebuild portal")
+          if LuaPlayer.mined.name ~= LuaPlayer.destination.name then 
+            -- On repose le portail au meme endroit (donne une impression qu'il ne s'est rien passé)   
+            ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
+
+            details.state = "rebuild portal"
+            ritnlib.utils.pcallLog(details)
             return
           end 
         end
@@ -168,16 +195,20 @@ local function portal_breaks(e)
               LuaPlayer.origine.print({"msg.is-died", LuaPlayer.destination.name})
             end
             ritnlib.portal.replacePortal(LuaSurface.origine, LuaEntity.origine.position, LuaPlayer.origine.name, LuaSurface.destination.name)
-            ritnlib.utils.ritnLog(">> (debug) - break portal - player dead")
+            
+            details.state = "player dead"
+            ritnlib.utils.pcallLog(details)
         else 
             -- si aucun des joueurs propriétaire ne sont mort
             -- On téléporte les joueurs d'origine s'ils ne sont pas chez eux
-            ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome1 : " .. LuaSurface.origine.name .. " - " .. LuaSurface.destination.name)
+            details.state = "tpHome1 : " .. LuaSurface.origine.name .. " - " .. LuaSurface.destination.name
+            ritnlib.utils.pcallLog(details)
             local id = ritnlib.portal.getId(LuaSurface.origine, TabPosition.origine)
             ritnlib.portal.returnHome(LuaSurface.origine, LuaSurface.destination, TabPosition.destination, id)
         
             -- On téléporte les joueurs venant de la destination s'il ne sont pas chez eux
-            ritnlib.utils.ritnLog(">> (debug) - break portal - tpHome2 : " .. LuaSurface.destination.name .. " - " .. LuaSurface.origine.name)
+            details.state = "tpHome2 : " .. LuaSurface.destination.name .. " - " .. LuaSurface.origine.name
+            ritnlib.utils.pcallLog(details)
             id = ritnlib.portal.getId(LuaSurface.destination, TabPosition.destination)
             ritnlib.portal.returnHome(LuaSurface.destination, LuaSurface.origine, TabPosition.origine, id)
         
@@ -187,24 +218,6 @@ local function portal_breaks(e)
     end
 
 end
-
-
--- Quand un portail a été détruit
-local function portal_died(e)
-  local LuaEntity = e.entity
-
-  if LuaEntity.name == ritnmods.teleport.defines.name.entity.portal then  
-
-    local LuaSurface = LuaEntity.surface
-    local LuaPlayer = LuaEntity.last_user
-    local position = LuaEntity.position
-    
-    local renderId = ritnlib.portal.replacePortal(LuaSurface, position, LuaPlayer.name, LuaSurface.name)
-    ritnlib.portal.setRenderId(LuaSurface, position, renderId)
-  end
-
-end
-
 
 
 
@@ -220,6 +233,12 @@ local function on_player_cursor_stack_changed(e)
 
   if LuaItemStack.name == ritnmods.teleport.defines.name.item.portal then 
     ritnlib.inventory.clearCursor(LuaPlayer, ritnmods.teleport.defines.name.item.portal, false)
+
+    local details = {
+      lib = "modules",
+      category = "portal",
+    }
+    ritnlib.utils.pcallLog(details, e)
   end
 end
 
@@ -246,7 +265,6 @@ commands.add_command("link", "",
 
 ----------------------------------------------------------------------------
 -- portal
-module.events[defines.events.on_entity_died] = portal_died
 module.events[defines.events.on_player_mined_entity] = portal_breaks
 module.events[defines.events.on_built_entity] = portal_place
 -- Autres events

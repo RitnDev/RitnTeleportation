@@ -38,20 +38,10 @@ local function give_start_item(LuaPlayer, vanilla)
     LuaPlayer.insert{name = "iron-plate", count = 8}
     LuaPlayer.insert{name = "stone-furnace", count = 1}
   end
-
-  -- modif 2.0
-  --[[
-  if game.is_multiplayer() then
-    if global.teleport.surfaces[LuaPlayer.name] then
-      LuaPlayer.insert{name = ritnmods.teleport.defines.name.item.portal, count = 1}
-    end
-  end
-  ]]
   
   if game.active_mods["Updated_Construction_Drones"] then 
     LuaPlayer.get_main_inventory().insert{name="Construction Drone",count=10}
   end
-
 end
 
 --le joueur est mort ?
@@ -100,8 +90,6 @@ local function acceptRequest(LuaPlayer, reponse)
           if global.teleport.requests[playerSend][LuaPlayer.name] then
             
             local LuaSurface = game.surfaces[LuaPlayer.name]
-
-            global.teleport.surfaces[LuaSurface.name].inventories[playerSend] = ritnlib.inventory.init()
             table.insert(global.teleport.surfaces[LuaSurface.name].origine, playerSend)
 
             -- Enregistrement de la surface d'origine
@@ -112,17 +100,24 @@ local function acceptRequest(LuaPlayer, reponse)
 
             -- Teleportation sur la surface du personnage.
             LuaPlayer = game.players[playerSend]
-            ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])
-            
+                        
             if LuaPlayer.connected and LuaPlayer.valid then
               -- gestion d'un decalage au moment du teleport pour eviter la colision des joueurs
               local decalage = ritnlib.utils.positionTP(LuaPlayer)
               LuaPlayer.teleport({decalage,decalage}, origine)
-              LuaPlayer.character.active = true
+              if LuaPlayer.character then 
+                LuaPlayer.character.active = true
+              end
             end
-            
-            -- Arrive sans rien
-            LuaPlayer.clear_items_inside()
+
+            -- gestion de l'inventaire
+            if not global.teleport.surfaces[origine].inventories[LuaPlayer.name] then 
+              -- init de l'inventaire sur la map avant transfert du joueur
+              global.teleport.surfaces[LuaSurface.name].inventories[playerSend] = ritnlib.inventory.init()
+              -- Arrive sans rien
+              LuaPlayer.clear_items_inside()
+              ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[origine].inventories[LuaPlayer.name])         
+            end
             
             -- suppression de la request
             global.teleport.surfaces[LuaSurface.name].requests[playerSend] = nil

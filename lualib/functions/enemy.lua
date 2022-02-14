@@ -1,6 +1,9 @@
 ---
 -- Fonction "enemy"
----
+---------------------------------------------------------------------------------------------
+local ritnlib = {}
+ritnlib.utils =       require(ritnmods.teleport.defines.functions.utils)
+---------------------------------------------------------------------------------------------
 local prefix_enemy = ritnmods.teleport.defines.prefix.enemy
 
 
@@ -17,7 +20,7 @@ local function get_evo_factor(LuaSurface, format)
     local whole_number = math.floor(percent_evo_factor)
     local fractional_component = math.floor((percent_evo_factor - whole_number) * 10)
 
-    return string.format(format, whole_number, fractional_component)
+    return string.format(format, whole_number, fractional_component)    
 end
 
 

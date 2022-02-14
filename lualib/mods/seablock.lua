@@ -1,6 +1,9 @@
 -------------------------
 --      SEABLOCK       --
 -------------------------
+local ritnlib = {}
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
+-------------------------
 
 local function giveresearch(force)
   local techs = {
@@ -14,6 +17,7 @@ local function giveresearch(force)
     force.add_research("sb-startup1")
   end
 end
+-------------------------
 
 local function giveitems(entity)
   local landfill = 'landfill'
@@ -46,7 +50,7 @@ local function giveitems(entity)
     entity.insert{name = v[1], count = v[2]}
   end
 end
-
+-------------------------
 
 local function haveitem(player, itemname, crafted)
   local unlock = global.unlocks[itemname]
@@ -59,13 +63,20 @@ local function haveitem(player, itemname, crafted)
     end
   end
 end
-
+-------------------------
 
 local function startMap(LuaSurface)
     if game.players[LuaSurface.name] then 
         local chest = LuaSurface.create_entity({name = "rock-chest", position = {0,0}, force = game.forces.neutral})
         giveitems(chest)
     end
+    local details = {
+      lib = "mods",
+      category = "seablock",
+      funct = "startMap",
+      state = "ok"
+    }
+    ritnlib.utils.pcallLog(details)
 end
 
 

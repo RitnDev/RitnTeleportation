@@ -9,7 +9,7 @@ ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
 -- Properties
 local visible = false
 local prefix = ritnmods.teleport.defines.name.gui.prefix.portal
-local luaGui = {}
+
 
 -- CREATION DU GUI
 local GuiElement = {
@@ -164,7 +164,17 @@ local function create_gui(LuaSurface, LuaPlayer, LuaEntity)
           local result = pcall(function()
             rendering.set_text(renderId, ritnmods.teleport.defines.value.portal_not_link) -- Change text
           end)
-          if result == false then print(">> (debug) guiElement - portal : create_gui : rendering.set_text non executé !") end
+          if result == false then 
+            
+            local details = {
+              lib = "gui",
+              gui = "portal",
+              category = "GuiElement",
+              func = "create_gui",
+              state = "rendering.set_text() not executed !"
+            }         
+            ritnlib.utils.pcallLog(details)
+          end
           ritnlib.portal.setDestination(LuaPlayer.surface, LuaEntity.position, ritnmods.teleport.defines.value.portal_not_link)
           content.LabelLink.caption = {"frame-portal.link", ritnlib.portal.getDestination(LuaPlayer.surface, LuaEntity.position)}
         end
@@ -254,6 +264,7 @@ local function close(LuaSurface, LuaPlayer)
       LuaEntity.minable = true
     end
     guiPortal.destroy()
+    ritnlib.utils.pcallLog("lib.gui.portal.close(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ")")
   end
 end
 
@@ -262,11 +273,13 @@ end
 local function open(LuaPlayer, LuaSurface, LuaEntity)
   close(LuaSurface, LuaPlayer)
   create_gui(LuaSurface, LuaPlayer, LuaEntity)
+  ritnlib.utils.pcallLog("lib.gui.portal.open(" .. LuaPlayer.name .. ", " ..  LuaSurface.name .. ")")
 end
 
 
 
 ------------------------------
+local luaGui = {}
 luaGui.show = create_gui
 luaGui.open = open
 luaGui.close = close

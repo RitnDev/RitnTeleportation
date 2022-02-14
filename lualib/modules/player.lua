@@ -14,8 +14,6 @@ ritnGui.teleporter =  require(ritnmods.teleport.defines.gui.teleporter.GuiElemen
 ritnGui.portal =      require(ritnmods.teleport.defines.gui.portal.GuiElements)
 ritnGui.lobby =       require(ritnmods.teleport.defines.gui.lobby.GuiElements)
 ---------------------------------------------------------------------------------------------
-local module = {}
-module.events = {}
 
 
 -- Restitution de l'inventaire lors du changement de surface
@@ -56,6 +54,12 @@ local function on_player_changed_surface(e)
 
   end
 
+  local details = {
+    lib = "modules",
+    category = "player",
+  }
+  ritnlib.utils.pcallLog(details, e)
+
   if not global.teleport.surfaces[LuaSurface.name] then return end
   if global.teleport.surfaces[LuaSurface.name].name == nil then return end
   ritnlib.surface.addPlayer(LuaPlayer)
@@ -72,46 +76,51 @@ local function on_pre_player_left_game(e)
   local LuaSurface = LuaPlayer.surface
   local reason = e.reason -- defines.disconnect_reason
   
-  ritnlib.utils.ritnLog(">> PRE left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
-
   if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.3
   
-  -- 1.6.2 ---------
+  local details = {
+    lib = "modules",
+    category = "player",
+    player = LuaPlayer.name,
+    surface = LuaSurface.name,
+  }
+  
   local statut, errorMsg = pcall(function() 
     if not global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] then
       global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name] = ritnlib.inventory.init()
-      ritnlib.utils.ritnLog(">> (debug) - portal teleport - teleport : init inventaire ok")
     end
   end)
   if statut  == (false or nil) then 
-    ritnlib.utils.ritnLog(">> (debug) - ERROR = " .. errorMsg)
+    ritnlib.utils.saveGameError("RitnTP/lualib/modules/players : on_pre_player_left_game > " .. errorMsg)
   end
   ritnlib.inventory.save(LuaPlayer, global.teleport.surfaces[LuaSurface.name].inventories[LuaPlayer.name])
 
 
   if reason == defines.disconnect_reason.quit then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "quit")
+    details.reason = "quit"
   elseif reason == defines.disconnect_reason.dropped then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "dropped")
+    details.reason =  "dropped"
   elseif reason == defines.disconnect_reason.reconnect then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "reconnect")
+    details.reason =  "reconnect"
   elseif reason == defines.disconnect_reason.wrong_input then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "wrong_input")
+    details.reason =  "wrong_input"
   elseif reason == defines.disconnect_reason.desync_limit_reached	then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "desync_limit_reached")
+    details.reason =  "desync_limit_reached"
   elseif reason == defines.disconnect_reason.cannot_keep_up	then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "cannot_keep_up")
+    details.reason =  "cannot_keep_up"
   elseif reason == defines.disconnect_reason.afk then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "afk")
+    details.reason =  "afk"
   elseif reason == defines.disconnect_reason.kicked	then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "kicked")
+    details.reason =  "kicked"
   elseif reason == defines.disconnect_reason.kicked_and_deleted then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "kicked_and_deleted")
+    details.reason =  "kicked_and_deleted"
   elseif reason == defines.disconnect_reason.banned	then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "banned")
+    details.reason =  "banned"
   elseif reason == defines.disconnect_reason.switching_servers then
-    ritnlib.utils.ritnLog(">> PRE left game - Reason : " .. "switching_servers")
+    details.reason =  "switching_servers"
   end
+
+  ritnlib.utils.pcallLog(details, e)
   ------------------
 end
 
@@ -119,9 +128,14 @@ end
 local function on_player_left_game(e)
   local LuaPlayer = game.players[e.player_index]
   local LuaSurface = LuaPlayer.surface
-  ritnlib.utils.ritnLog(">> left game '" .. LuaPlayer.name .. "' : " .. LuaSurface.name)
   if string.sub(LuaSurface.name, 1, 6) == "lobby~" then return end -- add 1.8.3
   ritnlib.surface.removePlayer(LuaPlayer, LuaSurface)
+
+  local details = {
+    lib = "modules",
+    category = "player",
+  }
+  ritnlib.utils.pcallLog(details, e)
 end
 
 
@@ -137,6 +151,12 @@ local function on_pre_player_died(e)
   ritnGui.menu.frame_menu_close(LuaPlayer)
   ritnGui.menu.frame_restart_close(LuaPlayer)
   table.insert(global.teleport.player_died, LuaPlayer.name)
+
+  local details = {
+    lib = "modules",
+    category = "player",
+  }
+  ritnlib.utils.pcallLog(details, e)
 end
 
 -- Désinscription à la liste des décès 
@@ -147,6 +167,12 @@ local function on_player_respawned(e)
       table.remove(global.teleport.player_died, i)
     end
   end 
+
+  local details = {
+    lib = "modules",
+    category = "player",
+  }
+  ritnlib.utils.pcallLog(details, e)
 end
 
 
@@ -178,17 +204,20 @@ local function on_player_joined_game(e)
       global.teleport.surfaces["nauvis"].inventories[LuaPlayer.name] = ritnlib.inventory.init()
     end
 
-    -- No characters
-    --if LuaPlayer.character == nil then return end
-              
+    local details = {
+      lib = "modules",
+      category = "player",
+      state = "create new surface"
+    }
+
     -- le joueur n'existe pas dans la structure
     if not global.teleport.players[LuaPlayer.name] then 
-      print(">> debug : not surface : create")
+      ritnlib.utils.pcallLog(details, e)
       NewPlayerSurface(LuaPlayer)
       return
     -- le joueur n'est plus lié à une map d'origine
     elseif global.teleport.players[LuaPlayer.name].origine == "" then
-      print(">> debug : not surface : create")
+      ritnlib.utils.pcallLog(details, e)
       NewPlayerSurface(LuaPlayer)
       return
     end
@@ -199,11 +228,14 @@ local function on_player_joined_game(e)
     if  surfaceOrigineName == LuaSurface.name then
       ritnlib.surface.addPlayer(LuaPlayer)
       ritnlib.inventory.get(LuaPlayer, global.teleport.surfaces[surfaceOrigineName].inventories[LuaPlayer.name])
-      LuaPlayer.character.active = true
+      if LuaPlayer.character then LuaPlayer.character.active = true end
     else -- player is no home
       LuaPlayer.teleport({0,0}, global.teleport.players[LuaPlayer.name].origine)
-      LuaPlayer.character.active = true
+      if LuaPlayer.character then LuaPlayer.character.active = true end
     end
+
+    details.state = "join"
+    ritnlib.utils.pcallLog(details, e)
 end
   
 -------------------------------------------------------------------------------------------------------------
@@ -251,10 +283,16 @@ local function on_player_changed_position(e)
 
                   -- Fermeture de tous les gui
                   ritnGui.remote.close(LuaPlayer)
-                  ritnGui.teleporter.close(LuaPlayer.surface, LuaPlayer)
-                  ritnGui.portal.close(LuaPlayer.surface, LuaPlayer)
+                  ritnGui.teleporter.close(LuaSurface, LuaPlayer) -- fix 2.0.16
+                  ritnGui.portal.close(LuaSurface, LuaPlayer) -- fix 2.0.16
                   ritnGui.menu.frame_menu_close(LuaPlayer)
                   ritnGui.menu.frame_restart_close(LuaPlayer)
+
+                  local details = {
+                    lib = "modules",
+                    category = "player",
+                  }
+                  ritnlib.utils.pcallLog(details, e)
                   
                 end 
   
@@ -277,6 +315,12 @@ local function on_runtime_mod_setting_changed(e)
   if setting_type == "runtime-per-user" then 
     if setting_name == ritnmods.teleport.defines.name.settings.enable_main_button then 
       ritnGui.menu.button_main_open(LuaPlayer)
+
+      local details = {
+        lib = "modules",
+        category = "player",
+      }
+      ritnlib.utils.pcallLog(details, e)
     end
   end
 
@@ -284,6 +328,12 @@ local function on_runtime_mod_setting_changed(e)
     if setting_name == ritnmods.teleport.defines.name.settings.surfaceMax then
       local setting_value = settings.global[setting_name].value
       global.settings.surfaceMax = setting_value
+
+      local details = {
+        lib = "modules",
+        category = "player",
+      }
+      ritnlib.utils.pcallLog(details, e)
     end
   end
 
@@ -305,6 +355,12 @@ local function on_research_finished(e)
       if setting_value then
         local richText = "[technology=" .. LuaTechnology.name .. "]"
         LuaPlayer.print({ritnmods.teleport.defines.name.caption.msg.show_research, richText}, {r=1,g=0,b=0,a=1})
+
+        local details = {
+          lib = "modules",
+          category = "player",
+        }
+        ritnlib.utils.pcallLog(details, e)
       end
     end
   end
@@ -312,7 +368,8 @@ end
 
 
 
-
+local module = {}
+module.events = {}
 -- Events Player
 module.events[defines.events.on_player_changed_surface] = on_player_changed_surface
 module.events[defines.events.on_player_joined_game] = on_player_joined_game

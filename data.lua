@@ -1,9 +1,8 @@
 --INITIALIZE
-if not ritnmods then ritnmods = {
-    teleport = {
+if not ritnmods then ritnmods = {} end 
+if not ritnmods.teleport then ritnmods.teleport = {
     -- definitions des constantes
       defines = require("defines"),
-    },
 } end 
 
 

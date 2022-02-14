@@ -1,6 +1,7 @@
 -- Initialisation des variables globals
 require ("core.global")
 
+
 -- Activation de l'event-listener
 local event_listener = require(ritnmods.teleport.defines.event_listener)
 -- Activation de gvv s'il est présent

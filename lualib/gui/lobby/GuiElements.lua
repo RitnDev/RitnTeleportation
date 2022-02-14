@@ -2,13 +2,14 @@
 local ritnlib = {}
 ritnlib.gui =         require(ritnmods.teleport.defines.functions.gui)
 ritnlib.styles =      require(ritnmods.teleport.defines.functions.styles)
+ritnlib.utils =      require(ritnmods.teleport.defines.functions.utils)
 ---------------------------------------------------------------------------------------------
 
 -- Properties
 local visible = false
 local prefix_lobby = ritnmods.teleport.defines.name.gui.prefix.lobby
 local definesGuiLobby = ritnmods.teleport.defines.name.gui.lobby
-local luaGui = {}
+
 
 
 
@@ -157,6 +158,7 @@ local function create_gui_lobby(LuaPlayer)
   content.button_request.style.maximal_width = 120
   content.button_request.tooltip = {"tooltip.button-valid"}
 
+  ritnlib.utils.pcallLog("lib.gui.lobby.frame_lobby_open(" .. LuaPlayer.name .. ")")
 end
 
 
@@ -173,6 +175,7 @@ local function frame_lobby_close(LuaPlayer)
 
   if frame_lobby then 
     frame_lobby.destroy()
+    ritnlib.utils.pcallLog("lib.gui.lobby.action.frame_lobby_close(" .. LuaPlayer.name .. ")")
   end
 end
 
@@ -185,6 +188,7 @@ end
 
 
 ------------------------------
+local luaGui = {}
 luaGui.open = frame_lobby_open
 luaGui.close = frame_lobby_close
 

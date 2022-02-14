@@ -40,6 +40,7 @@ defines.lib = {
     lobby = modules .. "lobby",
 }
 
+
 -- graphics
 local graphics = defines.mod_directory .. "/graphics/"
 local gui = graphics .. "gui/"
@@ -103,7 +104,7 @@ defines.gui.teleporter = {
     GuiElements = defines.lib.gui .. "teleporter/GuiElements",
 }
 defines.gui.remote = {
-    --action = defines.lib.gui .. "teleporter-remote/action",
+    action = defines.lib.gui .. "teleporter-remote/action",
     GuiElements = defines.lib.gui .. "teleporter-remote/GuiElements",
 }
 defines.gui.menu = {

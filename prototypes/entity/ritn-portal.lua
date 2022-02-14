@@ -15,6 +15,7 @@
       inventory_size = 0,
       corpse = "lamp-remnants",
       collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
+      collision_mask = {"item-layer", "object-layer", "water-tile"},
       selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
       vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
       opening_sound = { filename = ritnmods.teleport.defines.mod_directory .. "/sounds/none.ogg", volume = 0.5 },
