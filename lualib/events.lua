@@ -9,7 +9,7 @@ local events = {}
 events.inventory =    require(ritnmods.teleport.defines.functions.inventory)
 events.utils =        require(ritnmods.teleport.defines.functions.utils)
 events.surface =      require(ritnmods.teleport.defines.functions.surface)
-
+events.enemy =        require(ritnmods.teleport.defines.functions.enemy)
 
 
 local function call_remote_functions()
@@ -138,6 +138,45 @@ local function on_tick_evoGui(e)
 end
 
 
+local function on_tick_evolution(e)
+  local value = e.tick % 60
+
+  if global.teleport ~= nil then 
+    if global.map_settings then 
+      if global.map_settings.pollution then 
+        if global.map_settings.pollution.enabled then 
+          if global.map_settings.enemy_evolution then 
+            if global.map_settings.enemy_evolution.enabled then 
+              if global.enemy.setting then 
+                if global.enemy.value then 
+                  if global.teleport.surfaces ~= nil then 
+                    local LuaSurface = game.surfaces[value]
+                    if LuaSurface ~= nil then 
+                      if global.teleport.surfaces[LuaSurface.name] then
+                        events.enemy.pollution_by_surface(LuaSurface)
+                        if not global.teleport.surfaces[LuaSurface.name].current_time then 
+                          global.teleport.surfaces[LuaSurface.name].current_time = 0
+                          global.teleport.surfaces[LuaSurface.name].time = 0
+                        end
+                        global.teleport.surfaces[LuaSurface.name].last_time = global.teleport.surfaces[LuaSurface.name].current_time
+                        global.teleport.surfaces[LuaSurface.name].current_time = math.floor(game.tick / 60)
+                        if global.teleport.surfaces[LuaSurface.name].current_time > global.teleport.surfaces[LuaSurface.name].last_time then
+                          global.teleport.surfaces[LuaSurface.name].time = global.teleport.surfaces[LuaSurface.name].time + 1
+                        end
+                        events.enemy.evolution_by_surface(LuaSurface)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
 
 -- open_close_menu
 local function open_close_menu(e)
@@ -153,6 +192,7 @@ script.on_event({defines.events.on_tick},function(e)
   on_tick_local(e)
   on_tick_loadGame(e) 
   on_tick_evoGui(e)
+  on_tick_evolution(e)
 end)
 
 -- event : custom-input -> toggle_main_menu

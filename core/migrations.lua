@@ -45,120 +45,52 @@ local function on_player_joined_game(e)
 
 
     if tonumber(vZ) ~= nil then
-        if tonumber(vX) <= 1 and tonumber(vY) <= 4 then 
+        if tonumber(vX) <= 2 and tonumber(vY) <= 0 then 
+            if tonumber(vZ) <= 25 then 
 
-            if tonumber(vZ) <= (30 or 31) then
-                -- maj de la structure à la première connexion du premier joueur
-                pcall(function() 
-                    for _,surface in pairs(game.surfaces) do 
-                        if global.teleport.surfaces[surface.name] then 
-                            if settings.startup[ritnmods.teleport.defines.name.settings.restart].value == true then
-                                global.teleport.surfaces[surface.name].finish = true
-                            end
-                        end
-                    end
-                end)
+                -- reset de l'evolution de toute les force
+                for _,force in pairs(game.forces) do   
+                    if string.sub(force.name,1,5) == "enemy" then      
+                        force.evolution_factor = 0     
+                        force.evolution_factor_by_pollution = 0   
+                        force.evolution_factor_by_time = 0
+                    end 
+                end
 
-            end
+                -- valeur d'evolution par défaut
+                local time_factor =      0.0000040  -- 40
+                local pollution_factor = 0.0000009  -- 9
+                local destroy_factor =   0.00200    -- 200
+
+                -- creation de la structure map_settings en global
+                local map_settings = game.map_settings
+                global.map_settings = {}
+                global.map_settings.pollution = { enabled = map_settings.pollution.enabled}
         
-            if tonumber(vZ) <= 36 then
-                -- maj de la structure à la première connexion du premier joueur
-                pcall(function() 
-                    for _,surface in pairs(global.teleport.surfaces) do 
-                        
-                        local portal_value, teleporter_value, portal_id_value, teleporter_id_value
-                        portal_value = surface.portals[1].value
-                        portal_id_value = surface.portals[1].id_value
-                        teleporter_value = surface.teleporters[1].value
-                        teleporter_id_value = surface.teleporters[1].id_value
-
-                        surface.portals[1] = nil
-                        surface.teleporters[1] = nil
-
-                        surface.value = {
-                            portal = portal_value,
-                            id_portal = portal_id_value,
-                            teleporter = teleporter_value,
-                            id_teleporter = teleporter_id_value,
-                        }
-                    end
-                end)
-
-            end
-
-            if tonumber(vZ) <= 40 then
-                pcall(function() 
-                    for _,surface in pairs(global.teleport.surfaces) do 
-                        if surface.name ~= "nauvis" then
-                            if game.players[surface.name] then
-                                surface.exception = game.players[surface.name].admin
-                                surface.last_use = game.tick
-                                surface.map_used = false
-                            else
-                                surface.exception = false
-                                surface.last_use = game.tick
-                                surface.map_used = false
-                            end
-                        else
-                            surface.exception = true
-                            surface.last_use = 0
-                            surface.map_used = true
-                        end
-                    end
-                end)
-            end
-
-            
-            if tonumber(vZ) <= 43 then
-                pcall(function() 
-                    if not global.settings then global.settings = {} end
-                end)
-            end
-
-
-            if tonumber(vZ) <= (44 or 61 or 62)  then
-                pcall(function() 
-                    for _,surface in pairs(global.teleport.surfaces) do  
-                        surface.players = {}
-                    end
-                end)
-            end
-
-        end
-
-        if tonumber(vX) <= 1 and tonumber(vY) <= 5 then 
-            
-            --1.5.0
-            if tonumber(vZ) >= 0 then 
-
-                global.enemy = {
-                    setting = settings.startup[ritnmods.teleport.defines.name.settings.enemy].value,
-                    value = false
+                global.map_settings.enemy_evolution = {
+                    enabled = map_settings.enemy_evolution.enabled,
+                    time_factor = time_factor,
+                    destroy_factor = destroy_factor,
+                    pollution_factor = pollution_factor,
                 }
+                global.map_settings.enemy_expansion = {enabled = map_settings.enemy_expansion.enabled}
 
-                -- Recupération des settings de la map (nauvis)
-                if global.map_gen_settings.seed then 
-                    if global.map_gen_settings["autoplace_controls"]["enemy-base"].size == 0 then 
-                        global.enemy.value = false
-                    else
-                        global.enemy.value = true
-                    end
+                -- mise à zero
+                game.map_settings.enemy_evolution.time_factor = 0
+                game.map_settings.enemy_evolution.pollution_factor = 0
+
+                -- creation de la structure dans les 
+                for _,surface in pairs(global.teleport.surfaces) do
+                    surface.pollution = {
+                        last = 0,
+                        current = 0,
+                        count = 0,
+                    }
+                    surface.time = 0
                 end
-            end
 
-            if tonumber(vZ) <= 4 then 
-                for _,force in pairs(game.forces) do 
-                    if string.sub(force.name, 1, string.len(prefix_enemy)) == prefix_enemy then 
-                        if force.ai_controllable == false then
-                            force.ai_controllable = true
-                        end
-                    end
-                end
             end
-
-     
         end
-
     end
 
     --fix on_player_left_game (load local save)

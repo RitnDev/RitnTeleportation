@@ -1,5 +1,17 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.23
+Version: 2.0.26
+Date: 17.02.2022
+  Fixes:
+    - Fix de l'evolution par le temps.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.25
+Date: 17.02.2022
+  Changes:
+    - L'evolution des forces ennemies est calculé par surfaces par le mods.
+    - Calcul de l'evolution par le temps se stop quand personne est sur la map.
+    - Migration de la structure global pour la version precedente.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.24
 Date: 10.02.2022
   Fixes:
     - fix : function : "utils" - restart -> character = nil.

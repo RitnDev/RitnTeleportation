@@ -133,6 +133,11 @@ local function generateSurface(LuaSurface)
     teleporters = {},
     inventories = {},
     players = {},
+    pollution = {
+      last = 0,
+      current = 0,
+      count = 0,
+    },
     finish = settings.startup[ritnmods.teleport.defines.name.settings.restart].value,
   }
 
@@ -308,7 +313,6 @@ local function createSurface(LuaPlayer)
     LuaPlayer.print({"msg.server-full"})
   end
 end
-
 
 
 ----------------------------

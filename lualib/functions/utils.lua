@@ -268,10 +268,24 @@ end
 -- Recupération des settings de la map (nauvis)
 local function mapGeneratorNewSeed()
 
+    if global.map_settings.pollution == nil then 
+        local map_settings = game.map_settings
+        global.map_settings.pollution = { enabled = map_settings.pollution.enabled}
+
+        global.map_settings.enemy_evolution = {
+            enabled = map_settings.enemy_evolution.enabled,
+            time_factor = map_settings.enemy_evolution.time_factor,
+            destroy_factor = map_settings.enemy_evolution.destroy_factor,
+            pollution_factor = map_settings.enemy_evolution.pollution_factor,
+        }
+        global.map_settings.enemy_expansion = {enabled = map_settings.enemy_expansion.enabled}
+    end
+
     if not global.map_gen_settings.seed then 
-        game.map_settings.enemy_evolution.time_factor = 0   -- add 1.5.7
+        game.map_settings.enemy_evolution.time_factor = 0
+        game.map_settings.enemy_evolution.pollution_factor = 0
         global.map_gen_settings = game.surfaces.nauvis.map_gen_settings
-        --add 1.5.0
+
         if global.map_gen_settings["autoplace_controls"]["enemy-base"].size == 0 then 
         global.enemy.value = false
         else
@@ -303,6 +317,7 @@ local function saveGameError(retValue, output)
     -- stop server by error()
     error("ERROR RitnTP : " .. retValue) --.. "\n\nerror-report -> Factorio/write-output/RitnTeleportation/error/error-report.json")
 end
+
 
 
 
