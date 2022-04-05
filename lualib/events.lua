@@ -155,13 +155,20 @@ local function on_tick_evolution(e)
                       if global.teleport.surfaces[LuaSurface.name] then
                         events.enemy.pollution_by_surface(LuaSurface)
                         if not global.teleport.surfaces[LuaSurface.name].current_time then 
+                          global.teleport.surfaces[LuaSurface.name].last_time = 0
                           global.teleport.surfaces[LuaSurface.name].current_time = 0
                           global.teleport.surfaces[LuaSurface.name].time = 0
                         end
-                        global.teleport.surfaces[LuaSurface.name].last_time = global.teleport.surfaces[LuaSurface.name].current_time
-                        global.teleport.surfaces[LuaSurface.name].current_time = math.floor(game.tick / 60)
+                        -- si la map est utilisé par quelqu'un
+                        if global.teleport.surfaces[LuaSurface.name].map_used then 
+                          -- on recupère le curent time de la partie
+                          global.teleport.surfaces[LuaSurface.name].current_time = math.floor(game.tick / 60)
+                        end
+
+                        -- si le current time est surperieur au last time c'est que le temps s'ecoule (map_used = true)
                         if global.teleport.surfaces[LuaSurface.name].current_time > global.teleport.surfaces[LuaSurface.name].last_time then
                           global.teleport.surfaces[LuaSurface.name].time = global.teleport.surfaces[LuaSurface.name].time + 1
+                          global.teleport.surfaces[LuaSurface.name].last_time = global.teleport.surfaces[LuaSurface.name].current_time
                         end
                         events.enemy.evolution_by_surface(LuaSurface)
                       end
@@ -272,6 +279,35 @@ commands.add_command("exception", "<add/remove/view> <player>",
         else
           LuaPlayer.print("-> /exception <add/remove/view> <player>") 
         end 
+      end 
+  end
+)
+
+
+
+
+commands.add_command("reset_evo", nil, 
+  function (e)
+    local LuaPlayer = game.players[e.player_index]
+      if LuaPlayer.admin or LuaPlayer.name == "Ritn" then
+        for _,surface in pairs(global.teleport.surfaces) do 
+          if e.parameter == nil then 
+            surface.time = 0
+            surface.current_time = 0
+            surface.last_time = 0
+            surface.pollution.last = 0
+            surface.pollution.current = 0
+            surface.pollution.count = 0
+          elseif e.parameter == "time" then 
+            surface.time = 0
+            surface.current_time = 0
+            surface.last_time = 0
+          elseif e.parameter == "pollution" then
+            surface.pollution.last = 0
+            surface.pollution.current = 0
+            surface.pollution.count = 0
+          end
+        end
       end 
   end
 )

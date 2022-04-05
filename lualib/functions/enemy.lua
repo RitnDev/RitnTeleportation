@@ -45,8 +45,10 @@ local function evolution_by_surface(LuaSurface)
     if global.teleport.surfaces[LuaSurface.name] then  
         if global.teleport.surfaces[LuaSurface.name].pollution then                     
             local count = global.teleport.surfaces[LuaSurface.name].pollution.count
+            -- recuperation du temps
             local time = global.teleport.surfaces[LuaSurface.name].time
             local time_factor = global.map_settings.enemy_evolution.time_factor
+
             local pollution_factor = global.map_settings.enemy_evolution.pollution_factor
             local enemy_name = "enemy"
             if LuaSurface.name ~= "nauvis" then 
